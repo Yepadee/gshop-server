@@ -98,7 +98,7 @@ const RootQueryType = new GraphQLObjectType({
                 price: { type: GraphQLFloat }
             },
             resolve: (root, args) => {
-                db.models.product.findAll({where: args})
+                return db.models.product.findAll({where: args})
             }
         }
     })
