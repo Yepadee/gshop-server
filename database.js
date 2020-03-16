@@ -29,6 +29,10 @@ const Product = Conn.define('product', {
         type: Sequelize.DECIMAL,
         allowNull: false
     },
+    catagory: {
+        type: Sequelize.STRING,
+        allowNull: false
+    },
     productTypeId: {
         type: Sequelize.INTEGER,
         allowNull: false
@@ -114,6 +118,7 @@ Conn.sync({force: true}).then(
                     description: Faker.commerce.productAdjective(),
                     price: Faker.commerce.price(.10,5.00,2),
                     discount: 0.0,
+                    catagory: 'hoodie',
                     productTypeId: 1
             }).then((product) => {
                 return product.createStock({

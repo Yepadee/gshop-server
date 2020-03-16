@@ -125,6 +125,12 @@ const ProductType = new GraphQLObjectType({
                 return product.discount;
             }
         },
+        catagory: {
+            type: GraphQLString,
+            resolve: (product) => {
+                return product.catagory
+            }
+        },
         productType: {
             type: ProductTypeType,
             resolve: (product) => {
@@ -211,7 +217,9 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLInt },
                 name: { type: GraphQLString },
                 description: { type: GraphQLString },
-                price: { type: GraphQLFloat }
+                price: { type: GraphQLFloat },
+                discount: { type: GraphQLFloat },
+                catagory: { type: GraphQLString }
             },
             resolve: (root, args) => {
                 return db.models.product.findAll({where: args})
@@ -235,6 +243,30 @@ const RootMutationType = new GraphQLObjectType({
     name: 'Mutation',
     description: 'Root mutation',
     fields: () => ({
+        addProductType: {
+            type: ProductTypeType,
+            args: {
+                name: { type: GraphQLString }
+            },
+            resolve: (_, args) => {
+                return db.models.productType.create({
+                    name: args.name
+                })
+            }
+        },
+        addTypeProperty: {
+            type: TypePropertyType,
+            args: {
+                productTypeId: { type: GraphQLInt },
+                name: { type: GraphQLString }
+            },
+            resolve: (_, args) => {
+                return db.models.typeProperty.create({
+                    productType: args.productTypeId,
+                    name: args.name
+                })
+            }
+        },
         addProduct: {
             type: ProductType,
             args: {
