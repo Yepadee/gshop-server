@@ -28,6 +28,10 @@ const Product = Conn.define('product', {
     discount: {
         type: Sequelize.DECIMAL,
         allowNull: false
+    },
+    productTypeId: {
+        type: Sequelize.INTEGER,
+        allowNull: false
     }
 });
 
@@ -37,11 +41,21 @@ const Stock = Conn.define('stock', {
     }
 });
 
-const StockProperty = Conn.define('stockProperty', {
-    key: {
+const ProductType = Conn.define('productType', {
+    name: {
         type: Sequelize.STRING,
         allowNull: false
-    },
+    }
+});
+
+const TypeProperty = Conn.define('typeProperty', {
+    name: {
+        type: Sequelize.STRING,
+        allowNull: false
+    }
+});
+
+const PropertyValue = Conn.define('propertyValue', {
     value: {
         type: Sequelize.STRING,
         allowNull: false
@@ -51,31 +65,68 @@ const StockProperty = Conn.define('stockProperty', {
 Product.hasMany(Stock);
 Stock.belongsTo(Product);
 
-Stock.hasMany(StockProperty);
-StockProperty.belongsTo(Stock);
+ProductType.hasMany(Product, { foreignKey: 'productTypeId' });
+Product.belongsTo(ProductType, { foreignKey: 'productTypeId' });
 
-Conn.sync({force: true}).then(() => {
-    _.times(10, () => {
-        return Product.create({
-            name: Faker.commerce.productName(),
-            description: Faker.commerce.productAdjective(),
-            price: Faker.commerce.price(),
-            discount: 0.0
-        }).then( product => {
-            return product.createStock({
-                quantity: Faker.commerce.price()
-            }).then( stock => {
-                stock.createStockProperty({
-                    key: "colour",
-                    value: Faker.commerce.color()
-                })
-                return stock.createStockProperty({
-                    key: "size",
-                    value: "m"
-                })
-            })
-        });
-    })
-});
+ProductType.hasMany(TypeProperty);
+TypeProperty.belongsTo(ProductType);
+
+TypeProperty.hasMany(PropertyValue);
+PropertyValue.belongsTo(TypeProperty);
+
+Stock.belongsToMany(PropertyValue, { through: 'StockProperties'});
+PropertyValue.belongsToMany(Stock, { through: 'StockProperties'});
+
+Conn.sync({force: true}).then(
+    () => {
+        return ProductType.create({
+            name: "clothing"
+        }).then((productType) => {
+            productType.createTypeProperty({
+                name: 'colour'
+            }).then((typeProperty) => {
+                typeProperty.createPropertyValue({
+                    value: 'red'
+                });
+                typeProperty.createPropertyValue({
+                    value: 'green'
+                });
+                typeProperty.createPropertyValue({
+                    value: 'blue'
+                });
+            });
+            productType.createTypeProperty({
+                name: 'size'
+            }).then((typeProperty) => {
+                typeProperty.createPropertyValue({
+                    value: 'small'
+                });
+                typeProperty.createPropertyValue({
+                    value: 'medium'
+                });
+                typeProperty.createPropertyValue({
+                    value: 'large'
+                });
+            });
+            _.times(10, () => {  
+                return Product.create({
+                    name: Faker.commerce.productName(),
+                    description: Faker.commerce.productAdjective(),
+                    price: Faker.commerce.price(.10,5.00,2),
+                    discount: 0.0,
+                    productTypeId: 1
+            }).then((product) => {
+                return product.createStock({
+                        quantity: Faker.commerce.price(),
+                    }).then((stock) => {
+                        //Make sure this is valid
+                        stock.addPropertyValue(1)
+                        return stock.addPropertyValue(4)
+                    })
+                });
+            });
+        }) 
+    }
+);
 
 module.exports = Conn;
