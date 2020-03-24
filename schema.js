@@ -142,6 +142,12 @@ const ProductType = new GraphQLObjectType({
             resolve: (product) => {
                 return product.getStocks();
             }
+        },
+        properties: {
+            type: new GraphQLList(PropertyValueType),
+            resolve: (product) => {
+                return product.getPropertyValues();
+            }
         }
     })
 });
@@ -267,19 +273,37 @@ const RootMutationType = new GraphQLObjectType({
                 })
             }
         },
+        addPropertyValue: {
+            type: PropertyValueType,
+            args: {
+                typePropertyId: { type: GraphQLInt },
+                value: { type: GraphQLString }
+            },
+            resolve: (_, args) => {
+                return db.models.propertyValue.create({
+                    typeProperty: args.typePropertyId,
+                    value: args.value
+                })
+            }
+        },
         addProduct: {
             type: ProductType,
             args: {
                 name: { type: GraphQLString },
                 description: { type: new GraphQLNonNull(GraphQLString) },
-                price: { type: new GraphQLNonNull(GraphQLFloat) }
+                price: { type: new GraphQLNonNull(GraphQLFloat) },
+                propertyValues: { type: new GraphQLList(GraphQLInt) }
             },
             resolve: (_, args) => {
                 return db.models.product.create({
                     name: args.name,
                     description: args.description,
                     price: args.price,
-                    discount: 0
+                    discount: 0,
+                    propertyValues: args.propertyValues
+                }).then((product) => {
+                    product.setPropertyValues(args.propertyValues)
+                    return product
                 })
             }
         },
@@ -293,8 +317,10 @@ const RootMutationType = new GraphQLObjectType({
             resolve: (_, args) => {
                 return db.models.stock.create({
                     productId: args.productId,
-                    quantity: args.quantity,
-                    propertyValues: args.propertyValues
+                    quantity: args.quantity
+                }).then((stock) => {
+                    stock.setPropertyValues(args.propertyValues)
+                    return stock
                 })
             }
         }

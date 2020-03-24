@@ -81,6 +81,10 @@ PropertyValue.belongsTo(TypeProperty);
 Stock.belongsToMany(PropertyValue, { through: 'StockProperties'});
 PropertyValue.belongsToMany(Stock, { through: 'StockProperties'});
 
+Product.belongsToMany(PropertyValue, { through: 'ProductProperties'});
+PropertyValue.belongsToMany(Product, { through: 'ProductProperties'});
+
+
 Conn.sync({force: true}).then(
     () => {
         return ProductType.create({
@@ -121,6 +125,8 @@ Conn.sync({force: true}).then(
                     catagory: 'hoodie',
                     productTypeId: 1
             }).then((product) => {
+                product.addPropertyValue(1)
+                product.addPropertyValue(4)
                 return product.createStock({
                         quantity: Faker.commerce.price(),
                     }).then((stock) => {
