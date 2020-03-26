@@ -3,7 +3,7 @@ _ = require('lodash');
 Faker = require('faker');
 
 const Conn = new Sequelize(
-    'nodemysql',
+    'mysql',
     'root',
     'yoloswag69',
     {
