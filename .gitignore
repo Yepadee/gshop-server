@@ -1,3 +1,2 @@
 .DS_Store
-gshop-server/node_modules
-gshop-site/node_modules
+node_modules
