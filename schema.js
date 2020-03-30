@@ -87,12 +87,6 @@ const PropertyValueType = new GraphQLObjectType({
             resolve: (propertyValue) => {
                 return propertyValue.getTypeProperty();
             }
-        },
-        stock: {
-            type: new GraphQLList(StockType),
-            resolve: (propertyValue) => {
-                return propertyValue.getStocks();
-            }
         }
     })   
 });
