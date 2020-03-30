@@ -85,6 +85,7 @@ Product.belongsToMany(PropertyValue, { through: 'ProductProperties'});
 PropertyValue.belongsToMany(Product, { through: 'ProductProperties'});
 
 
+
 Conn.sync({force: true}).then(
     () => {
         return ProductType.create({
@@ -118,7 +119,7 @@ Conn.sync({force: true}).then(
             });
             _.times(10, () => {  
                 return Product.create({
-                    name: Faker.commerce.productName(),
+                    name: Faker.commerce.product(),
                     description: Faker.commerce.productAdjective(),
                     price: Faker.commerce.price(.10,5.00,2),
                     discount: 0.0,

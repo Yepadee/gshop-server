@@ -25,6 +25,12 @@ const ProductTypeType = new GraphQLObjectType({
             resolve: (productType) => {
                 return productType.getProducts();
             }
+        },
+        properties: {
+            type: new GraphQLList(TypePropertyType),
+            resolve: (productType) => {
+                return productType.getTypeProperties();
+            } 
         }
     })
 });
@@ -143,7 +149,7 @@ const ProductType = new GraphQLObjectType({
                 return product.getStocks();
             }
         },
-        properties: {
+        propertyValues: {
             type: new GraphQLList(PropertyValueType),
             resolve: (product) => {
                 return product.getPropertyValues();
