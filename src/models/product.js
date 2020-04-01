@@ -28,10 +28,11 @@ export default (sequelize, DataTypes) => {
 
     Product.associate = (models) => {
         Product.hasMany(models.Stock);
-        Product.belongsToMany(models.PropertyValue, { through: 'ProductProperties'});
         Product.belongsTo(models.ProductType, { foreignKey: 'productTypeId' });
+        Product.hasMany(models.ProductPropertyValue);
     };
 
 
     return Product;
+    
 };

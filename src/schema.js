@@ -1,4 +1,4 @@
- import {
+import {
     GraphQLSchema,
     GraphQLObjectType,
     GraphQLString,
@@ -26,18 +26,31 @@ const ProductTypeType = new GraphQLObjectType({
                 return productType.getProducts();
             }
         },
-        properties: {
-            type: new GraphQLList(PropertyNameType),
+        productPropertyNames: {
+            type: new GraphQLList(ProductPropertyNameType),
             resolve: (productType) => {
-                return productType.getPropertyNames();
+                return productType.getProductPropertyNames();
+            } 
+        },
+        // TODO
+        typePropertyNames: {
+            type: new GraphQLList(ProductPropertyNameType),
+            resolve: (productType) => {
+                return productType.getProductPropertyNames();
+            } 
+        },
+        typePropertyValues: {
+            type: new GraphQLList(ProductPropertyNameType),
+            resolve: (productType) => {
+                return productType.getProductPropertyNames();
             } 
         }
     })
 });
 
-const PropertyNameType = new GraphQLObjectType({
-    name: 'PropertyName',
-    description: 'A property of a type of product',
+const ProductPropertyNameType = new GraphQLObjectType({
+    name: 'ProductPropertyName',
+    description: 'A property of a product',
     fields: () => ({
         id: {
             type: GraphQLInt,
@@ -52,9 +65,9 @@ const PropertyNameType = new GraphQLObjectType({
             }
         },
         values: {
-            type: new GraphQLList(PropertyValueType),
+            type: new GraphQLList(ProductPropertyValueType),
             resolve: (propertyName) => {
-                return propertyName.getPropertyValues();
+                return propertyName.getProductPropertyValues();
             }
         },
         productType: {
@@ -66,9 +79,9 @@ const PropertyNameType = new GraphQLObjectType({
     })
 });
 
-const PropertyValueType = new GraphQLObjectType({
-    name: 'PropertyValue',
-    description: 'A value a type-property may take',
+const ProductPropertyValueType = new GraphQLObjectType({
+    name: 'ProductPropertyValue',
+    description: 'A value a product property may take',
     fields: () => ({
         id: {
             type: GraphQLInt,
@@ -83,9 +96,9 @@ const PropertyValueType = new GraphQLObjectType({
             }
         },
         propertyName: {
-            type: PropertyNameType,
+            type: ProductPropertyNameType,
             resolve: (propertyValue) => {
-                return propertyValue.getPropertyName();
+                return propertyValue.getProductPropertyName();
             }
         }
     })   
@@ -143,10 +156,10 @@ const ProductType = new GraphQLObjectType({
                 return product.getStocks();
             }
         },
-        propertyValues: {
-            type: new GraphQLList(PropertyValueType),
+        productPropertyValues: {
+            type: new GraphQLList(ProductPropertyValueType),
             resolve: (product) => {
-                return product.getPropertyValues();
+                return product.getProductPropertyValues();
             }
         }
     })
@@ -168,10 +181,10 @@ const StockType = new GraphQLObjectType({
                 return stock.quantity;
             }
         },
-        propertyValues: {
-            type: new GraphQLList(PropertyValueType),
+        productPropertyValues: {
+            type: new GraphQLList(ProductPropertyValueType),
             resolve: (stock) => {
-                return stock.getPropertyValues();
+                return stock.getProductPropertyValues();
             }
         },
         product: {
@@ -197,24 +210,24 @@ const RootQueryType = new GraphQLObjectType({
                 return db.models.productType.findAll({where: args})
             }
         },
-        propertyNames: {
-            type: new GraphQLList(PropertyNameType),
+        productPropertyNames: {
+            type: new GraphQLList(ProductPropertyNameType),
             args: {
                 id: { type: GraphQLInt },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
-                return db.models.propertyName.findAll({where: args})
+                return db.models.productPropertyName.findAll({where: args})
             }
         },
-        propertyValues: {
-            type: new GraphQLList(PropertyValueType),
+        productPropertyValues: {
+            type: new GraphQLList(ProductPropertyValueType),
             args: {
                 id: { type: GraphQLInt },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
-                return db.models.propertyValue.findAll({where: args})
+                return db.models.productPropertyValue.findAll({where: args})
             }
         },
         products: {
@@ -260,27 +273,27 @@ const RootMutationType = new GraphQLObjectType({
                 })
             }
         },
-        addPropertyName: {
-            type: PropertyNameType,
+        addProductPropertyName: {
+            type: ProductPropertyNameType,
             args: {
                 productTypeId: { type: GraphQLInt },
                 name: { type: GraphQLString }
             },
             resolve: (_, args) => {
-                return propertyName.create({
+                return productPropertyName.create({
                     productType: args.productTypeId,
                     name: args.name
                 })
             }
         },
-        addPropertyValue: {
-            type: PropertyValueType,
+        addProductPropertyValue: {
+            type: ProductPropertyValueType,
             args: {
                 propertyNameId: { type: GraphQLInt },
                 value: { type: GraphQLString }
             },
             resolve: (_, args) => {
-                return propertyValue.create({
+                return productPropertyValue.create({
                     propertyName: args.propertyNameId,
                     value: args.value
                 })
@@ -292,7 +305,7 @@ const RootMutationType = new GraphQLObjectType({
                 name: { type: GraphQLString },
                 description: { type: new GraphQLNonNull(GraphQLString) },
                 price: { type: new GraphQLNonNull(GraphQLFloat) },
-                propertyValues: { type: new GraphQLList(GraphQLInt) }
+                productPropertyValues: { type: new GraphQLList(GraphQLInt) }
             },
             resolve: (_, args) => {
                 return product.create({
@@ -300,9 +313,9 @@ const RootMutationType = new GraphQLObjectType({
                     description: args.description,
                     price: args.price,
                     discount: 0,
-                    propertyValues: args.propertyValues
+                    productPropertyValues: args.productPropertyValues
                 }).then((product) => {
-                    product.setPropertyValues(args.propertyValues)
+                    product.setPropertyValues(args.productPropertyValues)
                     return product
                 })
             }
@@ -312,14 +325,14 @@ const RootMutationType = new GraphQLObjectType({
             args: {
                 productId: { type: new GraphQLNonNull(GraphQLInt) },
                 quantity: { type: new GraphQLNonNull(GraphQLInt) },
-                propertyValues: { type: new GraphQLList(GraphQLInt) }
+                productPropertyValues: { type: new GraphQLList(GraphQLInt) }
             },
             resolve: (_, args) => {
                 return stock.create({
                     productId: args.productId,
                     quantity: args.quantity
                 }).then((stock) => {
-                    stock.setPropertyValues(args.propertyValues)
+                    stock.setProductPropertyValues(args.productPropertyValues)
                     return stock
                 })
             }

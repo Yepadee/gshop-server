@@ -7,8 +7,10 @@ export default (sequelize, DataTypes) => {
     });
 
     ProductType.associate = (models) => {
-        ProductType.hasMany(models.PropertyName);
+        ProductType.hasMany(models.ProductPropertyName);
+        ProductType.hasMany(models.TypePropertyName);
         ProductType.hasMany(models.Product, { foreignKey: 'productTypeId' });
+        
     };
 
     return ProductType;

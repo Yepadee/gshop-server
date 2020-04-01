@@ -16,8 +16,12 @@ const db = {
     ProductType: sequelize.import('./productType'),
     Product: sequelize.import('./product'),
     Stock: sequelize.import('./stock'),
-    PropertyName: sequelize.import('./propertyName'),
-    PropertyValue: sequelize.import('./propertyValue')
+
+    ProductPropertyName: sequelize.import('./productPropertyName'),
+    ProductPropertyValue: sequelize.import('./productPropertyValue'),
+
+    TypePropertyName: sequelize.import('./typePropertyName'),
+    TypePropertyValue: sequelize.import('./typePropertyValue')
 };
 
 Object.keys(db).forEach((modelName) => {
@@ -34,32 +38,28 @@ sequelize.sync({force: true}).then(
         return db.ProductType.create({
             name: "clothing"
         }).then((productType) => {
-            productType.createPropertyName({
+            productType.createProductPropertyName({
                 name: 'colour'
-            }).then((propertyName) => {
-                propertyName.createPropertyValue({
-                    value: 'red'
-                });
-                propertyName.createPropertyValue({
-                    value: 'green'
-                });
-                propertyName.createPropertyValue({
-                    value: 'blue'
-                });
             });
-            productType.createPropertyName({
+            productType.createTypePropertyName({
                 name: 'size'
-            }).then((propertyName) => {
-                propertyName.createPropertyValue({
-                    value: 'small'
-                });
-                propertyName.createPropertyValue({
-                    value: 'medium'
-                });
-                propertyName.createPropertyValue({
-                    value: 'large'
-                });
             });
+            
+            db.TypePropertyValue.create({
+                value: 'S',
+                typePropertyNameId: 1
+            });
+
+            db.TypePropertyValue.create({
+                value: 'M',
+                typePropertyNameId: 1
+            });
+
+            db.TypePropertyValue.create({
+                value: 'L',
+                typePropertyNameId: 1
+            });
+
             _.times(10, () => {  
                 return db.Product.create({
                     name: Faker.commerce.product(),
@@ -69,27 +69,41 @@ sequelize.sync({force: true}).then(
                     catagory: 'hoodie',
                     productTypeId: 1
             }).then((product) => {
-                product.addPropertyValue(1)
-                product.addPropertyValue(2)
-                product.addPropertyValue(3)
-                product.addPropertyValue(4)
-                product.addPropertyValue(5)
-                product.addPropertyValue(6)
+                product.createProductPropertyValue({
+                    value: "red",
+                    productPropertyNameId: 1
+                });
+
+                product.createProductPropertyValue({
+                    value: "green",
+                    productPropertyNameId: 1
+                });
+
+                product.createProductPropertyValue({
+                    value: "blue",
+                    productPropertyNameId: 1
+                });
+
+                //Make a stock for each colour
+                product.createStock({
+                    quantity: Faker.commerce.price(),
+                }).then((stock) => {
+                    stock.addTypePropertyValue(1);
+                    return stock.addProductPropertyValue(3 * (product.id - 1) + 1)
+                });
 
                 product.createStock({
                     quantity: Faker.commerce.price(),
                 }).then((stock) => {
-                    //Make sure this is valid
-                    stock.addPropertyValue(2)
-                    stock.addPropertyValue(4)
-                })
+                    stock.addTypePropertyValue(2);
+                    return stock.addProductPropertyValue(3 * (product.id - 1) + 2)
+                });
 
                 return product.createStock({
                         quantity: Faker.commerce.price(),
                     }).then((stock) => {
-                        //Make sure this is valid
-                        stock.addPropertyValue(1)
-                        return stock.addPropertyValue(5)
+                        stock.addTypePropertyValue(3);
+                        return stock.addProductPropertyValue(3 * (product.id - 1) + 3)
                     })
                 });
             });

@@ -7,7 +7,8 @@ export default (sequelize, DataTypes) => {
 
     Stock.associate = (models) => {
         Stock.belongsTo(models.Product);
-        Stock.belongsToMany(models.PropertyValue, { through: 'StockProperties'});
+        Stock.hasMany(models.ProductPropertyValue);
+        Stock.belongsToMany(models.TypePropertyValue, { through: "stockTypePropertyValues" });
     };
     
     return Stock;
