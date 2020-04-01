@@ -70,13 +70,26 @@ sequelize.sync({force: true}).then(
                     productTypeId: 1
             }).then((product) => {
                 product.addPropertyValue(1)
+                product.addPropertyValue(2)
+                product.addPropertyValue(3)
                 product.addPropertyValue(4)
+                product.addPropertyValue(5)
+                product.addPropertyValue(6)
+
+                product.createStock({
+                    quantity: Faker.commerce.price(),
+                }).then((stock) => {
+                    //Make sure this is valid
+                    stock.addPropertyValue(2)
+                    stock.addPropertyValue(4)
+                })
+
                 return product.createStock({
                         quantity: Faker.commerce.price(),
                     }).then((stock) => {
                         //Make sure this is valid
                         stock.addPropertyValue(1)
-                        return stock.addPropertyValue(4)
+                        return stock.addPropertyValue(5)
                     })
                 });
             });
