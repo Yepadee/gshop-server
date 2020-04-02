@@ -34,18 +34,74 @@ const ProductTypeType = new GraphQLObjectType({
         },
         // TODO
         typePropertyNames: {
-            type: new GraphQLList(ProductPropertyNameType),
+            type: new GraphQLList(TypePropertyNameType),
             resolve: (productType) => {
-                return productType.getProductPropertyNames();
+                return productType.getTypePropertyNames();
             } 
         },
         typePropertyValues: {
-            type: new GraphQLList(ProductPropertyNameType),
+            type: new GraphQLList(TypePropertyNameType),
             resolve: (productType) => {
-                return productType.getProductPropertyNames();
+                return productType.getTypePropertyNames();
             } 
         }
     })
+});
+
+const TypePropertyNameType = new GraphQLObjectType({
+    name: 'TypePropertyName',
+    description: 'A property of a type of product',
+    fields: () => ({
+        id: {
+            type: GraphQLInt,
+            resolve: (propertyName) => {
+                return propertyName.id;
+            }
+        },
+        name: {
+            type: GraphQLString,
+            resolve: (propertyName) => {
+                return propertyName.name;
+            }
+        },
+        values: {
+            type: new GraphQLList(TypePropertyValueType),
+            resolve: (propertyName) => {
+                return propertyName.getTypePropertyValues();
+            }
+        },
+        productType: {
+            type: ProductTypeType,
+            resolve: (propertyName) => {
+                return propertyName.getProductType();
+            }
+        }
+    })
+});
+
+const TypePropertyValueType = new GraphQLObjectType({
+    name: 'TypePropertyValue',
+    description: 'A value a product type property may take',
+    fields: () => ({
+        id: {
+            type: GraphQLInt,
+            resolve: (propertyValue) => {
+                return propertyValue.id;
+            }
+        },
+        value: {
+            type: GraphQLString,
+            resolve: (propertyValue) => {
+                return propertyValue.value;
+            }
+        },
+        propertyName: {
+            type: ProductPropertyNameType,
+            resolve: (propertyValue) => {
+                return propertyValue.getTypePropertyName();
+            }
+        }
+    })   
 });
 
 const ProductPropertyNameType = new GraphQLObjectType({
@@ -187,6 +243,12 @@ const StockType = new GraphQLObjectType({
                 return stock.getProductPropertyValues();
             }
         },
+        typePropertyValues: {
+            type: new GraphQLList(TypePropertyValueType),
+            resolve: (stock) => {
+                return stock.getTypePropertyValues();
+            }
+        },
         product: {
             type: ProductType,
             resolve: (stock) => {
@@ -228,6 +290,26 @@ const RootQueryType = new GraphQLObjectType({
             },
             resolve: (root, args) => {
                 return db.models.productPropertyValue.findAll({where: args})
+            }
+        },
+        typePropertyNames: {
+            type: new GraphQLList(TypePropertyNameType),
+            args: {
+                id: { type: GraphQLInt },
+                name: { type: GraphQLString }
+            },
+            resolve: (root, args) => {
+                return db.models.typePropertyName.findAll({where: args})
+            }
+        },
+        typePropertyValues: {
+            type: new GraphQLList(TypePropertyValueType),
+            args: {
+                id: { type: GraphQLInt },
+                name: { type: GraphQLString }
+            },
+            resolve: (root, args) => {
+                return db.models.typePropertyValue.findAll({where: args})
             }
         },
         products: {
