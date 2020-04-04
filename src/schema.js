@@ -5,7 +5,8 @@ import {
     GraphQLList,
     GraphQLInt,
     GraphQLFloat,
-    GraphQLNonNull
+    GraphQLNonNull,
+    GraphQLID
 } from 'graphql';
 
 import db from './models';
@@ -14,6 +15,12 @@ const ProductTypeType = new GraphQLObjectType({
     name: 'ProductType',
     description: 'A type of product',
     fields: () => ({
+        id: {
+            type: GraphQLID,
+            resolve: (productType) => {
+                return productType.id;
+            }
+        },
         name: {
             type: GraphQLString,
             resolve: (productType) => {
@@ -53,7 +60,7 @@ const TypePropertyNameType = new GraphQLObjectType({
     description: 'A property of a type of product',
     fields: () => ({
         id: {
-            type: GraphQLInt,
+            type: GraphQLID,
             resolve: (propertyName) => {
                 return propertyName.id;
             }
@@ -84,7 +91,7 @@ const TypePropertyValueType = new GraphQLObjectType({
     description: 'A value a product type property may take',
     fields: () => ({
         id: {
-            type: GraphQLInt,
+            type: GraphQLID,
             resolve: (propertyValue) => {
                 return propertyValue.id;
             }
@@ -109,7 +116,7 @@ const ProductPropertyNameType = new GraphQLObjectType({
     description: 'A property of a product',
     fields: () => ({
         id: {
-            type: GraphQLInt,
+            type: GraphQLID,
             resolve: (propertyName) => {
                 return propertyName.id;
             }
@@ -140,7 +147,7 @@ const ProductPropertyValueType = new GraphQLObjectType({
     description: 'A value a product property may take',
     fields: () => ({
         id: {
-            type: GraphQLInt,
+            type: GraphQLID,
             resolve: (propertyValue) => {
                 return propertyValue.id;
             }
@@ -165,7 +172,7 @@ const ProductType = new GraphQLObjectType({
     description: 'A product for sale in the shop',
     fields: () => ({
         id: {
-            type: GraphQLInt,
+            type: GraphQLID,
             resolve: (product) => {
                 return product.id;
             }
@@ -226,7 +233,7 @@ const StockType = new GraphQLObjectType({
     description: 'The stock of a variant of product',
     fields: () => ({
         id: {
-            type: GraphQLInt,
+            type: GraphQLID,
             resolve: (product) => {
                 return product.id;
             }
@@ -265,7 +272,7 @@ const RootQueryType = new GraphQLObjectType({
         productTypes: {
             type: new GraphQLList(ProductTypeType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
@@ -275,7 +282,7 @@ const RootQueryType = new GraphQLObjectType({
         productPropertyNames: {
             type: new GraphQLList(ProductPropertyNameType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
@@ -285,7 +292,7 @@ const RootQueryType = new GraphQLObjectType({
         productPropertyValues: {
             type: new GraphQLList(ProductPropertyValueType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
@@ -295,7 +302,7 @@ const RootQueryType = new GraphQLObjectType({
         typePropertyNames: {
             type: new GraphQLList(TypePropertyNameType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
@@ -305,7 +312,7 @@ const RootQueryType = new GraphQLObjectType({
         typePropertyValues: {
             type: new GraphQLList(TypePropertyValueType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
             resolve: (root, args) => {
@@ -315,7 +322,7 @@ const RootQueryType = new GraphQLObjectType({
         products: {
             type: new GraphQLList(ProductType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 name: { type: GraphQLString },
                 description: { type: GraphQLString },
                 price: { type: GraphQLFloat },
@@ -329,7 +336,7 @@ const RootQueryType = new GraphQLObjectType({
         stock: {
             type: new GraphQLList(StockType),
             args: {
-                id: { type: GraphQLInt },
+                id: { type: GraphQLID },
                 quantity: { type: GraphQLInt },
                 propertyValues: { type: new GraphQLList(GraphQLInt) }
             },
@@ -344,79 +351,155 @@ const RootMutationType = new GraphQLObjectType({
     name: 'Mutation',
     description: 'Root mutation',
     fields: () => ({
+        //ADD
         addProductType: {
             type: ProductTypeType,
             args: {
-                name: { type: GraphQLString }
+                name: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve: (_, args) => {
-                return productType.create({
+                return db.models.productType.create({
                     name: args.name
                 })
             }
         },
-        addProductPropertyName: {
-            type: ProductPropertyNameType,
+
+        addTypePropertyName: {
+            type: TypePropertyNameType,
             args: {
-                productTypeId: { type: GraphQLInt },
-                name: { type: GraphQLString }
+                productTypeId: { type: new GraphQLNonNull(GraphQLID) },
+                name: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve: (_, args) => {
-                return productPropertyName.create({
+                return db.models.typePropertyName.create({
                     productType: args.productTypeId,
                     name: args.name
                 })
             }
         },
-        addProductPropertyValue: {
-            type: ProductPropertyValueType,
+
+        addTypePropertyValue: {
+            type: TypePropertyValueType,
             args: {
-                propertyNameId: { type: GraphQLInt },
-                value: { type: GraphQLString }
+                propertyNameId: { type: new GraphQLNonNull(GraphQLID) },
+                value: { type: new GraphQLNonNull(GraphQLString) }
             },
             resolve: (_, args) => {
-                return productPropertyValue.create({
-                    propertyName: args.propertyNameId,
+                return db.models.typePropertyValue.create({
+                    typePropertyNameId: args.propertyNameId,
                     value: args.value
                 })
             }
         },
+
+        addProductPropertyName: {
+            type: ProductPropertyNameType,
+            args: {
+                productTypeId: { type: new GraphQLNonNull(GraphQLID) },
+                name: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: (_, args) => {
+                return db.models.productPropertyName.create({
+                    productType: args.productTypeId,
+                    name: args.name
+                })
+            }
+        },
+
         addProduct: {
             type: ProductType,
             args: {
-                name: { type: GraphQLString },
+                name: { type: new GraphQLNonNull(GraphQLString) },
                 description: { type: new GraphQLNonNull(GraphQLString) },
                 price: { type: new GraphQLNonNull(GraphQLFloat) },
-                productPropertyValues: { type: new GraphQLList(GraphQLInt) }
+                catagory: { type: new GraphQLNonNull(GraphQLString) },
+                productTypeId: { type: new GraphQLNonNull(GraphQLID) }
             },
             resolve: (_, args) => {
-                return product.create({
+                return db.models.product.create({
                     name: args.name,
                     description: args.description,
                     price: args.price,
                     discount: 0,
-                    productPropertyValues: args.productPropertyValues
-                }).then((product) => {
-                    product.setPropertyValues(args.productPropertyValues)
-                    return product
-                })
+                    productType: args.productTypeId
+                });
             }
         },
+
+        addProductPropertyValue: {
+            type: ProductPropertyValueType,
+            args: {
+                productId: { type: new GraphQLNonNull(GraphQLID) },
+                propertyNameId: { type: new GraphQLNonNull(GraphQLID) },
+                value: { type: new GraphQLNonNull(GraphQLString) }
+            },
+            resolve: (_, args) => {
+                return db.models.propertyValue.create({
+                    productId: args.productId,
+                    propertyNameId: args.propertyNameId,
+                    value: valueName
+                });
+            }
+        },
+
         addStock: {
             type: StockType,
             args: {
-                productId: { type: new GraphQLNonNull(GraphQLInt) },
+                productId: { type: new GraphQLNonNull(GraphQLID) },
                 quantity: { type: new GraphQLNonNull(GraphQLInt) },
-                productPropertyValues: { type: new GraphQLList(GraphQLInt) }
+                productPropertyValues: { type: new GraphQLList(GraphQLID) },
+                typePropertyValues: { type: new GraphQLList(GraphQLID) }
             },
             resolve: (_, args) => {
-                return stock.create({
+                return db.models.stock.create({
                     productId: args.productId,
                     quantity: args.quantity
                 }).then((stock) => {
                     stock.setProductPropertyValues(args.productPropertyValues)
+                    stock.setTypePropertyValues(args.typePropertyValues)
                     return stock
                 })
+            }
+        },
+
+        //DELETE
+        removeProductType: {
+            type: ProductTypeType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.productType.destroy({ where: args });
+            }
+        },
+
+        removeTypePropertyName: {
+            type: TypePropertyNameType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.typeProperName.destroy({ where: args });
+            }
+        },
+
+        removeProduct: {
+            type: ProductType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.product.destroy({ where: args });
+            }
+        },
+
+        removeStock: {
+            type: StockType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.stock.destroy({ where: args });
             }
         }
     })

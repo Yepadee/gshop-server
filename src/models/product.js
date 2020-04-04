@@ -19,17 +19,13 @@ export default (sequelize, DataTypes) => {
         catagory: {
             type: DataTypes.STRING,
             allowNull: false
-        },
-        productTypeId: {
-            type: DataTypes.INTEGER,
-            allowNull: false
         }
     });
 
     Product.associate = (models) => {
-        Product.hasMany(models.Stock);
+        Product.hasMany(models.Stock, { onDelete: 'cascade' });
         Product.belongsTo(models.ProductType, { foreignKey: 'productTypeId' });
-        Product.hasMany(models.ProductPropertyValue);
+        Product.hasMany(models.ProductPropertyValue, { onDelete: 'cascade' });
     };
 
 
