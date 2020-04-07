@@ -479,7 +479,27 @@ const RootMutationType = new GraphQLObjectType({
                 id: { type: new GraphQLNonNull(GraphQLID) }
             },
             resolve: (_, args) => {
-                return db.models.typeProperName.destroy({ where: args });
+                return db.models.typePropertyName.destroy({ where: args });
+            }
+        },
+
+        removeTypePropertyValue: {
+            type: TypePropertyValueType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.typePropertyValue.destroy({ where: args });
+            }
+        },
+
+        removeProductPropertyName: {
+            type: ProductPropertyNameType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.productPropertyName.destroy({ where: args });
             }
         },
 
@@ -490,6 +510,16 @@ const RootMutationType = new GraphQLObjectType({
             },
             resolve: (_, args) => {
                 return db.models.product.destroy({ where: args });
+            }
+        },
+
+        removeProductPropertyValue: {
+            type: ProductPropertyValueType,
+            args: {
+                id: { type: new GraphQLNonNull(GraphQLID) }
+            },
+            resolve: (_, args) => {
+                return db.models.productPropertyValue.destroy({ where: args });
             }
         },
 
