@@ -11,6 +11,32 @@ import {
 
 import db from './models';
 
+
+import {createError} from 'apollo-errors';
+import JWT from 'jsonwebtoken';
+
+const AuthorizationError = createError('AuthorizationError', {
+    message: 'You are not authorized!'
+});
+
+const checkPermsAndResolve = (context, expectedPerms, model, args) => {
+    const token = context.headers.authorization;
+    try {
+        const jwtPayload = JWT.verify(token.replace('Bearer ', ''), 'secret-key');
+        
+        const hasPerms = jwtPayload.user.perms === expectedPerms;
+
+        console.log(jwtPayload.perms);
+        if (hasPerms || expectedPerms === '') {
+            return model.findAll({where: args});
+        } else {
+            throw new AuthorizationError();
+        }
+    } catch (err) {
+        throw err;
+    }
+};
+
 const ProductTypeType = new GraphQLObjectType({
     name: 'ProductType',
     description: 'A type of product',
@@ -275,9 +301,12 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
-            resolve: (root, args) => {
-                return db.models.productType.findAll({where: args})
-            }
+            resolve: (root, args, context) => checkPermsAndResolve(
+                    context,
+                    'admin',
+                    db.models.productType,
+                    args
+                )
         },
         productPropertyNames: {
             type: new GraphQLList(ProductPropertyNameType),
@@ -531,7 +560,7 @@ const RootMutationType = new GraphQLObjectType({
             resolve: (_, args) => {
                 return db.models.stock.destroy({ where: args });
             }
-        }
+        },
     })
 });
 

@@ -21,7 +21,9 @@ const db = {
     ProductPropertyValue: sequelize.import('./productPropertyValue'),
 
     TypePropertyName: sequelize.import('./typePropertyName'),
-    TypePropertyValue: sequelize.import('./typePropertyValue')
+    TypePropertyValue: sequelize.import('./typePropertyValue'),
+
+    User: sequelize.import('./user'),
 };
 
 Object.keys(db).forEach((modelName) => {
@@ -38,6 +40,13 @@ sequelize.sync({force: true}).then(
         return db.ProductType.create({
             name: "clothing"
         }).then((productType) => {
+            db.User.create({
+                username: "Yepadee",
+                email: "jh17437@bristol.ac.uk",
+                password: "meme",
+                perms: "admin"
+            });
+            
             productType.createProductPropertyName({
                 name: 'colour'
             });
@@ -60,7 +69,7 @@ sequelize.sync({force: true}).then(
                 typePropertyNameId: 1
             });
 
-            _.times(10, () => {  
+            _.times(2, () => {  
                 return db.Product.create({
                     name: Faker.commerce.product(),
                     description: Faker.commerce.productAdjective(),
@@ -110,5 +119,4 @@ sequelize.sync({force: true}).then(
         }) 
     }
 );
-
 export default sequelize;
