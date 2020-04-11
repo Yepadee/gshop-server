@@ -10,32 +10,8 @@ import {
 } from 'graphql';
 
 import db from './models';
+import {checkPermsAndResolve} from './security'
 
-
-import {createError} from 'apollo-errors';
-import JWT from 'jsonwebtoken';
-
-const AuthorizationError = createError('AuthorizationError', {
-    message: 'You are not authorized!'
-});
-
-const checkPermsAndResolve = (context, expectedPerms, model, args) => {
-    const token = context.headers.authorization;
-    try {
-        const jwtPayload = JWT.verify(token.replace('Bearer ', ''), 'secret-key');
-        
-        const hasPerms = jwtPayload.user.perms === expectedPerms;
-
-        console.log(jwtPayload.perms);
-        if (hasPerms || expectedPerms === '') {
-            return model.findAll({where: args});
-        } else {
-            throw new AuthorizationError();
-        }
-    } catch (err) {
-        throw err;
-    }
-};
 
 const ProductTypeType = new GraphQLObjectType({
     name: 'ProductType',
@@ -303,7 +279,7 @@ const RootQueryType = new GraphQLObjectType({
             },
             resolve: (root, args, context) => checkPermsAndResolve(
                     context,
-                    'admin',
+                    ['admin'],
                     db.models.productType,
                     args
                 )
