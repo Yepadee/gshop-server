@@ -280,8 +280,7 @@ const RootQueryType = new GraphQLObjectType({
             resolve: (root, args, context) => checkPermsAndResolve(
                     context,
                     ['admin'],
-                    db.models.productType,
-                    args
+                    () => { return db.models.productType.findAll({where: args}) }
                 )
         },
         productPropertyNames: {

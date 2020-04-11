@@ -41,9 +41,9 @@ sequelize.sync({force: true}).then(
             name: "clothing"
         }).then((productType) => {
             db.User.create({
-                username: "Yepadee",
-                email: "jh17437@bristol.ac.uk",
-                password: "meme",
+                username: "Admin",
+                email: "",
+                password: "password",
                 perms: "admin"
             });
             
