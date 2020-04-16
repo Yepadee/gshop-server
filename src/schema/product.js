@@ -1,5 +1,7 @@
 import { groupBy  } from 'lodash';
 
+import db from '../models';
+
 const typeDef = `
 type Product {
     id: ID!
@@ -10,7 +12,7 @@ type Product {
     catagory: String!
     productType: ProductType!
     stock: [Stock]
-    productProperties: [ProductPropertyValue]
+    productProperties: [ProductProperty]
 }
 
 type ProductProperty {
@@ -26,7 +28,18 @@ const resolvers = {
         },
         productProperties: (product) => {
             return product.getProductPropertyValues().then( (propertyValues => {
-                return groupBy(propertyValues, propertyValue => propertyValue.getProductPopertyName().name);
+                const grouped = groupBy(propertyValues, propertyValue => propertyValue.productPropertyNameId);
+                return Object.keys(grouped).map( async (propertyNameId) => {
+                    const productName = await db.models.productPropertyName.findOne({ where: {id: propertyNameId} });
+                    const productProperty = {
+                        name: productName.name,
+                        values: grouped[propertyNameId]
+                    } ;
+                    console.log(productProperty);
+
+                    return productProperty;
+                  });
+                
             }));
         }
     }
