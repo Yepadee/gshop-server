@@ -1,5 +1,0 @@
-type ProductPropertyValue {
-    id: ID!
-    value: String!
-    propertyName: ProductPropertyName!
-}

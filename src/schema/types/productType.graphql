@@ -1,7 +1,0 @@
-type ProductType {
-    id: ID!
-    name: String!
-    products: [ProductType]
-    productPropertyNames: [ProductPropertyName]
-    typePropertyNames: [TypePropertyName]
-}

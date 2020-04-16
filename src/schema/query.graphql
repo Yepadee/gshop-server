@@ -1,9 +1,0 @@
-type Query {
-    productTypes(id: ID): [ProductType]
-    productPropertyNames(id: ID): [ProductPropertyName]
-    productPropertyValues(id: ID): [ProductPropertyValue]
-    typePropertyNames(id: ID): [TypePropertyName]
-    typePropertyValues(id: ID): [TypePropertyValue]
-    products(id: ID): [Product]
-    stock(id: ID): [Stock]
-}
