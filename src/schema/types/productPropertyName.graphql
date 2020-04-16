@@ -1,0 +1,6 @@
+type ProductPropertyName {
+    id: ID!
+    name: String!
+    values: [ProductPropertyValue]
+    productType: ProductType
+}

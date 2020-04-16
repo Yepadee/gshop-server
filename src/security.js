@@ -8,11 +8,29 @@ const AuthorizationError = createError('AuthorizationError', {
     message: 'You are not authorized!'
 });
 
+const getTokenFromCookie = (req, res, next) => {
+    const token = req.body.access_token || req.query.access_token || req.headers['x-access-token'] || req.cookies.access_token;
+
+    if (token)
+    {
+        req.headers.authorization = token;
+        next();
+    }
+    else
+    {
+        res.status(403);
+        res.json({
+            error: "You do not have rights to visit this page"
+        });
+    }
+}
+
 const checkPermsAndResolve = (context, expectedPerms, resolver) => {
     const token = context.headers.authorization;
     try {
         const jwtPayload = JWT.verify(token.replace('Bearer ', ''), 'secret-key');
-        const hasPerms = expectedPerms.includes(jwtPayload.user.perms);
+        const user = jwtPayload.user;
+        const hasPerms = expectedPerms.includes(user.perms);
 
         if (hasPerms || expectedPerms.length == 0) {
             return resolver();
@@ -45,4 +63,4 @@ const login = (req, res) => {
     });
 };
 
-export {checkPermsAndResolve, login};
+export {checkPermsAndResolve, login, getTokenFromCookie};

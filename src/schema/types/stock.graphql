@@ -1,0 +1,7 @@
+type Stock {
+    id: ID!
+    quantity: Int!
+    productPropertyValues: [ProductPropertyValue]
+    typePropertyValues: [TypePropertyValue]
+    product: [ProductType]
+}

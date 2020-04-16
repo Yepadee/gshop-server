@@ -3,59 +3,77 @@ import GraphHTTP from 'express-graphql';
 
 import HTTPS from 'https';
 
-import FS from 'fs'
-import Path from 'path';
+import fs from 'fs'
+import path from 'path';
 
 import CookieParser from 'cookie-parser';
 import BodyParser from 'body-parser';
 
 import Schema from './schema';
 
-import {login} from './security'
+import {login, getTokenFromCookie} from './security';
+
+import { ApolloServer, gql } from 'apollo-server';
+
+import db from './models';
 
 
+const readSchema = () => {
+    var schema = '';
+    schema += fs.readdirSync('src/schema/').reduce( (acc, filename) => {
+        if (path.extname(filename) === '.graphql') {
+            const text = fs.readFileSync('src/schema/' + filename, 'utf8');
+            return acc + text + "\n";
+        }
+        return acc;
+    }, '');
 
+    schema += fs.readdirSync('src/schema/types/').reduce( (acc, filename) => {
+        if (path.extname(filename) === '.graphql') {
+            const text = fs.readFileSync('src/schema/types/' + filename, 'utf8');
+            return acc + text + "\n";
+        }
+        return acc;
+    }, '');
+    return schema;
+}
 
-const PORT = 3000;
+const typeDefs = gql`${readSchema()}`;
 
-const app = Express();
-
-//const jwtMiddleware = ExpressJWT({ secret: 'secret-key'});
-
-app.use(BodyParser());
-app.use(CookieParser());
-
-// THIS WILL BE REMOVED ONCE AUTH TOKEN IS PUT IN EACH REQUEST.
-const getTokenFromCookie = (req, res, next) => {
-    const token = req.body.access_token || req.query.access_token || req.headers['x-access-token'] || req.cookies.access_token;
-
-    if (token)
-    {
-        req.headers.authorization = token;
-        next();
+const resolvers = {
+    Query: {
+        productTypes: (_, args) => {
+            return db.models.productType.findAll({where: args})
+        },
+        productPropertyNames: (_, args) => {
+            return db.models.productPropertyName.findAll({where: args})
+        },
+        productPropertyValues: (_, args) => {
+            return db.models.productPropertyValue.findAll({where: args})
+        },
+        typePropertyNames: (_, args) => {
+            return db.models.typePropertyName.findAll({where: args})
+        },
+        typePropertyValues: (_, args) => {
+            return db.models.typePropertyValue.findAll({where: args})
+        },
+        products: (_, args) => {
+            return db.models.product.findAll({where: args})
+        },
+        stock: (_, args) => {
+            return db.models.stock.findAll({where: args})
+        }
+    },
+    ProductType: {
+        products: (productType) => {
+            return productType.getProducts();
+        },
     }
 }
 
-app.use('/graphql', getTokenFromCookie);
+const PORT = 3000;
+const server = new ApolloServer({ typeDefs, resolvers });
 
-app.use('/graphql', GraphHTTP({
-    schema: Schema,
-    pretty: true,
-    graphiql: true
-}));
-
-app.get('/login', login);
-
-
-// app.listen(PORT, () => {
-//     console.log(`App listening on port ${PORT}`);
-// });
-
-const httpsOptions = {
-    cert: FS.readFileSync(Path.join(__dirname, 'ssl', 'server.crt')),
-    key: FS.readFileSync(Path.join(__dirname, 'ssl', 'server.key'))
-}
-
-HTTPS.createServer(httpsOptions, app).listen(PORT, () => {
-    console.log(`App listening on port ${PORT}`);
-});
+server.listen({port:PORT}).then(({ url }) => {
+    console.log(`🚀  Server ready at ${url}`);
+  });

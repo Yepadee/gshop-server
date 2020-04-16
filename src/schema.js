@@ -41,14 +41,7 @@ const ProductTypeType = new GraphQLObjectType({
                 return productType.getProductPropertyNames();
             } 
         },
-        // TODO
         typePropertyNames: {
-            type: new GraphQLList(TypePropertyNameType),
-            resolve: (productType) => {
-                return productType.getTypePropertyNames();
-            } 
-        },
-        typePropertyValues: {
             type: new GraphQLList(TypePropertyNameType),
             resolve: (productType) => {
                 return productType.getTypePropertyNames();
@@ -277,11 +270,9 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
-            resolve: (root, args, context) => checkPermsAndResolve(
-                    context,
-                    ['admin'],
-                    () => { return db.models.productType.findAll({where: args}) }
-                )
+            resolve: (_, args) => {
+                return db.models.productType.findAll({where: args})
+            }
         },
         productPropertyNames: {
             type: new GraphQLList(ProductPropertyNameType),
@@ -289,7 +280,7 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
-            resolve: (root, args) => {
+            resolve: (_, args) => {
                 return db.models.productPropertyName.findAll({where: args})
             }
         },
@@ -299,7 +290,7 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
-            resolve: (root, args) => {
+            resolve: (_, args) => {
                 return db.models.productPropertyValue.findAll({where: args})
             }
         },
@@ -309,7 +300,7 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
-            resolve: (root, args) => {
+            resolve: (_, args) => {
                 return db.models.typePropertyName.findAll({where: args})
             }
         },
@@ -319,7 +310,7 @@ const RootQueryType = new GraphQLObjectType({
                 id: { type: GraphQLID },
                 name: { type: GraphQLString }
             },
-            resolve: (root, args) => {
+            resolve: (_, args) => {
                 return db.models.typePropertyValue.findAll({where: args})
             }
         },
@@ -333,7 +324,7 @@ const RootQueryType = new GraphQLObjectType({
                 discount: { type: GraphQLFloat },
                 catagory: { type: GraphQLString }
             },
-            resolve: (root, args) => {
+            resolve: (_, args) => {
                 return db.models.product.findAll({where: args})
             }
         },
@@ -344,7 +335,7 @@ const RootQueryType = new GraphQLObjectType({
                 quantity: { type: GraphQLInt },
                 propertyValues: { type: new GraphQLList(GraphQLInt) }
             },
-            resolve: (root, args) => {
+            resolve: (_, args) => {
                 return db.models.stock.findAll({where: args})
             }
         }
