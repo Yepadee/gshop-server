@@ -17,28 +17,9 @@ import { ApolloServer, gql } from 'apollo-server';
 
 import db from './models';
 
+import schema from './schema';
 
-const readSchema = () => {
-    var schema = '';
-    schema += fs.readdirSync('src/schema/').reduce( (acc, filename) => {
-        if (path.extname(filename) === '.graphql') {
-            const text = fs.readFileSync('src/schema/' + filename, 'utf8');
-            return acc + text + "\n";
-        }
-        return acc;
-    }, '');
-
-    schema += fs.readdirSync('src/schema/types/').reduce( (acc, filename) => {
-        if (path.extname(filename) === '.graphql') {
-            const text = fs.readFileSync('src/schema/types/' + filename, 'utf8');
-            return acc + text + "\n";
-        }
-        return acc;
-    }, '');
-    return schema;
-}
-
-const typeDefs = gql`${readSchema()}`;
+const typeDefs = gql`${schema}`;
 
 const resolvers = {
     Query: {
