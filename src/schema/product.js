@@ -1,3 +1,5 @@
+import { groupBy  } from 'lodash';
+
 const typeDef = `
 type Product {
     id: ID!
@@ -24,10 +26,7 @@ const resolvers = {
         },
         productProperties: (product) => {
             return product.getProductPropertyValues().then( (propertyValues => {
-                console.log(propertyValues.reduce((r, a) => {
-                    r[a.productPropertyNameId] = [...r[a.productPropertyNameId] || [], a];
-                    return r;
-                   }, {}));
+                return groupBy(propertyValues, propertyValue => propertyValue.getProductPopertyName().name);
             }));
         }
     }
