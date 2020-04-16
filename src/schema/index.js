@@ -57,9 +57,9 @@ type Mutation {
     addTypePropertyName(parentId: ID!, name: String!): TypePropertyName
     addTypePropertyValue(parentId: ID!, value: String!): TypePropertyValue
     addProductPropertyName(parentId: ID!, name: String!): ProductPropertyName
-    addProduct(parentId: ID!, name: String!, description: String, price: Float, catagory: String!): Product
-    addProductPropertyValue(productId: ID!, productPropertyNameId: ID!, value: String!): ProductPropertyValue
-    addStock(parentId: ID!, productPropertyValueIds: [ID], typePropertyValueIds: [ID]): Stock
+    addProduct(parentId: ID!, name: String!, description: String, price: Float!, catagory: String): Product
+    addProductPropertyValue(parentId: ID!, productId: ID!, value: String!): ProductPropertyValue
+    addStock(parentId: ID!, productPropertyValueIds: [ID], typePropertyValueIds: [ID], quantity: Int): Stock
 
     removeProductType(id: ID): ProductType
     removeTypePropertyName(id: ID): TypePropertyName
@@ -104,7 +104,7 @@ const resolvers = {
 
         addTypePropertyName: (_, args) => {
             return db.models.typePropertyName.create({
-                productType: args.parentId,
+                productTypeId: args.parentId,
                 name: args.name
             })
         },
@@ -118,7 +118,7 @@ const resolvers = {
 
         addProductPropertyName:  (_, args) => {
             return db.models.productPropertyName.create({
-                productType: args.parentId,
+                productTypeId: args.parentId,
                 name: args.name
             })
         },
@@ -130,27 +130,28 @@ const resolvers = {
                 price: args.price,
                 discount: 0,
                 catagory: args.catagory,
-                productType: args.productTypeId
+                productTypeId: args.parentId
             });
         },
 
         addProductPropertyValue:  (_, args) => {
-            return db.models.propertyValue.create({
+            return db.models.productPropertyValue.create({
                 productId: args.productId,
-                propertyNameId: args.productPropertyNameId,
+                productPropertyNameId: args.parentId,
                 value: args.value
             });
         },
-
-        addStock:  (_, args) => {
-            return db.models.stock.create({
+        //TODO: Validate
+        addStock:  async (_, args) => {
+            const stock = await db.models.stock.create({
                 productId: args.parentId,
                 quantity: args.quantity
-            }).then((stock) => {
-                stock.setProductPropertyValues(args.productPropertyValueIds)
-                stock.setTypePropertyValues(args.typePropertyValueIds)
-                return stock
-            })
+            });
+
+            await stock.setProductPropertyValues(args.productPropertyValueIds);
+            await stock.setTypePropertyValues(args.typePropertyValueIds);
+
+            return stock
         },
 
         //DELETE

@@ -2,7 +2,8 @@ export default (sequelize, DataTypes) => {
     const ProductType = sequelize.define('productType', {
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: "unique"
         }
     });
 

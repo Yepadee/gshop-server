@@ -2,7 +2,13 @@ export default (sequelize, DataTypes) => {
     const TypePropertyName = sequelize.define('typePropertyName', {
         name: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: "compositeKey"
+        },
+        productTypeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false,
+            unique: "compositeKey"
         }
     });
 

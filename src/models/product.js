@@ -19,6 +19,10 @@ export default (sequelize, DataTypes) => {
         catagory: {
             type: DataTypes.STRING,
             allowNull: false
+        },
+        productTypeId: {
+            type: DataTypes.INTEGER,
+            allowNull: false
         }
     });
 

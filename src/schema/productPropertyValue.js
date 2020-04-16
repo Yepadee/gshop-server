@@ -1,6 +1,7 @@
 const typeDef = `
 type ProductPropertyValue {
     id: ID!
+    name: String!
     value: String!
     propertyName: ProductPropertyName!
 }
@@ -9,8 +10,12 @@ type ProductPropertyValue {
 const resolvers = {
     ProductPropertyValue: {
         propertyName: (productPropertyValue) => {
-            return productPropertyValue.getPropertyName();
-        }
+            return productPropertyValue.getProductPropertyName();
+        },
+        name: async (productPropertyValue) => {
+            const propertyName = await productPropertyValue.getProductPropertyName({ attributes: ['name'] });
+            return propertyName.name;
+        },
     }
 };
 

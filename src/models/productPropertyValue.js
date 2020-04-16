@@ -2,15 +2,18 @@ export default (sequelize, DataTypes) => {
     const ProductPropertyValue = sequelize.define('productPropertyValue', {
         productId: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            unique: "compositeKey"
         },
         productPropertyNameId: {
             type: DataTypes.INTEGER,
-            allowNull: false
+            allowNull: false,
+            unique: "compositeKey"
         },
         value: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            unique: "compositeKey"
         }
 
     });
