@@ -51,6 +51,26 @@ type Query {
 }
 `;
 
+const Mutation = `
+type Mutation {
+    addProductType(name: String!): ProductType
+    addTypePropertyName(parentId: ID!, name: String!): TypePropertyName
+    addTypePropertyValue(parentId: ID!, value: String!): TypePropertyValue
+    addProductPropertyName(parentId: ID!, name: String!): ProductPropertyName
+    addProduct(parentId: ID!, name: String!, description: String, price: Float, catagory: String!): Product
+    addProductPropertyValue(productId: ID!, productPropertyNameId: ID!, value: String!): ProductPropertyValue
+    addStock(parentId: ID!, productPropertyValueIds: [ID], typePropertyValueIds: [ID]): Stock
+
+    removeProductType(id: ID): ProductType
+    removeTypePropertyName(id: ID): TypePropertyName
+    removeTypePropertyValue(id: ID): TypePropertyValue
+    removeProductPropertyName(id: ID): ProductPropertyName
+    removeProduct(id: ID): Product
+    removeProductPropertyValue(id: ID): ProductPropertyValue
+    removeStock(id: ID): Stock
+}
+`;
+
 const resolvers = {
     Query: {
         productTypes: (_, args) => {
@@ -75,11 +95,99 @@ const resolvers = {
             return db.models.stock.findAll({ where: args })
         }
     },
+    Mutation: {
+        addProductType: (_, args) => {
+            return db.models.productType.create({
+                name: args.name
+            })
+        },
+
+        addTypePropertyName: (_, args) => {
+            return db.models.typePropertyName.create({
+                productType: args.parentId,
+                name: args.name
+            })
+        },
+
+        addTypePropertyValue: (_, args) => {
+            return db.models.typePropertyValue.create({
+                typePropertyNameId: args.parentId,
+                value: args.value
+            })
+        },
+
+        addProductPropertyName:  (_, args) => {
+            return db.models.productPropertyName.create({
+                productType: args.parentId,
+                name: args.name
+            })
+        },
+
+        addProduct: (_, args) => {
+            return db.models.product.create({
+                name: args.name,
+                description: args.description,
+                price: args.price,
+                discount: 0,
+                catagory: args.catagory,
+                productType: args.productTypeId
+            });
+        },
+
+        addProductPropertyValue:  (_, args) => {
+            return db.models.propertyValue.create({
+                productId: args.productId,
+                propertyNameId: args.productPropertyNameId,
+                value: args.value
+            });
+        },
+
+        addStock:  (_, args) => {
+            return db.models.stock.create({
+                productId: args.parentId,
+                quantity: args.quantity
+            }).then((stock) => {
+                stock.setProductPropertyValues(args.productPropertyValueIds)
+                stock.setTypePropertyValues(args.typePropertyValueIds)
+                return stock
+            })
+        },
+
+        //DELETE
+        removeProductType: (_, args) => {
+            return db.models.productType.destroy({ where: args });
+        },
+
+        removeTypePropertyName: (_, args) => {
+            return db.models.typePropertyName.destroy({ where: args });
+        },
+
+        removeTypePropertyValue: (_, args) => {
+            return db.models.typePropertyValue.destroy({ where: args });
+        },
+
+        removeProductPropertyName: (_, args) => {
+            return db.models.productPropertyName.destroy({ where: args });
+        },
+
+        removeProduct: (_, args) => {
+            return db.models.product.destroy({ where: args });
+        },
+
+        removeProductPropertyValue: (_, args) => {
+            return db.models.productPropertyValue.destroy({ where: args });
+        },
+
+        removeStock: (_, args) => {
+            return db.models.stock.destroy({ where: args });
+        }
+    }
 };
 
 const schema = makeExecutableSchema({
     typeDefs: [
         Query,
+        Mutation,
         Product,
         ProductPropertyName,
         ProductPropertyValue,
