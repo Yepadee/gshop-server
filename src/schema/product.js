@@ -8,7 +8,12 @@ type Product {
     catagory: String!
     productType: ProductType!
     stock: [Stock]
-    productPropertyValues: [ProductPropertyValue]
+    productProperties: [ProductPropertyValue]
+}
+
+type ProductProperty {
+    name: String!
+    values: [ProductPropertyValue]
 }
 `;
 
@@ -17,6 +22,14 @@ const resolvers = {
         stock: (product) => {
             return product.getStocks();
         },
+        productProperties: (product) => {
+            return product.getProductPropertyValues().then( (propertyValues => {
+                console.log(propertyValues.reduce((r, a) => {
+                    r[a.productPropertyNameId] = [...r[a.productPropertyNameId] || [], a];
+                    return r;
+                   }, {}));
+            }));
+        }
     }
 };
 
