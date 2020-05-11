@@ -1,10 +1,11 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryColumn, Column, BeforeInsert} from "typeorm";
+import * as uuidv4 from 'uuid/v4';
 
 @Entity()
-export class User {
+export class ProductType {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn("uuid")
+    id: string;
 
     @Column()
     firstName: string;
@@ -14,5 +15,10 @@ export class User {
 
     @Column()
     age: number;
+
+    @BeforeInsert()
+    addId() {
+        this.id = uuidv4();
+    }
 
 }
