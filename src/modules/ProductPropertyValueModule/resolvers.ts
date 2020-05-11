@@ -1,4 +1,4 @@
-import { ProductProvider } from "../../providers/product.provider";
+import { ProductProvider } from "../../providers/productPropertyValue.provider";
 
 export default {
     Query: {
