@@ -26,7 +26,7 @@ export class Product {
     @OneToMany(type => Stock, stock => stock.product)
     stock: Stock[];
 
-    @OneToMany(type => ProductPropertyValue, productPropertyValue => productPropertyValue.products)
+    @OneToMany(type => ProductPropertyValue, productPropertyValue => productPropertyValue.product)
     productPropertyValues: ProductPropertyValue[];
 
 }

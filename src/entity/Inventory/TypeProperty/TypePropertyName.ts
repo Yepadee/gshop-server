@@ -1,4 +1,6 @@
-import {Entity, PrimaryGeneratedColumn, Column} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+
+import {ProductType} from "../ProductType";
 
 @Entity()
 export class TypePropertyName {
@@ -7,6 +9,9 @@ export class TypePropertyName {
     id: number;
 
     @Column("varchar", {length: 255})
-    name: string; 
+    name: string;
+
+    @ManyToOne(type => ProductType, productType => productType.typePropertyNames)
+    productType: ProductType;
 
 }

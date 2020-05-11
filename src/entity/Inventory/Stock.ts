@@ -2,7 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable
 
 import {Product} from "./Product";
 import { ProductPropertyValue } from "./ProductProperty/ProductPropertyValue";
-import { TypePropertyValue } from "./ProductProperty/TypePropertyValue";
+import { TypePropertyValue } from "./TypeProperty/TypePropertyValue";
 
 @Entity()
 export class Stock {
