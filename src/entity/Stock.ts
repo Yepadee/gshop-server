@@ -16,10 +16,10 @@ export class Stock {
     product: Product;
 
     @ManyToMany(() => ProductPropertyValue)
-    @JoinTable()
+    @JoinTable({name: "stock_product_properties"})
     productPropertyValues: ProductPropertyValue[];
 
     @ManyToMany(() => TypePropertyValue)
-    @JoinTable()
+    @JoinTable({name: "stock_type_properties"})
     typePropertyValues: TypePropertyValue[];
 }

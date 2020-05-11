@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
 
-import {ProductType} from "../ProductType";
+import { ProductType } from "@entity/ProductType";
+import { TypePropertyValue } from "./TypePropertyValue";
 
 @Entity()
 export class TypePropertyName {
@@ -13,5 +14,8 @@ export class TypePropertyName {
 
     @ManyToOne(() => ProductType, productType => productType.typePropertyNames, { cascade: true })
     productType: ProductType;
+
+    @OneToMany(() => TypePropertyValue, propertyValue => propertyValue.propertyName, { cascade: true })
+    propertyValues: ProductType;
 
 }

@@ -1,6 +1,8 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
 
-import {Product} from "../Product";
+import {Product} from "@entity/Product";
+
+import {ProductPropertyName} from "./ProductPropertyName";
 
 @Entity()
 export class ProductPropertyValue {
@@ -13,5 +15,8 @@ export class ProductPropertyValue {
 
     @ManyToOne(() => Product, product => product.productPropertyValues)
     product: Product;
+
+    @ManyToOne(() => ProductPropertyName, productPropertyName => productPropertyName.propertyValues)
+    propertyName: ProductPropertyName; 
 
 }
