@@ -1,4 +1,4 @@
-import { ProductProvider } from "../../providers/stock.provider";
+import { ProductProvider } from "./stock.provider";
 
 export default {
     Query: {

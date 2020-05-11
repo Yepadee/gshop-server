@@ -1,4 +1,4 @@
-import { ProductProvider } from "../../providers/typePropertyValue.provider";
+import { ProductProvider } from "./typePropertyValue.provider";
 
 export default {
     Query: {
