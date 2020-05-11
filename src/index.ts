@@ -1,6 +1,8 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-import {ProductType} from "./entity/inventory/ProductType";
+import {ProductType} from "./entity/ProductType";
+import {Product} from "./entity/Product";
+//import {Stock} from "./entity/Stock";
 
 import { ApolloServer, gql } from 'apollo-server';
 
@@ -42,17 +44,21 @@ const resolvers = {
 
 createConnection().then(async connection => {
 
+    await connection.synchronize();
     console.log("Inserting a new user into the database...");
     const productType = new ProductType();
     productType.name = "Clothing";
     await connection.manager.save(productType);
     console.log("Saved a new user with id: " + productType.id);
 
-    console.log("Loading users from the database...");
-    const users = await connection.manager.find(ProductType);
-    console.log("Loaded users: ", users);
+    
+    const product = new Product();
+    product.name = "T-Shirt";
+    product.description = "amazing t-shirt";
+    product.price = 15.00;
+    product.type = <any>{id:1};
+    await connection.manager.save(product);
 
-    console.log("Here you can setup and run express/koa/any other framework.");
 
 }).catch(error => console.log(error));
 

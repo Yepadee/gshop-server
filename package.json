@@ -12,6 +12,7 @@
    "dependencies": {
       "apollo-server": "^2.13.0",
       "graphql": "^15.0.0",
+      "lodash": "^4.17.15",
       "mysql": "^2.14.1",
       "reflect-metadata": "^0.1.10",
       "typeorm": "0.2.24",
