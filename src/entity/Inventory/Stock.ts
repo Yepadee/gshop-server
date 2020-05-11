@@ -12,14 +12,14 @@ export class Stock {
     @Column("int")
     quantity: number;  
 
-    @ManyToOne(type => Product, product => product.stock)
+    @ManyToOne(() => Product, product => product.stock)
     product: Product;
 
-    @ManyToMany(type => ProductPropertyValue)
+    @ManyToMany(() => ProductPropertyValue)
     @JoinTable()
     productPropertyValues: ProductPropertyValue[];
 
-    @ManyToMany(type => TypePropertyValue)
+    @ManyToMany(() => TypePropertyValue)
     @JoinTable()
     typePropertyValues: TypePropertyValue[];
 }

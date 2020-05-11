@@ -20,13 +20,13 @@ export class Product {
     price: number; 
     
     
-    @ManyToOne(type => ProductType, type => type.products)
+    @ManyToOne(() => ProductType, type => type.products)
     type: ProductType;
 
-    @OneToMany(type => Stock, stock => stock.product)
+    @OneToMany(() => Stock, stock => stock.product)
     stock: Stock[];
 
-    @OneToMany(type => ProductPropertyValue, productPropertyValue => productPropertyValue.product)
+    @OneToMany(() => ProductPropertyValue, productPropertyValue => productPropertyValue.product)
     productPropertyValues: ProductPropertyValue[];
 
 }

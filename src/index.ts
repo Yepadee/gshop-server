@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import {createConnection} from "typeorm";
-import {ProductType} from "./entity/ProductType";
+import {ProductType} from "./entity/inventory/ProductType";
 
 import { ApolloServer, gql } from 'apollo-server';
 

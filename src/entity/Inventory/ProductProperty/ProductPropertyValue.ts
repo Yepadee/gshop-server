@@ -11,7 +11,7 @@ export class ProductPropertyValue {
     @Column("varchar", {length: 255})
     value: string;
 
-    @ManyToOne(type => Product, product => product.productPropertyValues)
+    @ManyToOne(() => Product, product => product.productPropertyValues)
     product: Product;
 
 }

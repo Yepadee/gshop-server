@@ -14,13 +14,13 @@ export class ProductType {
     @Column("varchar", {length: 127})
     name: string;
 
-    @OneToMany(type => Product, product => product.type)
+    @OneToMany(() => Product, product => product.type)
     products: Product[];
 
-    @OneToMany(type => ProductPropertyName, productPropertyName => productPropertyName.productType)
+    @OneToMany(() => ProductPropertyName, productPropertyName => productPropertyName.productType)
     productPropertyNames: ProductPropertyName[];
 
-    @OneToMany(type => TypePropertyName, typePropertyName => typePropertyName.productType)
+    @OneToMany(() => TypePropertyName, typePropertyName => typePropertyName.productType)
     typePropertyNames: TypePropertyName[];
 
 }
