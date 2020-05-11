@@ -17,8 +17,11 @@ export class Product {
     description: string;
 
     @Column("decimal", { precision: 5, scale: 2 })
-    price: number; 
+    price: number;
     
+    @Column("varchar", {length: 127})
+    catagory: string;
+
     
     @ManyToOne(() => ProductType, type => type.products, { cascade: true })
     type: ProductType;

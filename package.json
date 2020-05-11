@@ -4,8 +4,8 @@
    "description": "",
    "main": "index.js",
    "scripts": {
-      "dev": "ts-node-dev -r tsconfig-paths/register src/index.ts",
-      "start": "ts-node -r tsconfig-paths/register src/index.ts"
+      "dev": "ts-node-dev -r tsconfig-paths/register src/app.ts",
+      "start": "ts-node -r tsconfig-paths/register src/app.ts"
    },
    "author": "",
    "license": "ISC",
