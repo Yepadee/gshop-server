@@ -1,9 +1,9 @@
 
-type TypePropertyValue {
+type ProductPropertyValue {
   id: ID!
   value: String!
 }
 
-type TypePropertyName {
-  values: [TypePropertyValue]
+type ProductPropertyName {
+  values: [ProductPropertyValue]
 }

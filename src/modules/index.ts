@@ -5,6 +5,8 @@ import { ProductModule } from "./ProductModule";
 import { StockModule } from "./StockModule";
 import { TypePropertyNameModule } from "./TypePropertyNameModule";
 import { TypePropertyValueModule } from "./TypePropertyValueModule";
+import { ProductPropertyNameModule } from "./ProductPropertyNameModule";
+import { ProductPropertyValueModule } from "./ProductPropertyValueModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -13,6 +15,8 @@ export const GraphQLModules = new GraphQLModule({
         ProductModule,
         StockModule,
         TypePropertyNameModule,
-        TypePropertyValueModule
+        TypePropertyValueModule,
+        ProductPropertyNameModule,
+        ProductPropertyValueModule
     ],
 });
