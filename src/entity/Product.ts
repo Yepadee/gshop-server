@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn} from "typeorm";
 
 import {ProductType} from "./ProductType";
 import {Stock} from "./Stock";
@@ -23,7 +23,12 @@ export class Product {
     catagory: string;
 
     
+
+    @Column("int", { nullable: false })
+    typeId: number;
+
     @ManyToOne(() => ProductType, type => type.products, { cascade: true })
+    @JoinColumn({ name: "typeId" })
     type: Promise<ProductType>;
 
     @OneToMany(() => Stock, stock => stock.product)

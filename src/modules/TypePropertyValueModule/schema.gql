@@ -7,3 +7,7 @@ type TypePropertyValue {
 type TypePropertyName {
   values: [TypePropertyValue]
 }
+
+type TypeProperty {
+  values: [TypePropertyValue]
+}

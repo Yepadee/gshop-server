@@ -15,7 +15,7 @@ export class ProductPropertyValue {
     value: string;
 
     @Column("int", { nullable: false })
-    productId: string;
+    productId: number;
 
     @ManyToOne(() => Product, product => product.productPropertyValues)
     @JoinColumn({ name: "productId" })
