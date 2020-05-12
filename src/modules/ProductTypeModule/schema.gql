@@ -9,5 +9,5 @@ type ProductType {
 }
 
 type Product {
-  type: ProductType
+  type: ProductType!
 }

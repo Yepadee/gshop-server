@@ -9,6 +9,10 @@ export default {
     ProductType: {
       id: product => product.id,
       name: product => product.name
+    },
+
+    Product: {
+      type: product => product.type
     }
     
   };

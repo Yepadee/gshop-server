@@ -12,7 +12,6 @@ export default {
       description: product => product.description,
       catagory: product => product.catagory,
       price: product => product.price,
-      type: product => product.type
     }
   
 };
