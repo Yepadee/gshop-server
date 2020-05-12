@@ -1,0 +1,8 @@
+
+type ProductProperty {
+  name: String!
+}
+
+type Product {
+  productProperties: [ProductProperty]
+}

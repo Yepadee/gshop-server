@@ -7,3 +7,7 @@ type ProductPropertyValue {
 type ProductPropertyName {
   values: [ProductPropertyValue]
 }
+
+type ProductProperty {
+  values: [ProductPropertyValue]
+}
