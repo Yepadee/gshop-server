@@ -13,13 +13,13 @@ export class Stock {
     quantity: number;  
 
     @ManyToOne(() => Product, product => product.stock)
-    product: Product;
+    product: Promise<Product>;
 
     @ManyToMany(() => ProductPropertyValue)
     @JoinTable({name: "stock_product_properties"})
-    productPropertyValues: ProductPropertyValue[];
+    productPropertyValues: Promise<ProductPropertyValue[]>;
 
     @ManyToMany(() => TypePropertyValue)
     @JoinTable({name: "stock_type_properties"})
-    typePropertyValues: TypePropertyValue[];
+    typePropertyValues: Promise<TypePropertyValue[]>;
 }

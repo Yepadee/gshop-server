@@ -22,8 +22,7 @@
      "baseUrl": "./src",
      "paths": {
        "@modules": ["modules"],
-       "@entity/*": ["entity/*"],
-       "@providers/*": ["providers/*"]
+       "@entity/*": ["entity/*"]
      }
    },
    "exclude": ["node_modules"],

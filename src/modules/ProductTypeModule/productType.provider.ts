@@ -1,19 +1,16 @@
 import { Injectable } from "@graphql-modules/di";
 
 import { getRepository } from "typeorm";
-import { Product } from '@entity/Product';
+import { ProductType } from '@entity/ProductType';
 
 @Injectable()
-export class ProductProvider {
-    repository = getRepository(Product);
-    async getProducts(args) {
-        console.log(args);
-        
-        const users = await this.repository.find({ where: args });
-        console.log(users);
-        return users;
+export class ProductTypeProvider {
+    repository = getRepository(ProductType);
+    async getProductTypes(args) {
+        const productTypes = await this.repository.find({ where: args });
+        return productTypes;
     }
-    getProductById(id: number) {
+    getProductTypeById(id: number) {
         return this.repository.findOne(id);
     }
 }

@@ -1,11 +1,13 @@
 type Query {
-  products(id: ID, name: String, description: String, catagorty: String, price: Float): [Product]
-  product(id: ID!): Product
+  productTypes(id: ID, name: String): [ProductType]
+  productType(id: ID!): ProductType
+}
+
+type ProductType {
+  id: ID!
+  name: String!
 }
 
 type Product {
-  id: ID!
-  name: String!
-  description: String
-  price: Float
+  type: ProductType
 }

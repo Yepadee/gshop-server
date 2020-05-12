@@ -1,12 +1,14 @@
-import { ProductProvider } from "./productType.provider";
+import { ProductTypeProvider } from "./productType.provider";
 
 export default {
     Query: {
-      products: (_, args, { injector }) => injector.get(ProductProvider).getProducts(args),
-      product: (_, { id }, { injector }) => injector.get(ProductProvider).getProductById(id)
+      productTypes: (_, args, { injector }) => injector.get(ProductTypeProvider).getProductTypes(args),
+      productType: (_, { id }, { injector }) => injector.get(ProductTypeProvider).getProductTypeById(id)
     },
-    Product: {
+
+    ProductType: {
       id: product => product.id,
       name: product => product.name
     }
+    
   };

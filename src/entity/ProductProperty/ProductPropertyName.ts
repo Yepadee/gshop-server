@@ -14,9 +14,9 @@ export class ProductPropertyName {
     name: string; 
 
     @ManyToOne(() => ProductType, productType => productType.typePropertyNames, { cascade: true })
-    productType: ProductType;
+    productType: Promise<ProductType>;
 
     @OneToMany(() => ProductPropertyValue, propertyValue => propertyValue.propertyName, { cascade: true })
-    propertyValues: ProductType;
+    propertyValues: Promise<ProductType>;
 
 }

@@ -15,12 +15,12 @@ export class ProductType {
     name: string;
 
     @OneToMany(() => Product, product => product.type)
-    products: Product[];
+    products: Promise<Product[]>;
 
     @OneToMany(() => ProductPropertyName, productPropertyName => productPropertyName.productType)
-    productPropertyNames: ProductPropertyName[];
+    productPropertyNames: Promise<ProductPropertyName[]>;
 
     @OneToMany(() => TypePropertyName, typePropertyName => typePropertyName.productType)
-    typePropertyNames: TypePropertyName[];
+    typePropertyNames: Promise<TypePropertyName[]>;
 
 }

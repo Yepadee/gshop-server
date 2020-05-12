@@ -24,12 +24,12 @@ export class Product {
 
     
     @ManyToOne(() => ProductType, type => type.products, { cascade: true })
-    type: ProductType;
+    type: Promise<ProductType>;
 
     @OneToMany(() => Stock, stock => stock.product)
-    stock: Stock[];
+    stock:  Promise<Stock[]>;
 
     @OneToMany(() => ProductPropertyValue, productPropertyValue => productPropertyValue.product, { cascade: true })
-    productPropertyValues: ProductPropertyValue[];
+    productPropertyValues:  Promise<ProductPropertyValue[]>;
 
 }
