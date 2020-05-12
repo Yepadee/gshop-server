@@ -4,6 +4,7 @@ import {Product} from "@entity/Product";
 
 import {ProductPropertyName} from "./ProductPropertyName";
 
+
 @Entity()
 export class ProductPropertyValue {
 

@@ -3,6 +3,8 @@ import { Injectable } from "@graphql-modules/di";
 import { getRepository } from "typeorm";
 import { ProductPropertyValue } from '@entity/ProductProperty/ProductPropertyValue';
 
+import { groupBy } from "lodash";
+
 @Injectable()
 export class ProductPropertyProvider {
     repository = getRepository(ProductPropertyValue);
@@ -15,11 +17,14 @@ export class ProductPropertyProvider {
         relations: ["propertyName"]
         });
 
-        const productProperty = {
-            
-        }
-
-        return productPropertyValues;
+        const grouped = groupBy(productPropertyValues, propertyValue => propertyValue.propertyName.name);
+        return Object.keys(grouped).map((propertyName) => {
+            const productProperty = {
+                name: propertyName,
+                values: grouped[propertyName]
+            };
+            return productProperty;
+        });
     }
     
 }
