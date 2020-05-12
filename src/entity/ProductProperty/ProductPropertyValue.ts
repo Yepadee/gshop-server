@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, JoinColumn} from "typeorm";
 
 import {Product} from "@entity/Product";
 
@@ -13,7 +13,11 @@ export class ProductPropertyValue {
     @Column("varchar", {length: 255})
     value: string;
 
+    @Column("int", { nullable: false })
+    productId: string;
+
     @ManyToOne(() => Product, product => product.productPropertyValues)
+    @JoinColumn({ name: "productId" })
     product: Product;
 
     @ManyToOne(() => ProductPropertyName, productPropertyName => productPropertyName.propertyValues)

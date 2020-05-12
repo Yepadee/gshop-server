@@ -59,14 +59,14 @@ createConnection().then(async connection => {
 
       const s1 = new Stock();
       s1.quantity = faker.random.number({ max: 1, min: 30 });
-      s1.product = product;
+      s1.product = <any>product;
       s1.productPropertyValues = <any>[{id:1}];
       s1.typePropertyValues = <any>[{id:1}];
       await connection.manager.save(s1);
 
       const s2 = new Stock();
       s2.quantity = faker.random.number({ max: 2, min: 30 });
-      s2.product = product;
+      s2.product = <any>product;
       s2.productPropertyValues = <any>[{id:2}];
       s2.typePropertyValues = <any>[{id:2}];
       await connection.manager.save(s2);
