@@ -13,7 +13,7 @@ export class ProductPropertyName {
     @Column("varchar", {length: 255})
     name: string; 
 
-    @ManyToOne(() => ProductType, productType => productType.typePropertyNames, { cascade: true })
+    @ManyToOne(() => ProductType, productType => productType.typePropertyNames)
     productType: Promise<ProductType>;
 
     @OneToMany(() => ProductPropertyValue, propertyValue => propertyValue.propertyName, { cascade: true })

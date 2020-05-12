@@ -1,0 +1,9 @@
+
+type TypePropertyName {
+  id: ID!
+  name: String!
+}
+
+type ProductType {
+  typePropertyNames: [TypePropertyName]
+}

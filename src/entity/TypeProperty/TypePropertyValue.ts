@@ -12,6 +12,6 @@ export class TypePropertyValue {
     value: string; 
 
     @ManyToOne(() => TypePropertyName, typePropertyName => typePropertyName.propertyValues)
-    propertyName: TypePropertyName; 
+    propertyName: Promise<TypePropertyName>; 
 
 }

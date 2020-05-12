@@ -22,6 +22,7 @@ createConnection().then(async connection => {
 
     const typePropertyName = new TypePropertyName();
     typePropertyName.name = "Size";
+    typePropertyName.productType = <any>{id:1};
     await connection.manager.save(typePropertyName);
 
     const tv1 = new TypePropertyValue();
@@ -42,6 +43,7 @@ createConnection().then(async connection => {
 
     const productPropertyName = new ProductPropertyName();
     productPropertyName.name = "Colour";
+    productPropertyName.productType = <any>{id:1};
     await connection.manager.save(productPropertyName);
 
 

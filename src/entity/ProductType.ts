@@ -17,10 +17,10 @@ export class ProductType {
     @OneToMany(() => Product, product => product.type)
     products: Promise<Product[]>;
 
-    @OneToMany(() => ProductPropertyName, productPropertyName => productPropertyName.productType)
+    @OneToMany(() => ProductPropertyName, productPropertyName => productPropertyName.productType, { cascade: true })
     productPropertyNames: Promise<ProductPropertyName[]>;
 
-    @OneToMany(() => TypePropertyName, typePropertyName => typePropertyName.productType)
+    @OneToMany(() => TypePropertyName, typePropertyName => typePropertyName.productType, { cascade: true })
     typePropertyNames: Promise<TypePropertyName[]>;
 
 }

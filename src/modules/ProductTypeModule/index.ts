@@ -3,7 +3,7 @@ import { GraphQLModule } from "@graphql-modules/core";
 import * as typeDefs from "./schema.gql";
 import resolvers from "./resolvers";
 
-import { ProductTypeProvider } from "./productType.provider";
+import { ProductTypeProvider } from "./provider";
 
 export const ProductTypeModule = new GraphQLModule({
   typeDefs,

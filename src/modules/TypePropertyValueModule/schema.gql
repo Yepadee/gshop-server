@@ -1,0 +1,9 @@
+
+type TypePropertyValue {
+  id: ID!
+  value: String!
+}
+
+type TypePropertyName {
+  values: [TypePropertyValue]
+}
