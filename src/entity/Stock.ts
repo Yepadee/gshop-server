@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn} from "typeorm";
 
 import {Product} from "./Product";
 import { ProductPropertyValue } from "./ProductProperty/ProductPropertyValue";
@@ -10,9 +10,13 @@ export class Stock {
     id: number;
 
     @Column("int")
-    quantity: number;  
+    quantity: number;
+
+    @Column("int")
+    productId: number;
 
     @ManyToOne(() => Product, product => product.stock)
+    @JoinColumn({ name: "productId" })
     product: Promise<Product>;
 
     @ManyToMany(() => ProductPropertyValue)

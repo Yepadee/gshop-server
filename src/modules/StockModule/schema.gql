@@ -1,8 +1,10 @@
 type Query {
-  stocks(id: ID, name: String, description: String, catagorty: String, price: Float): [Stock]
+  stocks(id: ID, productId: ID, typePropertyValueIds: [ID], productPropertyValueIds: [ID]): [Stock]
   stock(id: ID!): Stock!
+
 }
 
 type Stock {
   id: ID!
+  quantity: Int!
 }

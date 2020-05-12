@@ -6,9 +6,14 @@ import { Stock } from '@entity/Stock';
 @Injectable()
 export class StockProvider {
     repository = getRepository(Stock);
+
     getStock(args) {
-        return this.repository.find({ where: args });
+        return this.repository.createQueryBuilder("stock")
+        .innerJoinAndSelect("stock.typePropertyValues", "typePropertyValue")
+        .where(args.id ? 'stock.id = :stockId' : '1=1', {stockId: args.id})
+        .getMany();
     }
+
     getStockById(id: number) {
         return this.repository.findOne(id);
     }

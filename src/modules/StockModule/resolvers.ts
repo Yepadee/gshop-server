@@ -8,6 +8,10 @@ export default {
 
     Stock: {
       id: stock => stock.id,
+    },
+
+    Product: {
+      stock: product => product.stock
     }
   
 };
