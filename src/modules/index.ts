@@ -3,11 +3,8 @@ import { GraphQLModule } from "@graphql-modules/core";
 import { ProductTypeModule } from "./ProductTypeModule";
 import { ProductModule } from "./ProductModule";
 import { StockModule } from "./StockModule";
-import { TypePropertyNameModule } from "./TypePropertyNameModule";
-import { TypePropertyValueModule } from "./TypePropertyValueModule";
-import { ProductPropertyNameModule } from "./ProductPropertyNameModule";
-import { ProductPropertyValueModule } from "./ProductPropertyValueModule";
-import { ProductPropertyModule } from "./ProductPropertyModule";
+import { PropertyNameModule } from "./PropertyNameModule";
+import { PropertyValueModule } from "./PropertyValueModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -15,10 +12,7 @@ export const GraphQLModules = new GraphQLModule({
         ProductTypeModule,
         ProductModule,
         StockModule,
-        TypePropertyNameModule,
-        TypePropertyValueModule,
-        ProductPropertyNameModule,
-        ProductPropertyValueModule,
-        ProductPropertyModule
+        PropertyNameModule,
+        PropertyValueModule
     ],
 });

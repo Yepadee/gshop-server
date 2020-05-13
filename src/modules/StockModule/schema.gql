@@ -1,5 +1,5 @@
 type Query {
-  stocks(id: ID, productId: ID, typePropertyValueIds: [ID], productPropertyValueIds: [ID]): [Stock]
+  stocks(id: ID, productId: ID, propertyValueIds: [ID]): [Stock]
   stock(id: ID!): Stock!
 
 }

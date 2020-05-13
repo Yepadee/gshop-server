@@ -1,8 +1,8 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, ManyToMany, JoinTable} from "typeorm";
 
 import {ProductType} from "./ProductType";
 import {Stock} from "./Stock";
-import { ProductPropertyValue } from "./ProductProperty/ProductPropertyValue";
+import { PropertyName } from "./Property/PropertyName";
 
 @Entity()
 export class Product {
@@ -31,10 +31,10 @@ export class Product {
     @JoinColumn({ name: "typeId" })
     type: Promise<ProductType>;
 
+    @ManyToMany(() => PropertyName)
+    @JoinTable({name: "product_required_properties"})
+    requiredProperties: Promise<PropertyName[]>;
+
     @OneToMany(() => Stock, stock => stock.product)
     stock:  Promise<Stock[]>;
-
-    @OneToMany(() => ProductPropertyValue, productPropertyValue => productPropertyValue.product, { cascade: true })
-    productPropertyValues:  Promise<ProductPropertyValue[]>;
-
 }

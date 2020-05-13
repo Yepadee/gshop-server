@@ -12,6 +12,14 @@ export default {
       description: product => product.description,
       catagory: product => product.catagory,
       price: product => product.price,
+    },
+
+    ProductType: {
+      products: productType => productType.products
+    },
+
+    Stock: {
+      product: stock => stock.product
     }
   
 };

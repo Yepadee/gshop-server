@@ -9,7 +9,7 @@ export class StockProvider {
 
     getStock(args) {
         return this.repository.createQueryBuilder("stock")
-        .innerJoinAndSelect("stock.typePropertyValues", "typePropertyValue")
+        .innerJoinAndSelect("stock.properties", "properties")
         .where(args.id ? 'stock.id = :stockId' : '1=1', {stockId: args.id})
         .getMany();
     }

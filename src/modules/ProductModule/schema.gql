@@ -10,3 +10,11 @@ type Product {
   description: String
   price: Float!
 }
+
+type ProductType {
+  products: [Product]
+}
+
+type Stock {
+  product: Product
+}

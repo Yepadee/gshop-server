@@ -2,8 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
 
 import {Product} from "./Product";
 
-import {ProductPropertyName} from "./ProductProperty/ProductPropertyName";
-import {TypePropertyName} from "./TypeProperty/TypePropertyName";
+import {PropertyName} from "./Property/PropertyName";
 
 @Entity()
 export class ProductType {
@@ -17,10 +16,7 @@ export class ProductType {
     @OneToMany(() => Product, product => product.type)
     products: Promise<Product[]>;
 
-    @OneToMany(() => ProductPropertyName, productPropertyName => productPropertyName.productType, { cascade: true })
-    productPropertyNames: Promise<ProductPropertyName[]>;
-
-    @OneToMany(() => TypePropertyName, typePropertyName => typePropertyName.productType, { cascade: true })
-    typePropertyNames: Promise<TypePropertyName[]>;
+    @OneToMany(() => PropertyName, propertyName => propertyName.productType, { cascade: true })
+    propertyNames: Promise<PropertyName[]>;
 
 }
