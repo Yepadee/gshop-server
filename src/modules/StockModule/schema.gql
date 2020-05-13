@@ -6,3 +6,7 @@ type Stock {
   id: ID!
   quantity: Int!
 }
+
+type Product {
+  stock: [Stock]!
+}

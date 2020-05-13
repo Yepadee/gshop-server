@@ -5,6 +5,7 @@ import { ProductModule } from "./ProductModule";
 import { StockModule } from "./StockModule";
 import { PropertyNameModule } from "./PropertyNameModule";
 import { PropertyValueModule } from "./PropertyValueModule";
+import { AvailablePropertiesModule } from "./AvailablePropertiesModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -13,6 +14,7 @@ export const GraphQLModules = new GraphQLModule({
         ProductModule,
         StockModule,
         PropertyNameModule,
-        PropertyValueModule
+        PropertyValueModule,
+        AvailablePropertiesModule
     ],
 });

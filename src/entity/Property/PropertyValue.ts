@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany} from "typeorm";
 
 import {PropertyName} from "./PropertyName";
+import { Stock } from "@entity/Stock";
 
 @Entity()
 export class PropertyValue {
@@ -12,6 +13,9 @@ export class PropertyValue {
     value: string; 
 
     @ManyToOne(() => PropertyName, propertyName => propertyName.propertyValues)
-    propertyName: Promise<PropertyName>; 
+    propertyName: Promise<PropertyName>;
+
+    @ManyToMany(() => Stock, stock => stock.properties)
+    stock: Promise<Stock[]>;
 
 }

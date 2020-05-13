@@ -15,3 +15,8 @@ type Property {
 type Stock {
   properties: [PropertyValue]
 }
+
+type AvailableProperties {
+  name: String
+  properties: [PropertyValue]
+}

@@ -18,7 +18,7 @@ export class Stock {
     @JoinColumn({ name: "productId" })
     product: Promise<Product>;
 
-    @ManyToMany(() => PropertyValue)
+    @ManyToMany(() => PropertyValue, propertyValue => propertyValue.stock)
     @JoinTable({name: "stock_properties"})
     properties: Promise<PropertyValue[]>;
 }
