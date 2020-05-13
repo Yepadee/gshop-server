@@ -2,8 +2,7 @@ import { StockProvider } from "./provider";
 
 export default {
     Query: {
-      stocks: (_, args, { injector }) => injector.get(StockProvider).getStock(args),
-      stock: (_, { id }, { injector }) => injector.get(StockProvider).getStockById(id)
+      stock: (_, { productId, propertyValueIds }, { injector }) => injector.get(StockProvider).getStock(productId, propertyValueIds)
     },
 
     Stock: {

@@ -83,6 +83,12 @@ createConnection().then(async connection => {
       s2.product = <any>product;
       s2.properties = <any>[{id:2}, {id:5}];
       await connection.manager.save(s2);
+
+      const s3 = new Stock();
+      s3.quantity = faker.random.number({ max: 3, min: 30 });
+      s3.product = <any>product;
+      s3.properties = <any>[{id:1}, {id:6}];
+      await connection.manager.save(s3);
     });
   });
 }).catch(error => console.log(error));

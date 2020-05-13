@@ -7,14 +7,24 @@ import { Stock } from '@entity/Stock';
 export class StockProvider {
     repository = getRepository(Stock);
 
-    getStock(args) {
-        return this.repository.createQueryBuilder("stock")
-        .innerJoinAndSelect("stock.properties", "properties")
-        .where(args.id ? 'stock.id = :stockId' : '1=1', {stockId: args.id})
-        .getMany();
-    }
+    async getStock(productId, propertyValueIds) {
+        const data = await this.repository.createQueryBuilder("stock")
+        .select("DISTINCT(propertyCount.stockId)", "stockId")
+        .from(qb => {
+            const subQuery = qb.subQuery()
+                .select("COUNT(*)", "propertyCount")
+                .addSelect("stock.id", "stockId")
+                .from(Stock, "stock")
+                .innerJoin("stock.properties", "properties")
+                .innerJoin("stock.product", "product")
+                .where("product.id = :productId", {productId})
+                .andWhere("properties.id IN (:...propertyValueIds)", {propertyValueIds})
+                .groupBy("stock.id")
+            return subQuery;
+        }, "propertyCount")
+        .where("propertyCount.propertyCount =:count", {count: propertyValueIds.length})
+        .getRawOne();
 
-    getStockById(id: number) {
-        return this.repository.findOne(id);
+        return this.repository.findOne(data.stockId);
     }
 }
