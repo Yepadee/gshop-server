@@ -1,0 +1,17 @@
+
+type PropertyValue {
+  id: ID!
+  value: String!
+}
+
+type PropertyName {
+  values: [PropertyValue]
+}
+
+type Property {
+  values: [PropertyValue]
+}
+
+type Stock {
+  properties: [PropertyValue]
+}

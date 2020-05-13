@@ -1,0 +1,13 @@
+
+type PropertyName {
+  id: ID!
+  name: String!
+}
+
+type ProductType {
+  propertyNames: [PropertyName]
+}
+
+type Product {
+  requiredProperties: [PropertyName]
+}
