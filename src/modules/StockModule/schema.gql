@@ -1,5 +1,9 @@
 type Query {
-  stock(productId: ID!, propertyValueIds: [ID]!): Stock!
+  stockQuantity(productId: ID!, propertyValueIds: [ID]!): Int
+}
+
+type Mutation {
+  addStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean!
 }
 
 type Stock {
