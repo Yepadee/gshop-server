@@ -6,6 +6,10 @@ export default {
       product: (_, { id }, { injector }) => injector.get(ProductProvider).getProductById(id)
     },
 
+    Mutation: {
+      deleteProduct: (_, { id }, { injector }) => injector.get(ProductProvider).deleteProductById(id)
+    },
+
     Product: {
       id: product => product.id,
       name: product => product.name,

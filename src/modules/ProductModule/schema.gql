@@ -3,6 +3,10 @@ type Query {
   product(id: ID!): Product!
 }
 
+type Mutation {
+  deleteProduct(id: ID!): Boolean
+}
+
 type Product {
   id: ID!
   name: String!

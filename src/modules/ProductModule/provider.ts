@@ -12,4 +12,14 @@ export class ProductProvider {
     getProductById(id: number) {
         return this.repository.findOne(id);
     }
+
+    async deleteProductById(id: number) {
+        try {
+            await this.repository.delete(id);
+            return true;
+        }
+        catch {
+            return false;
+        }
+    }
 }
