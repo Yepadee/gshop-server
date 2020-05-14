@@ -1,5 +1,3 @@
-//import { TypePropertyValueProvider } from "./provider";
-
 
 export default {
     PropertyName: {
@@ -8,6 +6,10 @@ export default {
 
     Stock: {
       properties: stock => stock.properties
+    },
+
+    AvailableProperty: {
+      values: availableProperty => availableProperty.values
     }
   
 };

@@ -3,10 +3,10 @@ import { GraphQLModule } from "@graphql-modules/core";
 import * as typeDefs from "./schema.gql";
 import resolvers from "./resolvers";
 
-import { AvailablePropertiesProvider } from "./provider";
+import { AvailablePropertyProvider } from "./provider";
 
-export const AvailablePropertiesModule = new GraphQLModule({
+export const AvailablePropertyModule = new GraphQLModule({
   typeDefs,
   resolvers,
-  providers: [AvailablePropertiesProvider]
+  providers: [AvailablePropertyProvider]
 });
