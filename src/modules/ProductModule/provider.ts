@@ -15,15 +15,13 @@ export class ProductProvider {
 
     async addProduct(product) {
         const newProduct = new Product();
-        
         newProduct.typeId = product.typeId;
         newProduct.name = product.name;
         newProduct.description = product.description;
         newProduct.price = product.price;
         newProduct.catagory = product.catagory;
         
-        console.log(newProduct);
-        this.repository.save(newProduct);
+        await this.repository.save(newProduct);
         return true;
     }
 

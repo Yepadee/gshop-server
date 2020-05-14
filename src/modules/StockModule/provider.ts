@@ -27,4 +27,14 @@ export class StockProvider {
 
         return data.quantity;
     }
+
+    async addStock(args) {
+        const stock = new Stock();
+        stock.productId = args.productId;
+        stock.properties = <any>args.propertyIds.map((propertyId) => <any>{id: propertyId});
+        stock.quantity = args.quantity;
+        console.log(stock);
+        await this.repository.save(stock);
+        return true;
+    }
 }

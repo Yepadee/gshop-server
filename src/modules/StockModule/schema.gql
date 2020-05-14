@@ -4,6 +4,8 @@ type Query {
 
 type Mutation {
   addStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean!
+  updateStock(productId: ID!, propertyValueIds: [ID]!, quantity: Int): Boolean!
+  deleteStock(stockId: ID!): Boolean!
 }
 
 type Stock {
