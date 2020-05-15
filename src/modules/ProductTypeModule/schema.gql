@@ -1,6 +1,11 @@
 type Query {
-  productTypes(id: ID, name: String): [ProductType]
+  productTypes(id: ID, name: String): [ProductType]!
   productType(id: ID!): ProductType
+}
+
+type Mutation {
+  addProductType(name: String!, propertyNameIds: [ID]!): Boolean!
+  removeProductType(productTypeId: ID!): Boolean!
 }
 
 type ProductType {

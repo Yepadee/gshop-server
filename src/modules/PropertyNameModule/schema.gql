@@ -14,9 +14,9 @@ type PropertyName {
 }
 
 type ProductType {
-  propertyNames: [PropertyName]
+  propertyNames: [PropertyName]!
 }
 
 type Product {
-  requiredProperties: [PropertyName]
+  requiredProperties: [PropertyName]!
 }

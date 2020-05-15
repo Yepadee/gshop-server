@@ -11,10 +11,11 @@ export default {
     },
 
     ProductType: {
-      typePropertyNames: productType => productType.typePropertyNames
+      propertyNames: productType => productType.propertyNames
     },
 
-    TypePropertyName: {
+    PropertyName: {
+      name: propertyName => propertyName.name,
       values: propertyName => propertyName.propertyValues
     },
 

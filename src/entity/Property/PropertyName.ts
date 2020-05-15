@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinTable} from "typeorm";
 
 import { ProductType } from "@entity/ProductType";
 import { PropertyValue } from "./PropertyValue";
@@ -12,8 +12,9 @@ export class PropertyName {
     @Column("varchar", {length: 255})
     name: string;
 
-    @ManyToOne(() => ProductType, productType => productType.propertyNames)
-    productType: Promise<ProductType>;
+    @ManyToMany(() => ProductType, productType => productType.propertyNames)
+    @JoinTable({name: "property_name_types"})
+    productTypes: Promise<ProductType[]>;
 
     @OneToMany(() => PropertyValue, propertyValue => propertyValue.propertyName, { cascade: true })
     propertyValues: Promise<PropertyValue>;

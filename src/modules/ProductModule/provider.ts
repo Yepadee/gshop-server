@@ -2,10 +2,14 @@ import { Injectable } from "@graphql-modules/di";
 
 import { getRepository } from "typeorm";
 import { Product } from '@entity/Product';
+import { ProductType } from "@entity/ProductType";
 
 @Injectable()
 export class ProductProvider {
     repository = getRepository(Product);
+
+    productTypeRepository = getRepository(ProductType);
+
     getProducts(args) {
         return this.repository.find({ where: args });
     }
@@ -14,15 +18,33 @@ export class ProductProvider {
     }
 
     async addProduct(product) {
-        const newProduct = new Product();
-        newProduct.typeId = product.typeId;
-        newProduct.name = product.name;
-        newProduct.description = product.description;
-        newProduct.price = product.price;
-        newProduct.catagory = product.catagory;
-        
-        await this.repository.save(newProduct);
-        return true;
+        //TODO: Check requiredPropertyIds are in type propertyNameIds.
+        const data = await this.productTypeRepository.createQueryBuilder("productType")
+        .select("propertyNames.id")
+        .innerJoin("productType.propertyNames", "propertyNames")
+        .where("productType.id = :typeId", {typeId: product.typeId})
+        .getRawMany();
+        const stripped = data.map(rowPacket => rowPacket.propertyNames_id.toString());
+
+        if (product.requiredPropertyIds.every(id => stripped.includes(id)))
+        {
+            const newProduct = new Product();
+            newProduct.typeId = product.typeId;
+            newProduct.name = product.name;
+            newProduct.description = product.description;
+            newProduct.price = product.price;
+            newProduct.catagory = product.catagory;
+    
+            newProduct.requiredProperties = product.requiredPropertyIds.map(id => <any>{id});
+            
+            await this.repository.save(newProduct);
+            return true;
+        }
+        else
+        {
+            return false;
+        }
+
     }
 
     async updateProduct(updatedProduct) {

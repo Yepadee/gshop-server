@@ -2,10 +2,16 @@ import { Injectable } from "@graphql-modules/di";
 
 import { getRepository } from "typeorm";
 import { Stock } from '@entity/Stock';
+import { Product } from "@entity/Product";
+import { PropertyValue } from "@entity/Property/PropertyValue";
 
 @Injectable()
 export class StockProvider {
     repository = getRepository(Stock);
+
+    productRepository = getRepository(Product);
+
+    propertyValueRepository = getRepository(PropertyValue);
 
     async getStockQuantity(productId, propertyValueIds) {
         const data = await this.repository.createQueryBuilder("stock")
@@ -31,6 +37,27 @@ export class StockProvider {
 
     async addStock(args) {
         if(await this.getStockQuantity(args.productId, args.propertyIds)) return false;
+        const allValidProperties = await args.propertyIds.reduce(async (acc: boolean, propertyValueId) => {
+            const data = await this.productRepository.createQueryBuilder("product")
+            .select("COUNT(*) > 0", "isValidProperty")
+            .innerJoin("product.requiredProperties", "requiredProperties")
+            .innerJoin("requiredProperties.propertyValues", "propertyValues")
+            .where("product.id = :productId", {productId: args.productId})
+            .andWhere("propertyValues.id = :propertyValueId", { propertyValueId })
+            .getRawOne();
+            
+           if (data.isValidProperty == '1') return acc;
+           else return false;
+        }, true);
+        if (!allValidProperties) return false;
+
+        const noDuplicateValues = await this.propertyValueRepository.createQueryBuilder("propertyValue")
+        .select("COUNT(DISTINCT(propertyName.id)) = COUNT(*)", "value")
+        .innerJoin("propertyValue.propertyName", "propertyName")
+        .where("propertyValue.id IN (:propertyValueIds)", {propertyValueIds: args.propertyIds})
+        .getRawOne();
+
+        if (noDuplicateValues.value == '0') return false;
 
         const stock = new Stock();
         stock.productId = args.productId;

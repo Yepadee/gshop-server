@@ -17,13 +17,8 @@ import { GraphQLModules } from "@modules";
 
 createConnection().then(async connection => {
   connection.synchronize(true).then( async () => {
-    const productType = new ProductType();
-    productType.name = "Clothing";
-    await connection.manager.save(productType);
-
     const propertyName = new PropertyName();
     propertyName.name = "Size";
-    propertyName.productType = <any>{id:1};
     await connection.manager.save(propertyName);
 
     const v1 = new PropertyValue();
@@ -43,7 +38,6 @@ createConnection().then(async connection => {
 
     const propertyName2 = new PropertyName();
     propertyName2.name = "Colour";
-    propertyName2.productType = <any>{id:1};
     await connection.manager.save(propertyName2);
 
     const v4 = new PropertyValue();
@@ -61,6 +55,10 @@ createConnection().then(async connection => {
     v6.propertyName = <any>{id:2};
     await connection.manager.save(v6);
 
+    const productType = new ProductType();
+    productType.name = "Clothing";
+    productType.propertyNames = <any>[{id:1}, {id:2}];
+    await connection.manager.save(productType);
 
 
     _.times(2, async () => {
@@ -70,6 +68,7 @@ createConnection().then(async connection => {
       product.price = faker.random.number({ max: 1, min: 30 });
       product.catagory = "hoodie";
       product.type = <any>{id:1};
+      product.requiredProperties = <any>[{id:1}, {id:2}];
       await connection.manager.save(product);
 
       const s1 = new Stock();

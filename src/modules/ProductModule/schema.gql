@@ -4,6 +4,7 @@ input NewProductInput {
   catagory: String!
   description: String
   price: Float!
+  requiredPropertyIds: [ID]!
 }
 
 input UpdatedProductInput {
@@ -16,7 +17,7 @@ input UpdatedProductInput {
 
 type Query {
   products(id: ID, name: String, description: String, catagorty: String, price: Float): [Product]!
-  product(id: ID!): Product!
+  product(id: ID!): Product
 }
 
 type Mutation {
@@ -34,9 +35,9 @@ type Product {
 }
 
 type ProductType {
-  products: [Product]
+  products: [Product]!
 }
 
 type Stock {
-  product: Product
+  product: Product!
 }

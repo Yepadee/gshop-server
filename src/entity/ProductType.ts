@@ -1,4 +1,4 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany} from "typeorm";
 
 import {Product} from "./Product";
 
@@ -10,13 +10,13 @@ export class ProductType {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("varchar", {length: 127})
+    @Column("varchar", {length: 127, unique: true})
     name: string;
 
     @OneToMany(() => Product, product => product.type)
     products: Promise<Product[]>;
 
-    @OneToMany(() => PropertyName, propertyName => propertyName.productType, { cascade: true })
+    @ManyToMany(() => PropertyName, propertyName => propertyName.productTypes)
     propertyNames: Promise<PropertyName[]>;
 
 }
