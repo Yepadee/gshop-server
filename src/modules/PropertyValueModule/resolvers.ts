@@ -1,15 +1,21 @@
+import { PropertyValueProvider } from "./provider";
 
 export default {
-    PropertyName: {
-      values: propertyName => propertyName.propertyValues
-    },
+  Mutation: {
+    addPropertyValue: (_, { propertyNameId, value }, { injector }) => injector.get(PropertyValueProvider).addPropertyValue(propertyNameId, value),
+    removePropertyValue: (_, { propertyValueId }, { injector }) => injector.get(PropertyValueProvider).removePropertyValue(propertyValueId),
+  },
 
-    Stock: {
-      properties: stock => stock.properties
-    },
+  PropertyName: {
+    values: propertyName => propertyName.propertyValues
+  },
 
-    AvailableProperty: {
-      values: availableProperty => availableProperty.values
-    }
+  Stock: {
+    properties: stock => stock.properties
+  },
+
+  AvailableProperty: {
+    values: availableProperty => availableProperty.values
+  }
   
 };

@@ -1,4 +1,9 @@
 
+type Mutation {
+  addPropertyValue(propertyNameId: ID!, value: String!): Boolean!
+  removePropertyValue(propertyValueId: ID!): Boolean!
+}
+
 type PropertyValue {
   id: ID!
   value: String!
