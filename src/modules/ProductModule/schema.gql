@@ -7,6 +7,7 @@ input NewProductInput {
 }
 
 input UpdatedProductInput {
+  id: Int!
   name: String
   catagory: String
   description: String
@@ -19,8 +20,8 @@ type Query {
 }
 
 type Mutation {
-  addProduct(newProduct: NewProductInput): Boolean!
-  updateProduct(updatedProduct: UpdatedProductInput): Boolean!
+  addProduct(newProduct: NewProductInput!): Boolean!
+  updateProduct(updatedProduct: UpdatedProductInput!): Boolean!
   deleteProduct(id: ID!): Boolean!
 }
 

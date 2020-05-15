@@ -25,16 +25,36 @@ export class StockProvider {
         .where("propertyCount.propertyCount =:count", {count: propertyValueIds.length})
         .getRawOne();
 
-        return data.quantity;
+        if (data) return data.quantity;
+        else return data;
     }
 
     async addStock(args) {
+        if(await this.getStockQuantity(args.productId, args.propertyIds)) return false;
+
         const stock = new Stock();
         stock.productId = args.productId;
-        stock.properties = <any>args.propertyIds.map((propertyId) => <any>{id: propertyId});
+        stock.properties = args.propertyIds.map((propertyId) => <any>{id: propertyId});
         stock.quantity = args.quantity;
-        console.log(stock);
+
         await this.repository.save(stock);
+        
+        return true;
+    }
+
+    async updateStockQuantity(stockId: number, quantity: number) {
+        await this.repository.createQueryBuilder()
+        .update(Stock)
+        .set({quantity})
+        .where("id = :stockId", {stockId})
+        .execute();
+
+        return true;
+    }
+
+    async deleteStock(stockId: number)
+    {
+        await this.repository.delete(stockId);
         return true;
     }
 }

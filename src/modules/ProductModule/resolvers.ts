@@ -8,7 +8,8 @@ export default {
 
   Mutation: {
     addProduct: (_, { newProduct }, { injector }) => injector.get(ProductProvider).addProduct(newProduct),
-    deleteProduct: (_, { id }, { injector }) => injector.get(ProductProvider).deleteProductById(id)
+    updateProduct: (_, { updatedProduct }, { injector }) => injector.get(ProductProvider).updateProduct(updatedProduct),
+    deleteProduct: (_, { id }, { injector }) => injector.get(ProductProvider).deleteProduct(id)
   },
 
   Product: {

@@ -7,7 +7,19 @@ import { PropertyName } from '@entity/Property/PropertyName';
 export class PropertyNameProvider {
     repository = getRepository(PropertyName);
 
-    getTypePropertiesByTypeId(typeId) {
-        return this.repository.find({ where: { typeId } });
+    getPropertyNames(args) {
+        return this.repository.find({where: args});
+    }
+
+    getPropertyNameById(id: number) {
+        return this.repository.findOne({where: {id}});
+    }
+
+    async addPropertyName(name: string) {
+        const propertyName = new PropertyName();
+        propertyName.name = name;
+        await this.repository.save(propertyName);
+
+        return true;
     }
 }

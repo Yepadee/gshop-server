@@ -25,7 +25,24 @@ export class ProductProvider {
         return true;
     }
 
-    async deleteProductById(id: number) {
+    async updateProduct(updatedProduct) {
+        const values = {};
+
+        if (updatedProduct.name) Object.assign(values, {name: updatedProduct.name})
+        if (updatedProduct.catagory) Object.assign(values, {catagory: updatedProduct.catagory})
+        if (updatedProduct.description) Object.assign(values, {description: updatedProduct.description})
+        if (updatedProduct.price) Object.assign(values, {price: updatedProduct.price})
+
+        await this.repository.createQueryBuilder()
+        .update(Product)
+        .set(values)
+        .where("id = :productId", { productId: updatedProduct.id })
+        .execute();
+        
+        return true;
+    }
+
+    async deleteProduct(id: number) {
         try {
             await this.repository.delete(id);
             return true;

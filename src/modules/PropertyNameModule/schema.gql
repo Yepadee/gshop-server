@@ -1,4 +1,13 @@
 
+type Query {
+  propertyNames(id: ID, name: String): [PropertyName]!
+  propertyName(id: ID!): PropertyName
+}
+
+type Mutation {
+  addPropertyName(name: String!): Boolean!
+}
+
 type PropertyName {
   id: ID!
   name: String!
