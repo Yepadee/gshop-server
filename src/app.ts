@@ -1,22 +1,30 @@
 import "reflect-metadata";
-import * as _ from "lodash";
-import * as faker from "faker";
+
 import { ApolloServer } from 'apollo-server';
+import { createConnection } from "typeorm";
 
-import {createConnection} from "typeorm";
-import {ProductType} from "@entity/ProductType";
-import {Product} from "@entity/Product";
+import { ProductType } from "@entity/ProductType";
+import { Product } from "@entity/Product";
+import { PropertyName } from "@entity/Property/PropertyName";
+import { PropertyValue } from "@entity/Property/PropertyValue";
+import { Stock } from "@entity/Stock";
 
-import {PropertyName} from "@entity/Property/PropertyName";
-import {PropertyValue} from "@entity/Property/PropertyValue";
-
-import {Stock} from "@entity/Stock";
+import { User } from "@entity/User";
 
 import { GraphQLModules } from "@modules";
+
+import * as _ from "lodash";
+import * as faker from "faker";
+import * as bcrypt from "bcrypt";
 
 
 createConnection().then(async connection => {
   connection.synchronize(true).then( async () => {
+    const user = new User();
+    user.username = "admin";
+    user.password = await bcrypt.hash("password", 10);
+    await connection.manager.save(user);
+
     const propertyName = new PropertyName();
     propertyName.name = "Size";
     await connection.manager.save(propertyName);
@@ -93,15 +101,12 @@ createConnection().then(async connection => {
 }).catch(error => console.log(error));
 
 
-// The ApolloServer constructor requires two parameters: your schema
-// definition and your set of resolvers.
 const server = new ApolloServer({
   schema: GraphQLModules.schema,
   resolvers: GraphQLModules.resolvers,
   context: session => session
 });
 
-// The `listen` method launches a web server.
 server.listen({port: 3000}).then(({ url }) => {
   console.log(`🚀  Server ready at ${url}`);
 });
