@@ -1,26 +1,18 @@
-import { PropertyNameProvider } from "./provider";
+import { UserProvider } from "./provider";
 
 export default {
     Query: {
-      propertyNames: (_, args, { injector }) => injector.get(PropertyNameProvider).getPropertyNames(args),
-      propertyName: (_, { id }, { injector }) => injector.get(PropertyNameProvider).getPropertyNameById(id)
+      users: (_, args, { injector }) => injector.get(UserProvider).getUsers(args),
+      user: (_, { id }, { injector }) => injector.get(UserProvider).getUserById(id)
     },
 
     Mutation: {
-      addPropertyName: (_, { name }, { injector }) => injector.get(PropertyNameProvider).addPropertyName(name),
+      login: (_, { username, password }, { injector }) => injector.get(UserProvider).login(username, password),
+      addUser: (_, { username, password }, { injector }) => injector.get(UserProvider).addUser(username, password)
     },
 
-    ProductType: {
-      propertyNames: productType => productType.propertyNames
-    },
-
-    PropertyName: {
-      name: propertyName => propertyName.name,
-      values: propertyName => propertyName.propertyValues
-    },
-
-    Product: {
-      requiredProperties: product => product.requiredProperties
+    User: {
+      username: user => user.username
     }
   
 };

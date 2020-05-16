@@ -13,6 +13,8 @@ import { User } from "@entity/User";
 
 import { GraphQLModules } from "@modules";
 
+import { getUserFromJWT } from "@security";
+
 import * as _ from "lodash";
 import * as faker from "faker";
 import * as bcrypt from "bcrypt";
@@ -104,7 +106,7 @@ createConnection().then(async connection => {
 const server = new ApolloServer({
   schema: GraphQLModules.schema,
   resolvers: GraphQLModules.resolvers,
-  context: session => session
+  context: ({req}) => getUserFromJWT(req)
 });
 
 server.listen({port: 3000}).then(({ url }) => {
