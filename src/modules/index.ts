@@ -8,6 +8,7 @@ import { PropertyValueModule } from "./PropertyValueModule";
 import { AvailablePropertyModule } from "./AvailablePropertyModule";
 import { UserModule } from "./UserModule";
 import { AuthModule } from "./AuthModule";
+import { isAuthenticated } from "./security";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -21,4 +22,7 @@ export const GraphQLModules = new GraphQLModule({
         UserModule,
         AuthModule
     ],
+    resolversComposition: {
+        'Query.stockQuantity': [isAuthenticated()]
+    }
 });

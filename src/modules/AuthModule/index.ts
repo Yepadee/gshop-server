@@ -9,7 +9,7 @@ export const AuthModule = new GraphQLModule({
   typeDefs,
   resolvers,
   providers: [AuthProvider],
-  context: ({ req }, _, {injector}) => {
+  context: ({ req }, _, { injector }) => {
     const authToken = req.headers.authorization;
     const currentUser = injector.get(AuthProvider).authorizeUser(authToken);
     return { currentUser }
