@@ -6,7 +6,6 @@ type Query {
 
 type Mutation {
   addUser(username: String!, password: String!): Boolean!
-  login(username: String!, password: String!): String
 }
 
 type User {

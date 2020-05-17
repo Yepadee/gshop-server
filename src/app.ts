@@ -13,12 +13,14 @@ import { User } from "@entity/User";
 
 import { GraphQLModules } from "@modules";
 
-import { getUserFromJWT } from "@security";
-
 import * as _ from "lodash";
 import * as faker from "faker";
 import * as bcrypt from "bcrypt";
 
+import * as dotenv from "dotenv";
+
+const result = dotenv.config()
+if (result.error) throw result.error;
 
 createConnection().then(async connection => {
   connection.synchronize(true).then( async () => {
@@ -106,7 +108,7 @@ createConnection().then(async connection => {
 const server = new ApolloServer({
   schema: GraphQLModules.schema,
   resolvers: GraphQLModules.resolvers,
-  context: ({req}) => getUserFromJWT(req)
+  context: GraphQLModules.context
 });
 
 server.listen({port: 3000}).then(({ url }) => {

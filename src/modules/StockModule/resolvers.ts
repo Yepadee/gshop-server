@@ -2,7 +2,10 @@ import { StockProvider } from "./provider";
 
 export default {
     Query: {
-      stockQuantity: (_, { productId, propertyValueIds }, { injector }) => injector.get(StockProvider).getStockQuantity(productId, propertyValueIds),
+      stockQuantity: (_, { productId, propertyValueIds }, context) => {
+        console.log(context);
+        return context.injector.get(StockProvider).getStockQuantity(productId, propertyValueIds);
+      },
       itemInStock: (_, { productId, propertyValueIds }, { injector }) => injector.get(StockProvider).getStockQuantity(productId, propertyValueIds) > 0
     },
 

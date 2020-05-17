@@ -5,6 +5,10 @@ import resolvers from "./resolvers";
 
 import { UserProvider } from "./provider";
 
+export interface IMyModuleContext {
+  myField: string;
+}
+
 export const UserModule = new GraphQLModule({
   typeDefs,
   resolvers,

@@ -8,9 +8,7 @@ import { PropertyValue } from "@entity/Property/PropertyValue";
 @Injectable()
 export class StockProvider {
     repository = getRepository(Stock);
-
     productRepository = getRepository(Product);
-
     propertyValueRepository = getRepository(PropertyValue);
 
     async getStockQuantity(productId, propertyValueIds) {
