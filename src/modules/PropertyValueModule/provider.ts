@@ -25,7 +25,7 @@ export class PropertyValueProvider {
         .innerJoin("propertyValue.stock", "stock")
         .getRawOne();
 
-        if (data.hasStock == '1') return false;
+        if (data.hasStock == '1') throw new Error("Cannot remove value if there exists stock with this value.");
 
         await this.repository.delete(propertyValueId);
         return true;

@@ -42,7 +42,7 @@ export class ProductProvider {
         }
         else
         {
-            return false;
+            throw new Error("A property selected cannot be chosen for this product type.");
         }
 
     }
@@ -65,12 +65,7 @@ export class ProductProvider {
     }
 
     async removeProduct(id: number) {
-        try {
-            await this.repository.delete(id);
-            return true;
-        }
-        catch {
-            return false;
-        }
+        await this.repository.delete(id);
+        return true;
     }
 }

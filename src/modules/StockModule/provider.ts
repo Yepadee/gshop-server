@@ -34,7 +34,7 @@ export class StockProvider {
     }
 
     async addStock(args) {
-        if(await this.getStockQuantity(args.productId, args.propertyIds)) return false;
+        if(await this.getStockQuantity(args.productId, args.propertyIds)) throw new Error("Stock for this product with these properties already exist.");
         const allValidProperties = await args.propertyIds.reduce(async (acc: boolean, propertyValueId) => {
             const data = await this.productRepository.createQueryBuilder("product")
             .select("COUNT(*) > 0", "isValidProperty")
@@ -47,7 +47,7 @@ export class StockProvider {
            if (data.isValidProperty == '1') return acc;
            else return false;
         }, true);
-        if (!allValidProperties) return false;
+        if (!allValidProperties) throw new Error("One or more of the properties selected are not accosiated with this product.");
 
         const noDuplicateValues = await this.propertyValueRepository.createQueryBuilder("propertyValue")
         .select("COUNT(DISTINCT(propertyName.id)) = COUNT(*)", "value")
@@ -55,7 +55,7 @@ export class StockProvider {
         .where("propertyValue.id IN (:propertyValueIds)", {propertyValueIds: args.propertyIds})
         .getRawOne();
 
-        if (noDuplicateValues.value == '0') return false;
+        if (noDuplicateValues.value == '0') throw new Error("Cannot assign more than one proprty of the same type.");
 
         const stock = new Stock();
         stock.productId = args.productId;

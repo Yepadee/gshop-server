@@ -4,7 +4,6 @@ import { getRepository } from "typeorm";
 import { User } from '@entity/User';
 
 import * as bcrypt from "bcrypt";
-import * as jwt from "jsonwebtoken";
 
 @Injectable()
 export class UserProvider {
