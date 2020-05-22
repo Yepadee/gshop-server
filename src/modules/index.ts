@@ -30,8 +30,14 @@ export const GraphQLModules = new GraphQLModule({
         'Mutation.addProductType': [isAuthenticated()],
         'Mutation.removeProductType': [isAuthenticated()],
 
-        
+        'Mutation.addProductValue': [isAuthenticated()],
+        'Mutation.removeProductValue': [isAuthenticated()],
 
-        'Query.stockQuantity': [isAuthenticated()]
+        'Query.stockQuantity': [isAuthenticated()],
+        'Mutation.addStock': [isAuthenticated()],
+        'Mutation.updateStockQuantity': [isAuthenticated()],
+        'Mutation.removeStock': [isAuthenticated()],
+
+        'Mutation.addUser': [isAuthenticated()]
     }
 });
