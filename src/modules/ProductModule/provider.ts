@@ -64,7 +64,7 @@ export class ProductProvider {
         return true;
     }
 
-    async deleteProduct(id: number) {
+    async removeProduct(id: number) {
         try {
             await this.repository.delete(id);
             return true;

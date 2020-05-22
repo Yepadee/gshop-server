@@ -23,7 +23,7 @@ type Query {
 type Mutation {
   addProduct(newProduct: NewProductInput!): Boolean!
   updateProduct(updatedProduct: UpdatedProductInput!): Boolean!
-  deleteProduct(id: ID!): Boolean!
+  removeProduct(id: ID!): Boolean!
 }
 
 type Product {
