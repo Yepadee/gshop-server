@@ -1,7 +1,7 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinColumn} from "typeorm";
 
 import {PropertyName} from "./PropertyName";
-import { Stock } from "@entity/Stock";
+import { Stock } from "./Stock";
 
 @Entity()
 export class PropertyValue {

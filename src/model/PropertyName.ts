@@ -1,6 +1,6 @@
 import {Entity, PrimaryGeneratedColumn, Column, ManyToMany, OneToMany, JoinTable} from "typeorm";
 
-import { ProductType } from "@entity/ProductType";
+import { ProductType } from "./ProductType";
 import { PropertyValue } from "./PropertyValue";
 
 @Entity()

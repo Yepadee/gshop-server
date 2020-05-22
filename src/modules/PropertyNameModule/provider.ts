@@ -1,7 +1,7 @@
 import { Injectable } from "@graphql-modules/di";
 
 import { getRepository } from "typeorm";
-import { PropertyName } from '@entity/Property/PropertyName';
+import { PropertyName } from '@entity/PropertyName';
 
 @Injectable()
 export class PropertyNameProvider {

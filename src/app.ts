@@ -5,8 +5,8 @@ import { createConnection } from "typeorm";
 
 import { ProductType } from "@entity/ProductType";
 import { Product } from "@entity/Product";
-import { PropertyName } from "@entity/Property/PropertyName";
-import { PropertyValue } from "@entity/Property/PropertyValue";
+import { PropertyName } from "@entity/PropertyName";
+import { PropertyValue } from "@entity/PropertyValue";
 import { Stock } from "@entity/Stock";
 
 import { User } from "@entity/User";

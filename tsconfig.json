@@ -22,7 +22,7 @@
      "baseUrl": "./src",
      "paths": {
        "@modules": ["modules"],
-       "@entity/*": ["entity/*"]
+       "@entity/*": ["model/*"]
      }
    },
    "exclude": ["node_modules"],
