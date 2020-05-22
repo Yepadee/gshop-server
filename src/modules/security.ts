@@ -1,7 +1,6 @@
 
 
 export const isAuthenticated = () => next => async (root, args, context, info) => {
-    console.log("TEST");
     if (!context.currentUser) {
       throw new Error('You are not authenticated!');
     }
