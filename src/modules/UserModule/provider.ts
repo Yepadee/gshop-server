@@ -28,7 +28,7 @@ export class UserProvider {
     }
 
     async changePassword(id: number, newPassword: string) {
-        await this.repository.update(id, {password: newPassword});
+        await this.repository.update(id, {password: await bcrypt.hash(newPassword, 10)});
         return true;
     }
 }
