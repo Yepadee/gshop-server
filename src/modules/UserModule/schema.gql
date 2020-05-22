@@ -6,6 +6,7 @@ type Query {
 
 type Mutation {
   addUser(username: String!, password: String!): Boolean!
+  changePassword(id: ID!, newPassword: String!): Boolean!
 }
 
 type User {

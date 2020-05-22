@@ -26,4 +26,9 @@ export class UserProvider {
 
         return true;
     }
+
+    async changePassword(id: number, newPassword: string) {
+        await this.repository.update(id, {password: newPassword});
+        return true;
+    }
 }
