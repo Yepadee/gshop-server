@@ -23,6 +23,15 @@ export const GraphQLModules = new GraphQLModule({
         AuthModule
     ],
     resolversComposition: {
+        'Mutation.addProduct': [isAuthenticated()],
+        'Mutation.updateProduct': [isAuthenticated()],
+        'Mutation.removeProduct': [isAuthenticated()],
+
+        'Mutation.addProductType': [isAuthenticated()],
+        'Mutation.removeProductType': [isAuthenticated()],
+
+        
+
         'Query.stockQuantity': [isAuthenticated()]
     }
 });

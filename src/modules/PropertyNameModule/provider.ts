@@ -22,4 +22,9 @@ export class PropertyNameProvider {
 
         return true;
     }
+
+    async removePropertyName(id: number) {
+        await this.repository.delete(id);
+        return true;
+    }
 }

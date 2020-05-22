@@ -6,6 +6,7 @@ type Query {
 
 type Mutation {
   addPropertyName(name: String!): Boolean!
+  removePropertyName(id: ID!): Boolean!
 }
 
 type PropertyName {

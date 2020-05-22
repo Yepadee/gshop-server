@@ -67,19 +67,19 @@ export class StockProvider {
         return true;
     }
 
-    async updateStockQuantity(stockId: number, quantity: number) {
+    async updateStockQuantity(id: number, quantity: number) {
         await this.repository.createQueryBuilder()
         .update(Stock)
         .set({quantity})
-        .where("id = :stockId", {stockId})
+        .where("id = :id", {id})
         .execute();
 
         return true;
     }
 
-    async deleteStock(stockId: number)
+    async deleteStock(id: number)
     {
-        await this.repository.delete(stockId);
+        await this.repository.delete(id);
         return true;
     }
 }

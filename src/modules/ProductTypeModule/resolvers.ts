@@ -8,7 +8,7 @@ export default {
 
     Mutation: {
       addProductType: (_, { name, propertyNameIds }, { injector }) => injector.get(ProductTypeProvider).addProductType(name, propertyNameIds),
-      removeProductType: (_, { productTypeId }, { injector }) => injector.get(ProductTypeProvider).removeProductType(productTypeId)
+      removeProductType: (_, { id }, { injector }) => injector.get(ProductTypeProvider).removeProductType(id)
     },
 
     ProductType: {
