@@ -1,6 +1,6 @@
 import "reflect-metadata";
-
-import { ApolloServer } from 'apollo-server';
+import * as express from "express";
+import { ApolloServer } from "apollo-server-express";
 import { createConnection } from "typeorm";
 
 import { ProductType } from "@entity/ProductType";
@@ -115,6 +115,9 @@ const server = new ApolloServer({
   }
 });
 
-server.listen({port: 3000}).then(({ url }) => {
-  console.log(`🚀  Server ready at ${url}`);
+const app = express();
+server.applyMiddleware({ app });
+
+app.listen({port: 3000}, () => {
+  console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
 });
