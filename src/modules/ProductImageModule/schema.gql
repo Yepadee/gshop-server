@@ -1,0 +1,11 @@
+scalar Upload
+
+type Image {
+  id: ID
+  name: String
+  url: String
+}
+
+type Mutation {
+  uploadImage(name: String!, file: Upload!): Boolean
+}

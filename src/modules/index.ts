@@ -9,6 +9,7 @@ import { AvailablePropertyModule } from "./AvailablePropertyModule";
 import { UserModule } from "./UserModule";
 import { AuthModule } from "./AuthModule";
 import { isAuthenticated } from "./security";
+import { ProductImageModule } from "./ProductImageModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -20,7 +21,8 @@ export const GraphQLModules = new GraphQLModule({
         PropertyValueModule,
         AvailablePropertyModule,
         UserModule,
-        AuthModule
+        AuthModule,
+        ProductImageModule
     ],
     resolversComposition: {
         'Mutation.addProduct': [isAuthenticated()],

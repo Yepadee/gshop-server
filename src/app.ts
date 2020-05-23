@@ -108,7 +108,11 @@ createConnection().then(async connection => {
 const server = new ApolloServer({
   schema: GraphQLModules.schema,
   resolvers: GraphQLModules.resolvers,
-  context: GraphQLModules.context
+  context: GraphQLModules.context,
+  uploads: {
+    maxFileSize: 10000000, // 10 MB
+    maxFiles: 20
+  }
 });
 
 server.listen({port: 3000}).then(({ url }) => {
