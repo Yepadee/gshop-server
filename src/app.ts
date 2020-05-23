@@ -116,6 +116,7 @@ const server = new ApolloServer({
 });
 
 const app = express();
+app.use(express.static('public'));
 server.applyMiddleware({ app });
 
 app.listen({port: 3000}, () => {

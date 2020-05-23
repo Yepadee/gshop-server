@@ -11,7 +11,7 @@ export class ProductImageProvider {
     {
         const { filename, createReadStream } = await file;
         const stream : ReadStream = createReadStream();
-        const outStream = fs.createWriteStream("files/images/" + name + path.extname(filename));
+        const outStream = fs.createWriteStream("public/images/" + name + path.extname(filename));
         stream.pipe(outStream);
         return true;
     }
