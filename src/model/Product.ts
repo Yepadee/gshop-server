@@ -1,8 +1,10 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, ManyToMany, JoinTable} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn, ManyToMany, JoinTable, AfterInsert} from "typeorm";
 
 import { ProductType } from "./ProductType";
 import { Stock } from "./Stock";
 import { PropertyName } from "./PropertyName";
+
+import * as fs from "fs";
 
 @Entity()
 export class Product {
@@ -37,4 +39,12 @@ export class Product {
 
     @OneToMany(() => Stock, stock => stock.product)
     stock:  Promise<Stock[]>;
+
+    @AfterInsert()
+    createImageFolder() {
+        const imageDir = "public/product-images/" + this.id;
+        if (!fs.existsSync(imageDir)) {
+            fs.mkdirSync(imageDir);
+        }
+    }
 }

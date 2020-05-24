@@ -4,6 +4,8 @@ import { getRepository } from "typeorm";
 import { Product } from '@entity/Product';
 import { ProductType } from "@entity/ProductType";
 
+import * as rimraf from "rimraf";
+
 @Injectable()
 export class ProductProvider {
     repository = getRepository(Product);
@@ -65,6 +67,7 @@ export class ProductProvider {
     }
 
     async removeProduct(id: number) {
+        rimraf.sync("public/product-images/" + id);
         await this.repository.delete(id);
         return true;
     }

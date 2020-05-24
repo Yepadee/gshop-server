@@ -77,7 +77,7 @@ export class StockProvider {
         return true;
     }
 
-    async deleteStock(id: number)
+    async removeStock(id: number)
     {
         await this.repository.delete(id);
         return true;
