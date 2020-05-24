@@ -7,6 +7,6 @@ type Image {
 }
 
 type Mutation {
-  uploadProductImages(productId: ID!, files: [Upload]!): Boolean
-  deleteProductImage(productId: ID!, filename: String!): Boolean
+  uploadProductImages(productId: ID!, files: [Upload]!): Boolean @auth
+  deleteProductImage(productId: ID!, filename: String!): Boolean @auth
 }

@@ -1,12 +1,12 @@
 
 type Query {
-  propertyNames(id: ID, name: String): [PropertyName]!
-  propertyName(id: ID!): PropertyName
+  propertyNames(id: ID, name: String): [PropertyName]! @auth
+  propertyName(id: ID!): PropertyName @auth
 }
 
 type Mutation {
-  addPropertyName(name: String!): Boolean
-  removePropertyName(id: ID!): Boolean
+  addPropertyName(name: String!): Boolean @auth
+  removePropertyName(id: ID!): Boolean @auth
 }
 
 type PropertyName {

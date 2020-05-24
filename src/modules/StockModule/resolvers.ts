@@ -14,6 +14,7 @@ export default {
 
     Stock: {
       id: stock => stock.id,
+      inStock: stock => stock.quantity > 0
     },
 
     Product: {

@@ -21,12 +21,12 @@ type Query {
 }
 
 type Mutation {
-  addProduct(newProduct: NewProductInput!): Boolean
-  updateProduct(updatedProduct: UpdatedProductInput!): Boolean
-  removeProduct(id: ID!): Boolean
+  addProduct(newProduct: NewProductInput!): Boolean @auth
+  updateProduct(updatedProduct: UpdatedProductInput!): Boolean @auth
+  removeProduct(id: ID!): Boolean @auth
 }
 
-type Product {
+type Product{
   id: ID!
   name: String!
   catagory: String!

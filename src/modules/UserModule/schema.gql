@@ -1,12 +1,12 @@
 
 type Query {
-  users(id: ID, username: String): [User]!
-  user(id: ID!): User
+  users(id: ID, username: String): [User]! @auth
+  user(id: ID!): User @auth
 }
 
 type Mutation {
-  addUser(username: String!, password: String!): Boolean
-  changePassword(id: ID!, newPassword: String!): Boolean
+  addUser(username: String!, password: String!): Boolean @auth
+  changePassword(id: ID!, newPassword: String!): Boolean @auth
 }
 
 type User {

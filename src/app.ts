@@ -1,6 +1,6 @@
 import "reflect-metadata";
 import * as express from "express";
-import { ApolloServer } from "apollo-server-express";
+import { ApolloServer, SchemaDirectiveVisitor } from "apollo-server-express";
 import { createConnection } from "typeorm";
 
 import { ProductType } from "@entity/ProductType";
@@ -104,16 +104,18 @@ createConnection().then(async connection => {
   });
 }).catch(error => console.log(error));
 
-
 const server = new ApolloServer({
   schema: GraphQLModules.schema,
   resolvers: GraphQLModules.resolvers,
   context: GraphQLModules.context,
+  schemaDirectives: GraphQLModules.schemaDirectives,
   uploads: {
     maxFileSize: 10000000, // 10 MB
     maxFiles: 20
   }
 });
+
+SchemaDirectiveVisitor.visitSchemaDirectives(GraphQLModules.schema, GraphQLModules.schemaDirectives);
 
 const app = express();
 app.use(express.static('public'));

@@ -1,17 +1,19 @@
+
 type Query {
-  stockQuantity(productId: ID!, propertyValueIds: [ID]!): Int
+  stockQuantity(productId: ID!, propertyValueIds: [ID]!): Int @auth
   itemInStock(productId: ID!, propertyValueIds: [ID]!): Boolean!
 }
 
 type Mutation {
-  addStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean
-  updateStockQuantity(stockId: ID!, quantity: Int!): Boolean
-  removeStock(id: ID!): Boolean
+  addStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean @auth
+  updateStockQuantity(stockId: ID!, quantity: Int!): Boolean @auth
+  removeStock(id: ID!): Boolean @auth
 }
 
 type Stock {
   id: ID!
-  quantity: Int!
+  quantity: Int @auth
+  inStock: Boolean!
 }
 
 type Product {

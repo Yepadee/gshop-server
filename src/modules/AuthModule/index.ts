@@ -4,6 +4,7 @@ import * as typeDefs from "./schema.gql";
 import resolvers from "./resolvers";
 
 import { AuthProvider } from "./provider";
+import { IsAuthenticatedDirective } from "@directives/isAuthenticated";
 
 export const AuthModule = new GraphQLModule({
   typeDefs,
@@ -13,5 +14,8 @@ export const AuthModule = new GraphQLModule({
     const authToken = req.headers.authorization;
     const currentUser = injector.get(AuthProvider).authorizeUser(authToken);
     return { currentUser }
+  },
+  schemaDirectives: {
+      auth: IsAuthenticatedDirective
   }
 });
