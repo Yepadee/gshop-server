@@ -2,17 +2,19 @@ import { Injectable } from "@graphql-modules/di";
 
 import { ReadStream } from "typeorm/platform/PlatformTools";
 import * as fs from 'fs';
-import * as path from 'path';
 
 @Injectable()
 export class ProductImageProvider {
 
-    async uploadImage(name, file)
+    async uploadProductImages(productId, files)
     {
-        const { filename, createReadStream } = await file;
-        const stream : ReadStream = createReadStream();
-        const outStream = fs.createWriteStream("public/images/" + name + path.extname(filename));
-        stream.pipe(outStream);
+        await Promise.all(files.map( async file => {
+            const { filename, createReadStream } = await file;
+            const stream : ReadStream = createReadStream();
+            const outStream = fs.createWriteStream("public/product-images/" + productId + "/" + filename);
+            await stream.pipe(outStream);
+        }));
+        
         return true;
     }
 }

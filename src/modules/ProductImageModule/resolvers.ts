@@ -3,7 +3,7 @@ import { ProductImageProvider } from "./provider";
 
 export default {
   Mutation: {
-    uploadImage: async (_, { name, file }, { injector }) => injector.get(ProductImageProvider).uploadImage(name, file)
+    uploadProductImages: async (_, { productId, files }, { injector }) => injector.get(ProductImageProvider).uploadProductImages(productId, files)
   }
   
 };

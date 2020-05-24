@@ -7,5 +7,5 @@ type Image {
 }
 
 type Mutation {
-  uploadProductImages(file: [Upload]!): Boolean
+  uploadProductImages(productId: ID!, files: [Upload]!): Boolean
 }
