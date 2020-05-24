@@ -27,10 +27,8 @@ export class ProductImageProvider {
             const { filename, createReadStream } = await file;
             const stream = createReadStream();
             const path = "public/product-images/" + productId + "/" + filename;
-
-            await this.storeFile(stream, path);
-
             
+            await this.storeFile(stream, path);
         }));
 
         return true;

@@ -3,7 +3,7 @@ import { StockProvider } from "./provider";
 export default {
     Query: {
       stockQuantity: (_, { productId, propertyValueIds }, { injector }) => injector.get(StockProvider).getStockQuantity(productId, propertyValueIds),
-      itemInStock: (_, { productId, propertyValueIds }, { injector }) => injector.get(StockProvider).getStockQuantity(productId, propertyValueIds) > 0
+      itemInStock: (_, { productId, propertyValueIds }, { injector }) => injector.get(StockProvider).itemInStock(productId, propertyValueIds)
     },
 
     Mutation: {

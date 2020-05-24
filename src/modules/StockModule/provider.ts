@@ -33,6 +33,12 @@ export class StockProvider {
         else return data;
     }
 
+    async itemInStock(productId, propertyValueIds)
+    {
+        const stockCount = await this.getStockQuantity(productId, propertyValueIds);
+        return parseInt(stockCount) > 0;
+    }
+
     async addStock(args) {
         if(await this.getStockQuantity(args.productId, args.propertyIds)) throw new Error("Stock for this product with these properties already exist.");
         const allValidProperties = await args.propertyIds.reduce(async (acc: boolean, propertyValueId) => {
