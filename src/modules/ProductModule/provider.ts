@@ -74,9 +74,8 @@ export class ProductProvider {
     }
 
     getProductImages(id: number) {
-        const publicDir = "product-images/" + id;
         const dir = "public/product-images/" + id;
         const files = fs.readdirSync(dir);
-        return files.map( filename => "/" + publicDir + "/" + filename );
+        return files;
     }
 }
