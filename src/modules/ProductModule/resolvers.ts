@@ -18,6 +18,7 @@ export default {
     description: product => product.description,
     catagory: product => product.catagory,
     price: product => product.price,
+    images: (product, _, { injector }) => injector.get(ProductProvider).getProductImages(product.id)
   },
 
   ProductType: {

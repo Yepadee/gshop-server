@@ -4,6 +4,7 @@ import { getRepository } from "typeorm";
 import { Product } from '@entity/Product';
 import { ProductType } from "@entity/ProductType";
 
+import * as fs from "fs";
 import * as rimraf from "rimraf";
 
 @Injectable()
@@ -70,5 +71,12 @@ export class ProductProvider {
         rimraf.sync("public/product-images/" + id);
         await this.repository.delete(id);
         return true;
+    }
+
+    getProductImages(id: number) {
+        const publicDir = "product-images/" + id;
+        const dir = "public/product-images/" + id;
+        const files = fs.readdirSync(dir);
+        return files.map( filename => "/" + publicDir + "/" + filename );
     }
 }

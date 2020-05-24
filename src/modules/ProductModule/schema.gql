@@ -32,6 +32,7 @@ type Product {
   catagory: String!
   description: String
   price: Float!
+  images: [String]!
 }
 
 type ProductType {
