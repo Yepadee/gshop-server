@@ -21,9 +21,9 @@ type Query {
 }
 
 type Mutation {
-  addProduct(newProduct: NewProductInput!): Boolean!
-  updateProduct(updatedProduct: UpdatedProductInput!): Boolean!
-  removeProduct(id: ID!): Boolean!
+  addProduct(newProduct: NewProductInput!): Boolean
+  updateProduct(updatedProduct: UpdatedProductInput!): Boolean
+  removeProduct(id: ID!): Boolean
 }
 
 type Product {

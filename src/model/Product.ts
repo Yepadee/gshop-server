@@ -44,7 +44,7 @@ export class Product {
     createImageFolder() {
         const imageDir = "public/product-images/" + this.id;
         if (!fs.existsSync(imageDir)) {
-            fs.mkdirSync(imageDir);
+            fs.mkdirSync(imageDir, { recursive: true });
         }
     }
 }

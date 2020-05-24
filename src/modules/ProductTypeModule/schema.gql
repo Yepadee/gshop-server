@@ -4,8 +4,8 @@ type Query {
 }
 
 type Mutation {
-  addProductType(name: String!, propertyNameIds: [ID]!): Boolean!
-  removeProductType(id: ID!): Boolean!
+  addProductType(name: String!, propertyNameIds: [ID]!): Boolean
+  removeProductType(id: ID!): Boolean
 }
 
 type ProductType {
