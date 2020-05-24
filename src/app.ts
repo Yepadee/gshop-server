@@ -111,7 +111,7 @@ const server = new ApolloServer({
   context: GraphQLModules.context,
   uploads: {
     maxFileSize: 10000000, // 10 MB
-    maxFiles: 200
+    maxFiles: 20
   }
 });
 
