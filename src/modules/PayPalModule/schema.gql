@@ -1,0 +1,10 @@
+
+type PayPalOrder {
+  orderId: String!
+  approveUrl: String!
+}
+
+type Mutation {
+  createPayPalOrder(stockIds: [ID]!): PayPalOrder
+  capturePayPalOrder(orderId: String!): Boolean!
+}

@@ -12,6 +12,7 @@
    "dependencies": {
       "@graphql-modules/core": "^0.7.17",
       "@graphql-modules/utils": "^0.4.0",
+      "@paypal/checkout-server-sdk": "^1.0.2",
       "@types/bcrypt": "^3.0.0",
       "@types/lodash": "^4.14.152",
       "apollo-server-express": "^2.13.1",

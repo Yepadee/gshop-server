@@ -9,6 +9,7 @@ import { AvailablePropertyModule } from "./AvailablePropertyModule";
 import { UserModule } from "./UserModule";
 import { AuthModule } from "./AuthModule";
 import { ProductImageModule } from "./ProductImageModule";
+import { PayPalModule } from "./PayPalModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -21,6 +22,7 @@ export const GraphQLModules = new GraphQLModule({
         AvailablePropertyModule,
         UserModule,
         AuthModule,
-        ProductImageModule
+        ProductImageModule,
+        PayPalModule
     ]
 });

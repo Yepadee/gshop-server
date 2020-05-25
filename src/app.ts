@@ -19,6 +19,8 @@ import * as bcrypt from "bcrypt";
 
 import * as dotenv from "dotenv";
 
+import {  createOrder } from "./payPal/order";
+
 const result = dotenv.config()
 if (result.error) throw result.error;
 
@@ -118,8 +120,9 @@ const server = new ApolloServer({
 SchemaDirectiveVisitor.visitSchemaDirectives(GraphQLModules.schema, GraphQLModules.schemaDirectives);
 
 const app = express();
-app.use(express.static('public'));
+app.use(express.static("public"));
 server.applyMiddleware({ app });
+
 
 app.listen({port: 3000}, () => {
   console.log(`🚀 Server ready at http://localhost:3000${server.graphqlPath}`)
