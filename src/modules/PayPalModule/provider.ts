@@ -1,6 +1,8 @@
 import { Injectable } from "@graphql-modules/di";
 import * as paypal from '@paypal/checkout-server-sdk';
 import * as dotenv from "dotenv";
+import { getRepository, In } from "typeorm";
+import { Stock } from "@entity/Stock";
 
 const result = dotenv.config()
 if (result.error) throw result.error;
@@ -12,6 +14,8 @@ let clientSecret = process.env.PAYPAL_SECRET;
 let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 let client = new paypal.core.PayPalHttpClient(environment);
 
+
+
 function buildRequestBody() {
     return {
         "intent": "CAPTURE",
@@ -20,8 +24,8 @@ function buildRequestBody() {
             "cancel_url": "https://www.example.com",
             "brand_name": "EXAMPLE INC",
             "locale": "en-US",
-            "landing_page": "BILLING",
-            "shipping_preference": "SET_PROVIDED_ADDRESS",
+            "landing_page": "LOGIN",
+            "shipping_preference": "GET_FROM_FILE",
             "user_action": "CONTINUE"
         },
         "purchase_units": [
@@ -32,27 +36,27 @@ function buildRequestBody() {
                 "custom_id": "CUST-HighFashions",
                 "soft_descriptor": "HighFashions",
                 "amount": {
-                    "currency_code": "USD",
+                    "currency_code": "GBP",
                     "value": "220.00",
                     "breakdown": {
                         "item_total": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "180.00"
                         },
                         "shipping": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "20.00"
                         },
                         "handling": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "10.00"
                         },
                         "tax_total": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "20.00"
                         },
                         "shipping_discount": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "10"
                         }
                     }
@@ -63,11 +67,11 @@ function buildRequestBody() {
                         "description": "Green XL",
                         "sku": "sku01",
                         "unit_amount": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "90.00"
                         },
                         "tax": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "10.00"
                         },
                         "quantity": "1",
@@ -78,31 +82,17 @@ function buildRequestBody() {
                         "description": "Running, Size 10.5",
                         "sku": "sku02",
                         "unit_amount": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "45.00"
                         },
                         "tax": {
-                            "currency_code": "USD",
+                            "currency_code": "GBP",
                             "value": "5.00"
                         },
                         "quantity": "2",
                         "category": "PHYSICAL_GOODS"
                     }
-                ],
-                "shipping": {
-                    "method": "United States Postal Service",
-                    "name": {
-                        "full_name":"John Doe"
-                    },
-                    "address": {
-                        "address_line_1": "123 Townsend St",
-                        "address_line_2": "Floor 6",
-                        "admin_area_2": "San Francisco",
-                        "admin_area_1": "CA",
-                        "postal_code": "94107",
-                        "country_code": "US"
-                    }
-                }
+                ]
             }
         ]
     };
@@ -110,7 +100,24 @@ function buildRequestBody() {
 
 @Injectable()
 export class PayPalProvider {
-    async createOrder(stockIds) {
+    stockRepository = getRepository(Stock);
+
+    private async parseItems(items) {
+        const ids = items.map(item => {
+            return item.stockId
+        });
+
+        const stock = await this.stockRepository.find({
+            relations: ["product"],
+            where: { id : In(ids) }
+        });
+
+        console.log(stock);
+
+        return ids;
+    }
+
+    async createOrder(items) {
         const request = new paypal.orders.OrdersCreateRequest();
         request.headers["prefer"] = "return=representation";
         request.requestBody(buildRequestBody());
@@ -123,8 +130,8 @@ export class PayPalProvider {
                 approveUrl = item.href;
             }
         });
-
-        console.log(response.result);
+        const parsedItems = await this.parseItems(items);
+        console.log(parsedItems);
         const payPalOrder = {
             orderId: response.result.id,
             approveUrl
@@ -149,4 +156,6 @@ export class PayPalProvider {
             return false;
         }  
     }
+
+
 }

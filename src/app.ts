@@ -19,7 +19,6 @@ import * as bcrypt from "bcrypt";
 
 import * as dotenv from "dotenv";
 
-import {  createOrder } from "./payPal/order";
 
 const result = dotenv.config()
 if (result.error) throw result.error;
