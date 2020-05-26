@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository } from "typeorm";
+import { EntityRepository, Repository, getRepository, In } from "typeorm";
 import { Stock } from "@entity/Stock";
 import { Product } from "@entity/Product";
 import { PropertyValue } from "@entity/PropertyValue";
@@ -68,12 +68,42 @@ export class StockRepository extends Repository<Stock> {
         await this.save(stock);
     }
 
-    
     async updateStockQuantity(id: number, quantity: number) {
         await this.createQueryBuilder()
         .update(Stock)
         .set({quantity})
         .where("id = :id", {id})
         .execute();
+    }
+
+    async getStockInfo(ids: number[])
+    {
+        const stock = <any> await this.find({
+            where: { id : In(ids) },
+            join: {
+                alias: "stock",
+                leftJoinAndSelect: {
+                    "properties":"stock.properties",
+                    "product":"stock.product",
+                    "productType":"product.type"
+                }
+            }
+        });
+
+        const stockInfo = stock.map(item => {
+            const properties = item.__properties__;
+            const product = item.__product__;
+            const productType = product.__type__;
+            
+            return {
+                itemId: item.id,
+                type: productType.name,
+                name: product.name,
+                price: parseFloat(product.price),
+                properties: properties.map( property => property.value ),
+            }
+        });
+        
+        return stockInfo;
     }
 }
