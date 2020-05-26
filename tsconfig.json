@@ -24,6 +24,7 @@
        "@modules": ["modules"],
        "@entity/*": ["model/*"],
        "@directives/*": ["directives/*"],
+       "@repository/*": ["repository/*"]
      }
    },
    "exclude": ["node_modules"],

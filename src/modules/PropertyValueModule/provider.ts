@@ -1,33 +1,21 @@
 import { Injectable } from "@graphql-modules/di";
 
-import { getRepository } from "typeorm";
-import { PropertyValue } from '@entity/PropertyValue';
+import { getCustomRepository } from "typeorm";
+import { PropertyValueRepository } from "@repository/PropertyValueRepository";
 
 @Injectable()
 export class PropertyValueProvider {
-    repository = getRepository(PropertyValue);
+    repository = getCustomRepository(PropertyValueRepository);
 
     async addPropertyValue(propertyNameId, value)
     {
-        const propertyValue = new PropertyValue();
-        propertyValue.value = value;
-        propertyValue.propertyNameId = propertyNameId;
-
-        await this.repository.save(propertyValue);
-
+        await this.repository.insertPropertyValue(propertyNameId, value);
         return true;
     }
 
     async removePropertyValue(propertyValueId)
     {   
-        const data = await this.repository.createQueryBuilder("propertyValue")
-        .select("COUNT(*) > 0", "hasStock")
-        .innerJoin("propertyValue.stock", "stock")
-        .getRawOne();
-
-        if (data.hasStock == '1') throw new Error("Cannot remove value if there exists stock with this value.");
-
-        await this.repository.delete(propertyValueId);
+        await this.repository.deletePropertyValue(propertyValueId);
         return true;
     }
 }

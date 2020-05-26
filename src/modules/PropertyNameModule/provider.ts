@@ -1,11 +1,11 @@
 import { Injectable } from "@graphql-modules/di";
 
-import { getRepository } from "typeorm";
-import { PropertyName } from '@entity/PropertyName';
+import { getRepository, getCustomRepository } from "typeorm";
+import { PropertyNameRepository } from "@repository/PropertyNameRepository";
 
 @Injectable()
 export class PropertyNameProvider {
-    repository = getRepository(PropertyName);
+    repository = getCustomRepository(PropertyNameRepository);
 
     getPropertyNames(args) {
         return this.repository.find({where: args});
@@ -16,10 +16,7 @@ export class PropertyNameProvider {
     }
 
     async addPropertyName(name: string) {
-        const propertyName = new PropertyName();
-        propertyName.name = name;
-        await this.repository.save(propertyName);
-
+        await this.repository.insertPropertyName(name);
         return true;
     }
 

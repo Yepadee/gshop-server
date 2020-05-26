@@ -1,11 +1,11 @@
 import { Injectable } from "@graphql-modules/di";
 
-import { getRepository } from "typeorm";
-import { ProductType } from '@entity/ProductType';
+import { getCustomRepository } from "typeorm";
+import { ProductTypeRepository } from "@repository/ProductTypeRepository";
 
 @Injectable()
 export class ProductTypeProvider {
-    repository = getRepository(ProductType);
+    repository = getCustomRepository(ProductTypeRepository);
 
     getProductTypes(args) {
         return this.repository.find({ where: args });
@@ -17,18 +17,8 @@ export class ProductTypeProvider {
 
     async addProductType(name, propertyNameIds)
     {
-        try
-        {
-            const productType = new ProductType();
-            productType.name = name;
-            productType.propertyNames = propertyNameIds.map(propertyNameId => <any>{id: propertyNameId});
-            await this.repository.save(productType);
-            return true;
-        }
-        catch
-        {
-            return false;
-        }
+        await this.repository.insertProductType(name, propertyNameIds);
+        return true;
     }
 
     async removeProductType(productTypeId)
