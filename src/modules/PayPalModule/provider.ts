@@ -15,88 +15,6 @@ let clientSecret = process.env.PAYPAL_SECRET;
 let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
 let client = new paypal.core.PayPalHttpClient(environment);
 
-function buildRequestBody() {
-    return {
-        intent: "CAPTURE",
-        application_context: {
-            return_url: "https://www.example.com",
-            cancel_url: "https://www.example.com",
-            brand_name: "EXAMPLE INC",
-            locale: "en-US",
-            landing_page: "LOGIN",
-            shipping_preference: "GET_FROM_FILE",
-            user_action: "CONTINUE"
-        },
-        purchase_units: [
-            {
-                reference_id: "PUHF",
-                description: "Sporting Goods",
-
-                custom_id: "CUST-HighFashions",
-                soft_descriptor: "HighFashions",
-                amount: {
-                    currency_code: "USD",
-                    value: "180.00",
-                    breakdown: {
-                        item_total: {
-                            currency_code: "USD",
-                            value: "180.00"
-                        },
-                        shipping: {
-                            currency_code: "USD",
-                            value: "0.00"
-                        },
-                        handling: {
-                            currency_code: "USD",
-                            value: "0.00"
-                        },
-                        tax_total: {
-                            currency_code: "USD",
-                            value: "0.00"
-                        },
-                        shipping_discount: {
-                            currency_code: "USD",
-                            value: "0"
-                        }
-                    }
-                },
-                items: [
-                    {
-                        name: "T-Shirt",
-                        description: "Green XL",
-                        sku: "sku01",
-                        unit_amount: {
-                            currency_code: "USD",
-                            value: "90.00"
-                        },
-                        tax: {
-                            currency_code: "USD",
-                            value: "0.00"
-                        },
-                        quantity: "1",
-                        category: "PHYSICAL_GOODS"
-                    },
-                    {
-                        name: "Shoes",
-                        description: "Running, Size 10.5",
-                        sku: "sku02",
-                        unit_amount: {
-                            currency_code: "USD",
-                            value: "45.00"
-                        },
-                        tax: {
-                            currency_code: "USD",
-                            value: "0.00"
-                        },
-                        quantity: "2",
-                        category: "PHYSICAL_GOODS"
-                    }
-                ]
-            }
-        ]
-    };
-}
-
 @Injectable()
 export class PayPalProvider {
     stockRepository = getCustomRepository(StockRepository);
@@ -154,9 +72,6 @@ export class PayPalProvider {
             ]
         };
 
-        console.log(body);
-        console.log(body.purchase_units[0].amount);
-        console.log(body.purchase_units[0].items);
         return body;
     }
 

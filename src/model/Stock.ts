@@ -1,6 +1,7 @@
-import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn} from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn } from "typeorm";
+import { Min } from "class-validator";
 
-import {Product} from "./Product";
+import { Product } from "./Product";
 import { PropertyValue } from "./PropertyValue";
 
 @Entity()
@@ -9,6 +10,7 @@ export class Stock {
     id: number;
 
     @Column("int")
+    @Min(0)
     quantity: number;
 
     @Column("int")

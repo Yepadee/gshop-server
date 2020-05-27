@@ -30,8 +30,7 @@ export class StockRepository extends Repository<Stock> {
         else return data;
     }
 
-    async itemInStock(productId, propertyValueIds)
-    {
+    async itemInStock(productId, propertyValueIds) {
         const stockCount = await this.getStockQuantity(productId, propertyValueIds);
         return parseInt(stockCount) > 0;
     }
@@ -76,8 +75,7 @@ export class StockRepository extends Repository<Stock> {
         .execute();
     }
 
-    async getStockInfo(ids: number[])
-    {
+    async getStockInfo(ids: number[]) {
         const stock = <any> await this.find({
             where: { id : In(ids) },
             join: {
@@ -105,5 +103,21 @@ export class StockRepository extends Repository<Stock> {
         });
         
         return stockInfo;
+    }
+
+    async incrementStockQuantity(id: number) {
+        await this.createQueryBuilder()
+        .update(Stock)
+        .set({ quantity: () => "quantity + 1" })
+        .where("id = :id", {id})
+        .execute();
+    }
+
+    async decrementStockQuantity(id: number) {
+        await this.createQueryBuilder()
+        .update(Stock)
+        .set({ quantity: () => "quantity - 1" })
+        .where("id = :id", {id})
+        .execute();
     }
 }
