@@ -75,7 +75,7 @@ export class StockRepository extends Repository<Stock> {
         .execute();
     }
 
-    async getStockInfo(ids: number[]) {
+    async getOrderItemsDetails(ids: number[]) {
         const stock = <any> await this.find({
             where: { id : In(ids) },
             join: {
@@ -94,7 +94,7 @@ export class StockRepository extends Repository<Stock> {
             const productType = product.__type__;
             
             return {
-                itemId: item.id,
+                stockId: item.id,
                 type: productType.name,
                 name: product.name,
                 price: parseFloat(product.price),
@@ -105,18 +105,18 @@ export class StockRepository extends Repository<Stock> {
         return stockInfo;
     }
 
-    async incrementStockQuantity(id: number) {
+    async incrementStockQuantity(id: number, delta: number) {
         await this.createQueryBuilder()
         .update(Stock)
-        .set({ quantity: () => "quantity + 1" })
+        .set({ quantity: () => "quantity + " + delta })
         .where("id = :id", {id})
         .execute();
     }
 
-    async decrementStockQuantity(id: number) {
+    async decrementStockQuantity(id: number, delta: number) {
         await this.createQueryBuilder()
         .update(Stock)
-        .set({ quantity: () => "quantity - 1" })
+        .set({ quantity: () => "quantity - " + delta })
         .where("id = :id", {id})
         .execute();
     }

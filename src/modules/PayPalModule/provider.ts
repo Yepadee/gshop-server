@@ -1,9 +1,10 @@
 import { Injectable } from "@graphql-modules/di";
 import * as paypal from '@paypal/checkout-server-sdk';
 import * as dotenv from "dotenv";
-import { getRepository, In, getCustomRepository } from "typeorm";
-import { Stock } from "@entity/Stock";
+import { getCustomRepository } from "typeorm";
 import { StockRepository } from "@repository/StockRepository";
+
+import { buildRequestBody } from "@payPalUtils"
 
 const result = dotenv.config()
 if (result.error) throw result.error;
@@ -19,112 +20,15 @@ let client = new paypal.core.PayPalHttpClient(environment);
 export class PayPalProvider {
     stockRepository = getCustomRepository(StockRepository);
 
-    private async buildRequestBody(selectedStock) {
-
-        const { items, totalValue } = await this.parseSelectedStock(selectedStock);
-
-        const body = {
-            intent: "CAPTURE",
-            application_context: {
-                return_url: "https://www.example.com",
-                cancel_url: "https://www.example.com",
-                brand_name: "EXAMPLE INC",
-                locale: "en-US",
-                landing_page: "LOGIN",
-                shipping_preference: "GET_FROM_FILE",
-                user_action: "CONTINUE"
-            },
-            purchase_units: [
-                {
-                    reference_id: "PUHF",
-                    description: "Sporting Goods",
-    
-                    custom_id: "CUST-HighFashions",
-                    soft_descriptor: "HighFashions",
-                    amount: {
-                        currency_code: "GBP",
-                        value: totalValue.toString(),
-                        breakdown: {
-                            item_total: {
-                                currency_code: "GBP",
-                                value: totalValue.toString()
-                            },
-                            shipping: {
-                                currency_code: "GBP",
-                                value: "0.00"
-                            },
-                            handling: {
-                                currency_code: "GBP",
-                                value: "0.00"
-                            },
-                            tax_total: {
-                                currency_code: "GBP",
-                                value: "0.00"
-                            },
-                            shipping_discount: {
-                                currency_code: "GBP",
-                                value: "0"
-                            }
-                        }
-                    },
-                    items: items
-                }
-            ]
-        };
-
-        return body;
-    }
-
-    private praseStockInfo(stockInfo, quantity: number) {
-        const parsedItem = {
-            name: stockInfo.name.toString(),
-            description: stockInfo.properties.join(", "),
-            sku: stockInfo.itemId.toString(),
-            unit_amount: {
-                currency_code: "GBP",
-                value: stockInfo.price.toString()
-            },
-            tax: {
-                currency_code: "GBP",
-                value: "0.00"
-            },
-            quantity: quantity.toString(),
-            category: "PHYSICAL_GOODS"
-        }
-        return parsedItem;
-    }
-    
-    private async parseSelectedStock(selectedStock) {
-        
-        const ids = selectedStock.map(stock => {
-            return stock.stockId
-        });
-
-        const itemMap = {};
-        selectedStock.forEach(stock => {
-            itemMap[stock.stockId] = stock.quantity;
-        });
-
-        const stockInfos = await this.stockRepository.getStockInfo(ids);
-        const totalValue = stockInfos.reduce((acc, item) => acc + item.price * itemMap[item.itemId], 0);
-
-        const parsed = stockInfos.map(stockInfo => 
-            this.praseStockInfo(stockInfo, itemMap[stockInfo.itemId])
-        );
-
-        return {items: parsed, totalValue};
-    }
-
     async createOrder(selectedStock) {
         const request = new paypal.orders.OrdersCreateRequest();
         request.headers["prefer"] = "return=representation";
-        request.requestBody(await this.buildRequestBody(selectedStock));
+        request.requestBody(await buildRequestBody(selectedStock));
         const response = await client.execute(request);
 
         let approveUrl;
-        response.result.links.forEach( item => {
-            if (item.rel === "approve")
-            {
+        response.result.links.forEach(item => {
+            if (item.rel === "approve") {
                 approveUrl = item.href;
             }
         });
@@ -140,18 +44,29 @@ export class PayPalProvider {
     async captureOrder(orderId) {
         const request = new paypal.orders.OrdersCaptureRequest(orderId);
         request.requestBody({});
-        // Call API with your client and get a response for your call
         let response = await client.execute(request);
         console.log(`Response: ${JSON.stringify(response)}`);
 
         // If call returns body in response, you can get the deserialized version from the result attribute of the response.
         console.log(`CaptureId: ${response.result.id}`);
-        if (response.statusCode === 201 && response.result.status === "COMPLETED")
-        {
+        if (response.statusCode === 201 && response.result.status === "COMPLETED") {
+
             return true;
         } else {
             return false;
-        }  
+        }
+    }
+
+    async getOrder(orderId) {
+        const request = new paypal.orders.OrdersGetRequest(orderId);
+        let response = await client.execute(request);
+        console.log(response.result.purchase_units[0].items);
+    }
+
+    private async updateStock(orderId) {
+        const request = new paypal.orders.OrdersGetRequest(orderId);
+        let response = await client.execute(request);
+        console.log(response.result.purchase_units[0].items);
     }
 
 }

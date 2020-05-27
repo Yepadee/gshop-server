@@ -9,6 +9,10 @@ input OrderItem {
   quantity: Int!
 }
 
+type Query {
+  getPayPalOrder(orderId: String!): String! @auth
+}
+
 type Mutation {
   createPayPalOrder(items: [OrderItem]!): PayPalOrder #TODO: return url, cancel url
   capturePayPalOrder(orderId: String!): Boolean!

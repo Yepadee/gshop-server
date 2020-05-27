@@ -24,7 +24,8 @@
        "@modules": ["modules"],
        "@entity/*": ["model/*"],
        "@directives/*": ["directives/*"],
-       "@repository/*": ["repository/*"]
+       "@repository/*": ["repository/*"],
+       "@payPalUtils": ["payPalUtils"]
      }
    },
    "exclude": ["node_modules"],
