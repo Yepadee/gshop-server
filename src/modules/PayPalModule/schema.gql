@@ -9,8 +9,13 @@ input OrderItem {
   quantity: Int!
 }
 
+type OrderItemDetails {
+  quantity: Int!
+}
+
 type Query {
   getPayPalOrder(orderId: String!): String! @auth
+  getPayPalOrderItemsDetails(orderId: String!): [OrderItemDetails]!
 }
 
 type Mutation {
