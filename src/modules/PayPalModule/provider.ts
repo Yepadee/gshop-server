@@ -6,9 +6,9 @@ import { PayPalRepository } from "@payPalUtils"
 export class PayPalProvider {
     payPalRepo = new PayPalRepository();
 
-    async createOrder(orderItems) {
+    async createOrder(orderItems, returnUrl: string, cancelUrl: string) {
         await this.payPalRepo.checkOrderItemsInStock(orderItems);
-        return this.payPalRepo.createOrder(orderItems);
+        return this.payPalRepo.createOrder(orderItems, returnUrl, cancelUrl);
     }
 
     async captureOrder(orderId: string) {

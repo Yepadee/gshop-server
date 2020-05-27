@@ -19,6 +19,6 @@ type Query {
 }
 
 type Mutation {
-  createPayPalOrder(items: [OrderItem]!): PayPalOrder #TODO: return url, cancel url
+  createPayPalOrder(items: [OrderItem]!, returnUrl: String, cancelUrl: String): PayPalOrder
   capturePayPalOrder(orderId: String!): Boolean!
 }

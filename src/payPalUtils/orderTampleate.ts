@@ -1,8 +1,6 @@
 export const template = {
     intent: "CAPTURE",
     application_context: {
-        return_url: "https://www.example.com",
-        cancel_url: "https://www.example.com",
         brand_name: "EXAMPLE INC",
         locale: "en-US",
         landing_page: "LOGIN",
