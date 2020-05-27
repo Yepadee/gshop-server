@@ -2,13 +2,12 @@ import { Injectable } from "@graphql-modules/di";
 import { PayPalRepository } from "@payPalUtils"
 
 
-
 @Injectable()
 export class PayPalProvider {
     payPalRepo = new PayPalRepository();
 
     async createOrder(orderItems) {
-        this.payPalRepo.checkOrderItemsInStock(orderItems);
+        await this.payPalRepo.checkOrderItemsInStock(orderItems);
         return this.payPalRepo.createOrder(orderItems);
     }
 
@@ -22,7 +21,7 @@ export class PayPalProvider {
             throw error;
         }
         await this.payPalRepo.deductStockFromOrder(orderId);
-        
+
         return true;
     }
 
