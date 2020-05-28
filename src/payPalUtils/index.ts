@@ -4,16 +4,27 @@ import { getCustomRepository, In } from "typeorm";
 import * as paypal from '@paypal/checkout-server-sdk';
 import * as dotenv from "dotenv";
 
+import { Address } from "@entity/Address";
+import { Customer } from "@entity/Customer";
+import { Order } from "@entity/Order";
+import { OrderRepository } from "@repository/OrderRepository";
+import { CustomerRepository } from "@repository/CustomerRepository";
+
+
 const result = dotenv.config()
 if (result.error) throw result.error;
 
 export class PayPalRepository {
     stockRepository : StockRepository
+    orderRepository : OrderRepository
+    customerRepository: CustomerRepository
     client: any
     
     constructor()
     {
         this.stockRepository = getCustomRepository(StockRepository);
+        this.orderRepository = getCustomRepository(OrderRepository);
+        this.customerRepository = getCustomRepository(CustomerRepository);
 
         let clientId = process.env.PAYPAL_CLIENT_ID;
         let clientSecret = process.env.PAYPAL_SECRET;
@@ -115,11 +126,46 @@ export class PayPalRepository {
         }
     }
 
-    public async deductStockFromOrder(orderId: string) {
-        const items = await this.getItemsFromOrder(orderId);
+    public async finaliseOrder(orderId: string) {
+        const request = new paypal.orders.OrdersGetRequest(orderId);
+        const response = await this.client.execute(request);
+        const items = response.result.purchase_units[0].items;
+
+        // Update stock quantity
         items.forEach(item => {
             this.stockRepository.decrementStockQuantity(item.sku, item.quantity)
         });
+
+        const payer = response.result.payer;
+        const addressDetails = response.result.purchase_units[0].shipping.address;
+
+        // Parse address
+        const address = new Address();
+        address.addressLine1 = addressDetails.address_line_1;
+        address.addressLine2 = addressDetails.address_line_2;
+        address.adminArea1 = addressDetails.admin_area_1;
+        address.adminArea2 = addressDetails.admin_area_2;
+        address.postalCode = addressDetails.postal_code;
+        address.countryCode = addressDetails.country_code;
+
+        // Add customer to db if new
+        if (!await this.customerRepository.findOne(payer.payer_id))
+        {
+            const newCustomer = new Customer();
+            newCustomer.id = payer.payer_id;
+            newCustomer.firstName = payer.name.given_name;
+            newCustomer.lastName = payer.name.surname;
+            newCustomer.email = payer.email_address;
+            await this.customerRepository.save(newCustomer);
+        }
+        
+        // Save order details
+        const order = new Order();
+        order.id = orderId;
+        order.address = address;
+        order.customer = <any>{ id: payer.payer_id };
+
+        await this.orderRepository.save(order);
     }
 
     public async getOrderItems(orderId: string) {

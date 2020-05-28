@@ -12,15 +12,11 @@ export class PayPalProvider {
     }
 
     async captureOrder(orderId: string) {
-        //TODO: CHECK STOCK COUNT
         const orderItems = await this.payPalRepo.getOrderItems(orderId);
+
         await this.payPalRepo.checkOrderItemsInStock(orderItems);
-        try {
-            await this.payPalRepo.captureOrder(orderId);
-        } catch (error){
-            throw error;
-        }
-        await this.payPalRepo.deductStockFromOrder(orderId);
+        await this.payPalRepo.captureOrder(orderId);
+        await this.payPalRepo.finaliseOrder(orderId);
 
         return true;
     }
