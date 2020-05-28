@@ -1,7 +1,8 @@
-import { Entity, PrimaryColumn, OneToOne, JoinColumn, ManyToOne, Column } from "typeorm";
+import { Entity, PrimaryColumn, OneToOne, JoinColumn, ManyToOne, Column, OneToMany } from "typeorm";
 
 import { Customer } from "@entity/Customer";
 import { Address } from "@entity/Address";
+import { OrderItem } from "./OrderItem";
 
 @Entity()
 export class Order {
@@ -16,6 +17,9 @@ export class Order {
     @OneToOne(() => Address, { cascade: true, persistence: true })
     @JoinColumn()
     address: Address
+
+    @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
+    items: Promise<OrderItem[]>
 
     @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
     date: Date

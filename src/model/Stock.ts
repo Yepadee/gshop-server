@@ -1,8 +1,9 @@
-import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne, ManyToMany, JoinTable, JoinColumn, OneToMany } from "typeorm";
 import { Min } from "class-validator";
 
 import { Product } from "./Product";
 import { PropertyValue } from "./PropertyValue";
+import { OrderItem } from "./OrderItem";
 
 @Entity()
 export class Stock {
@@ -23,4 +24,7 @@ export class Stock {
     @ManyToMany(() => PropertyValue, propertyValue => propertyValue.stock)
     @JoinTable({name: "stock_properties"})
     properties: Promise<PropertyValue[]>;
+
+    @OneToMany(() => OrderItem, orderItem => orderItem.stock)
+    orders: Promise<OrderItem[]>;
 }

@@ -158,12 +158,20 @@ export class PayPalRepository {
             newCustomer.email = payer.email_address;
             await this.customerRepository.save(newCustomer);
         }
-        
+
+        const orderItems = items.map(item => {
+            return {
+                stock: <any>{id: item.sku},
+                quantity: item.quantity
+            }
+        });
+
         // Save order details
         const order = new Order();
         order.id = orderId;
         order.address = address;
         order.customer = <any>{ id: payer.payer_id };
+        order.items = orderItems;
 
         await this.orderRepository.save(order);
     }
