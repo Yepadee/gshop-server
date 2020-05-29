@@ -161,7 +161,7 @@ export class PayPalRepository {
 
         const orderItems = items.map(item => {
             return {
-                stock: <any>{id: item.sku},
+                __stock__: <any>{id: item.sku},
                 quantity: item.quantity
             }
         });
@@ -169,7 +169,7 @@ export class PayPalRepository {
         // Save order details
         const order = new Order();
         order.id = orderId;
-        order.address = address;
+        order.address = <any>address;
         order.customer = <any>{ id: payer.payer_id };
         order.items = orderItems;
 

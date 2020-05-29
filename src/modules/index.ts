@@ -10,6 +10,8 @@ import { UserModule } from "./UserModule";
 import { AuthModule } from "./AuthModule";
 import { ProductImageModule } from "./ProductImageModule";
 import { PayPalModule } from "./PayPalModule";
+import { OrderModule } from "./OrderModule";
+import { OrderItemModule } from "./OrderItemModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -23,6 +25,8 @@ export const GraphQLModules = new GraphQLModule({
         UserModule,
         AuthModule,
         ProductImageModule,
-        PayPalModule
+        PayPalModule,
+        OrderModule,
+        OrderItemModule
     ]
 });

@@ -1,0 +1,24 @@
+enum OrderStatus {
+  NEW
+  PROCESSED
+  ARRIVED
+}
+
+type Query {
+  orders(id: String): [Order]! @auth
+  order(id: String!): Order @auth
+}
+
+type Mutation {
+  updateOrderStatus(id: String!, newStatus: OrderStatus!): Boolean @auth
+}
+
+type Order {
+  id: String!
+  status: String!
+  date: String!
+}
+
+type OrderItem {
+  order: Order!
+}

@@ -1,0 +1,15 @@
+type Query {
+  getItemsByPayPalOrderId(orderId: String): [OrderItem]
+}
+
+type OrderItem {
+  quantity: Int!
+}
+
+type Order {
+  items: [OrderItem]!
+}
+
+type Stock {
+  orders: [OrderItem]!
+}

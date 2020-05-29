@@ -4,21 +4,16 @@ type PayPalOrder {
   approveUrl: String!
 }
 
-input OrderItem {
+input OrderItemInput {
   stockId: ID!
-  quantity: Int!
-}
-
-type OrderItemDetails {
   quantity: Int!
 }
 
 type Query {
   getPayPalOrder(orderId: String!): String! @auth
-  getPayPalOrderItemsDetails(orderId: String!): [OrderItemDetails]!
 }
 
 type Mutation {
-  createPayPalOrder(items: [OrderItem]!, returnUrl: String, cancelUrl: String): PayPalOrder
+  createPayPalOrder(items: [OrderItemInput]!, returnUrl: String, cancelUrl: String): PayPalOrder
   capturePayPalOrder(orderId: String!): Boolean!
 }

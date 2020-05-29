@@ -19,6 +19,12 @@ export default {
 
     Product: {
       stock: product => product.stock
+    },
+
+    OrderItem: {
+      stock: orderItem => {
+        return orderItem.stock;
+      }
     }
   
 };

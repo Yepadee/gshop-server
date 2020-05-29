@@ -10,21 +10,21 @@ export class Order {
     @PrimaryColumn()
     id: string;
 
-    @ManyToOne(() => Customer, customer => customer.orders)
-    @JoinColumn()
-    customer: Customer
-
-    @OneToOne(() => Address, { cascade: true, persistence: true })
-    @JoinColumn()
-    address: Address
-
-    @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
-    items: Promise<OrderItem[]>
-
     @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
     date: Date
 
     @Column("varchar", {length: 127, default: () => "'NEW'"})
     status: string
-    
+
+
+    @ManyToOne(() => Customer, customer => customer.orders)
+    @JoinColumn()
+    customer: Promise<Customer>
+
+    @OneToOne(() => Address, { cascade: true, persistence: true })
+    address: Promise<Address>
+
+    @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
+    items: Promise<OrderItem[]>
+
 }
