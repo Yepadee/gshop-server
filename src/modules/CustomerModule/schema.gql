@@ -4,7 +4,7 @@ type Query {
 }
 
 type Customer {
-  id: Int!
+  id: ID!
   firstName: String!
   lastName: String!
   email: String!

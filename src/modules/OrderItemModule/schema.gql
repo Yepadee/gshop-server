@@ -3,6 +3,7 @@ type Query {
 }
 
 type OrderItem {
+  id: ID!
   quantity: Int!
 }
 

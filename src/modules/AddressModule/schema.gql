@@ -1,0 +1,13 @@
+type Address {
+  id: ID!
+  addressLine1: String
+  addressLine2: String
+  adminArea1: String
+  adminArea2: String
+  postalCode: String!
+  countryCode: String!
+}
+
+type Order {
+  address: Address! @auth
+}

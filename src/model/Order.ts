@@ -22,6 +22,7 @@ export class Order {
     customer: Promise<Customer>
 
     @OneToOne(() => Address, { cascade: true, persistence: true })
+    @JoinColumn()
     address: Promise<Address>
 
     @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
