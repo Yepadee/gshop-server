@@ -22,3 +22,7 @@ type Order {
 type OrderItem {
   order: Order! @auth
 }
+
+type Customer {
+  orders: [Order]! @auth
+}

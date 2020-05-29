@@ -17,5 +17,5 @@ export class Customer {
     email: string;
 
     @OneToMany(() => Order, order => order.customer)
-    orders: Order[];
+    orders: Promise<Order[]>;
 }

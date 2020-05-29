@@ -12,5 +12,9 @@ export default {
 
     OrderItem: {
       order: orderItems => orderItems.order
+    },
+
+    Customer: {
+      orders: customer => customer.orders
     }
 };

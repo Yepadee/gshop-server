@@ -12,6 +12,7 @@ import { ProductImageModule } from "./ProductImageModule";
 import { PayPalModule } from "./PayPalModule";
 import { OrderModule } from "./OrderModule";
 import { OrderItemModule } from "./OrderItemModule";
+import { CustomerModule } from "./CustomerModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -27,6 +28,7 @@ export const GraphQLModules = new GraphQLModule({
         ProductImageModule,
         PayPalModule,
         OrderModule,
-        OrderItemModule
+        OrderItemModule,
+        CustomerModule
     ]
 });

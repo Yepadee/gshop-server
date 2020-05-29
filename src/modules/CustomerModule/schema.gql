@@ -1,0 +1,15 @@
+type Query {
+  customers(id: String): [Customer] @auth
+  customer(id: String): Customer @auth
+}
+
+type Customer {
+  id: Int!
+  firstName: String!
+  lastName: String!
+  email: String!
+}
+
+type Order {
+  customer: Customer! @auth
+}
