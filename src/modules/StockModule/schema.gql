@@ -20,10 +20,6 @@ type Product {
   stock: [Stock]!
 }
 
-type OrderItemDetails {
-  stock: Stock!
-}
-
 type OrderItem {
   stock: Stock!
 }

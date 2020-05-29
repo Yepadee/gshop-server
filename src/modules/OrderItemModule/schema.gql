@@ -7,9 +7,9 @@ type OrderItem {
 }
 
 type Order {
-  items: [OrderItem]!
+  items: [OrderItem]! @auth
 }
 
 type Stock {
-  orders: [OrderItem]!
+  orders: [OrderItem]! @auth
 }

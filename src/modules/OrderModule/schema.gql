@@ -14,11 +14,11 @@ type Mutation {
 }
 
 type Order {
-  id: String!
-  status: String!
-  date: String!
+  id: String! @auth
+  status: String! @auth
+  date: String! @auth
 }
 
 type OrderItem {
-  order: Order!
+  order: Order! @auth
 }
