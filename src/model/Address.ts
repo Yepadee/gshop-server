@@ -1,5 +1,4 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToOne } from "typeorm";
-import { Order } from "./Order";
+import { Entity, PrimaryGeneratedColumn, Column } from "typeorm";
 
 
 @Entity()
