@@ -9,7 +9,9 @@ export default {
   Mutation: {
     addProduct: (_, { newProduct }, { injector }) => injector.get(ProductProvider).addProduct(newProduct),
     updateProduct: (_, { updatedProduct }, { injector }) => injector.get(ProductProvider).updateProduct(updatedProduct),
-    removeProduct: (_, { id }, { injector }) => injector.get(ProductProvider).removeProduct(id)
+    removeProduct: (_, { id }, { injector }) => injector.get(ProductProvider).removeProduct(id),
+
+    publishProduct: (_, { id, published }, { injector }) => injector.get(ProductProvider).setPublished(id, published)
   },
 
   Product: {

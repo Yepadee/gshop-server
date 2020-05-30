@@ -40,4 +40,9 @@ export class ProductProvider {
         const files = fs.readdirSync(dir);
         return files;
     }
+
+    async setPublished(id: number, published: boolean) {
+        await this.repository.setPublished(id, published);
+        return true;
+    }
 }

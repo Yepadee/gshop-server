@@ -82,6 +82,7 @@ createConnection().then(async connection => {
       product.catagory = "hoodie";
       product.type = <any>{id:1};
       product.requiredProperties = <any>[{id:1}, {id:2}];
+      product.published = true;
       await connection.manager.save(product);
 
       const s1 = new Stock();

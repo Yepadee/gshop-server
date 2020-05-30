@@ -24,7 +24,8 @@ export class Product {
     @Column("varchar", {length: 127})
     catagory: string;
 
-    
+    @Column("bool", {default: false})
+    published: boolean;
 
     @Column("int", { nullable: false })
     typeId: number;

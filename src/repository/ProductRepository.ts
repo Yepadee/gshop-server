@@ -53,4 +53,24 @@ export class ProductRepository extends Repository<Product> {
         
         return true;
     }
+
+    async setPublished(id, published) {
+        if (published) {
+            const result = await this.createQueryBuilder("product")
+            .select("COUNT(*) > 0", "hasStock")
+            .innerJoin("product.stock", "stock")
+            .where("product.id = :id", { id })
+            .getRawOne();
+
+            if (result.hasStock == 0) {
+                throw new Error("Cannot publish product with no stock!");
+            }
+        }
+
+        await this.createQueryBuilder()
+        .update(Product)
+        .set({published})
+        .where("id = :id", { id })
+        .execute();
+    }
 }
