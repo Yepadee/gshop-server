@@ -125,7 +125,6 @@ export class StockRepository extends Repository<Stock> {
         const stock = await this.find({
             where: { productId, quantity: MoreThan(0) },
         });
-        console.log(stock);
         return stock;
     }
 }

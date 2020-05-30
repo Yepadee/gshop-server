@@ -22,6 +22,10 @@ export default {
 
     Product: {
       requiredProperties: product => product.requiredProperties
+    },
+
+    PropertyValue: {
+      propertyName: propertyValue => propertyValue.propertyName
     }
   
 };

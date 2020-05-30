@@ -21,3 +21,7 @@ type ProductType {
 type Product {
   requiredProperties: [PropertyName]!
 }
+
+type PropertyValue {
+  propertyName: PropertyName!
+}
