@@ -34,4 +34,9 @@ export class StockProvider {
         await this.repository.delete(id);
         return true;
     }
+
+    async getAvailableStock(productId: number)
+    {
+        return this.repository.getAvailableStock(productId);
+    }
 }

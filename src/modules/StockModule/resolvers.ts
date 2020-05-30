@@ -18,7 +18,8 @@ export default {
     },
 
     Product: {
-      stock: product => product.stock
+      allStock: product => product.stock,
+      availableStock: (product, _, { injector }) => injector.get(StockProvider).getAvailableStock(product.id)
     },
 
     OrderItem: {

@@ -17,7 +17,8 @@ type Stock {
 }
 
 type Product {
-  stock: [Stock]!
+  allStock: [Stock]!
+  availableStock: [Stock]!
 }
 
 type OrderItem {

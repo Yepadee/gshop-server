@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository, In } from "typeorm";
+import { EntityRepository, Repository, getRepository, In, MoreThan } from "typeorm";
 import { Stock } from "@entity/Stock";
 import { Product } from "@entity/Product";
 import { PropertyValue } from "@entity/PropertyValue";
@@ -119,5 +119,13 @@ export class StockRepository extends Repository<Stock> {
         .set({ quantity: () => "quantity - " + delta })
         .where("id = :id", {id})
         .execute();
+    }
+
+    async getAvailableStock(productId: number) {
+        const stock = await this.find({
+            where: { productId, quantity: MoreThan(0) },
+        });
+        console.log(stock);
+        return stock;
     }
 }
