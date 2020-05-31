@@ -26,7 +26,7 @@ if (result.error) throw result.error;
 createConnection().then(async connection => {
   connection.synchronize(true).then( async () => {
     const user = new User();
-    user.username = "admin";
+    user.username = "Admin";
     user.password = await bcrypt.hash("password", 10);
     await connection.manager.save(user);
 
