@@ -24,3 +24,7 @@ type Product {
 type OrderItem {
   stock: Stock!
 }
+
+type PropertyValue {
+  stock: [Stock]!
+}

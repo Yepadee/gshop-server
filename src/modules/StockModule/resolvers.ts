@@ -1,4 +1,5 @@
 import { StockProvider } from "./provider";
+import { PropertyValue } from "@entity/PropertyValue";
 
 export default {
     Query: {
@@ -23,9 +24,11 @@ export default {
     },
 
     OrderItem: {
-      stock: orderItem => {
-        return orderItem.stock;
-      }
+      stock: orderItem => orderItem.stock
+    },
+
+    PropertyValue: {
+      stock: propertyValue => propertyValue.stock
     }
   
 };
