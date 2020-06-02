@@ -7,7 +7,7 @@ export class PropertyNameRepository extends Repository<PropertyName> {
     async insertPropertyName(name: string) {
         const propertyName = new PropertyName();
         propertyName.name = name;
-        await this.save(propertyName);
+        return await this.save(propertyName);
     }
 
 }
