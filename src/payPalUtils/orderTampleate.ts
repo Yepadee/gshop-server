@@ -1,7 +1,7 @@
 export const template = {
     intent: "CAPTURE",
     application_context: {
-        brand_name: "EXAMPLE INC",
+        brand_name: "GSHOP",
         locale: "en-US",
         landing_page: "LOGIN",
         shipping_preference: "GET_FROM_FILE",
