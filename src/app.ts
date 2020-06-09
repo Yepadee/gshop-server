@@ -69,18 +69,52 @@ createConnection().then(async connection => {
     await connection.manager.save(v6);
 
     const productType = new ProductType();
-    productType.name = "Clothing";
+    productType.name = "Hoodies";
     productType.propertyNames = <any>[{id:1}, {id:2}];
     await connection.manager.save(productType);
 
+    const productType1 = new ProductType();
+    productType1.name = "T-Shirts";
+    productType1.propertyNames = <any>[{id:1}, {id:2}];
+    await connection.manager.save(productType1);
 
-    _.times(2, async () => {
+    _.times(12, async () => {
       const product = new Product();
-      product.name = faker.commerce.product();
+      product.name = faker.commerce.productName();
       product.description = faker.commerce.productAdjective();
       product.price = faker.random.number({ max: 1, min: 30 });
-      product.catagory = "hoodie";
+      product.catagory = "summer";
       product.type = <any>{id:1};
+      product.requiredProperties = <any>[{id:1}, {id:2}];
+      product.published = true;
+      await connection.manager.save(product);
+
+      const s1 = new Stock();
+      s1.quantity = faker.random.number({ max: 1, min: 30 });
+      s1.product = <any>product;
+      s1.properties = <any>[{id:1}, {id:4}];
+      await connection.manager.save(s1);
+
+      const s2 = new Stock();
+      s2.quantity = faker.random.number({ max: 1, min: 30 });
+      s2.product = <any>product;
+      s2.properties = <any>[{id:2}, {id:5}];
+      await connection.manager.save(s2);
+
+      const s3 = new Stock();
+      s3.quantity = faker.random.number({ max: 3, min: 30 });
+      s3.product = <any>product;
+      s3.properties = <any>[{id:1}, {id:6}];
+      await connection.manager.save(s3);
+    });
+
+    _.times(12, async () => {
+      const product = new Product();
+      product.name = faker.commerce.productName();
+      product.description = faker.commerce.productAdjective();
+      product.price = faker.random.number({ max: 1, min: 30 });
+      product.catagory = "summer";
+      product.type = <any>{id:2};
       product.requiredProperties = <any>[{id:1}, {id:2}];
       product.published = true;
       await connection.manager.save(product);

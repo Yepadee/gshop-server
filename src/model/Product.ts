@@ -20,9 +20,6 @@ export class Product {
 
     @Column("decimal", { precision: 5, scale: 2 })
     price: number;
-    
-    @Column("varchar", {length: 127})
-    catagory: string;
 
     @Column("int", {default: false})
     published: boolean;

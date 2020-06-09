@@ -1,7 +1,6 @@
 input NewProductInput {
   typeId: ID!
   name: String!
-  catagory: String!
   description: String
   price: Float!
   requiredPropertyIds: [ID]!
@@ -10,13 +9,12 @@ input NewProductInput {
 input UpdatedProductInput {
   id: Int!
   name: String
-  catagory: String
   description: String
   price: Float
 }
 
 type Query {
-  products(id: ID, name: String, description: String, catagorty: String, price: Float, published: Boolean): [Product]!
+  products(id: ID, name: String, description: String, price: Float, published: Boolean): [Product]!
   product(id: ID!): Product
 }
 
@@ -28,10 +26,9 @@ type Mutation {
   publishProduct(id: ID!, published: Boolean!): Boolean @auth
 }
 
-type Product{
+type Product {
   id: ID!
   name: String!
-  catagory: String!
   description: String
   price: Float!
   published: Boolean!
