@@ -1,6 +1,6 @@
 import { Injectable } from "@graphql-modules/di";
 
-import { getRepository, getCustomRepository } from "typeorm";
+import { getCustomRepository } from "typeorm";
 import { PropertyNameRepository } from "@repository/PropertyNameRepository";
 
 @Injectable()

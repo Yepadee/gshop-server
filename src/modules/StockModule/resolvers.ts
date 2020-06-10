@@ -1,5 +1,4 @@
 import { StockProvider } from "./provider";
-import { PropertyValue } from "@entity/PropertyValue";
 
 export default {
     Query: {
