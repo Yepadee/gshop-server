@@ -1,7 +1,7 @@
 import { startServer } from "../../../src/start";
 import { GraphQLClient } from "graphql-request";
 
-//import * as jwt from "jsonwebtoken";
+import * as jwt from "jsonwebtoken";
 let graphQLClient;
 
 
@@ -10,7 +10,7 @@ beforeAll(async () => {
     //@ts-ignore
     const { port } = app.address();
 
-    //const token = jwt.sign({ username: "Admin" }, process.env.JWT_SECRET, { expiresIn: '1d' });
+    const token = jwt.sign({ username: "Admin" }, process.env.JWT_SECRET, { expiresIn: '1d' });
 
     graphQLClient = new GraphQLClient(`http://localhost:${port}/graphql`, {
         headers: {
