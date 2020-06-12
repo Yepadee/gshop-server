@@ -1,8 +1,0 @@
-
-type AvailableProperty {
-  name: String!
-}
-
-type Product {
-  availableProperties: [AvailableProperty]
-}

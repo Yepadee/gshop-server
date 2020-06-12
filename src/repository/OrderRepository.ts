@@ -3,10 +3,18 @@ import { EntityRepository, Repository } from "typeorm";
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
-    async updateStatus(id: string, newStatus: string) {
+    async setStatus(id: number, newStatus: string) {
         await this.createQueryBuilder()
         .update(Order)
         .set({status: newStatus})
+        .where("id = :id", {id})
+        .execute();
+    }
+
+    async setSupplierOrderId(id: number, orderId: string) {
+        await this.createQueryBuilder()
+        .update(Order)
+        .set({supplierOrderId: orderId})
         .where("id = :id", {id})
         .execute();
     }

@@ -11,12 +11,17 @@ export class OrderProvider {
         return this.repository.find({ where: args });
     }
 
-    getOrderById(id) {
-        return this.repository.find({ where: {id}});
+    getOrderById(id: number) {
+        return this.repository.find({ where: { id } });
     }
 
-    async updateOrderStatus(id, newStatus) {
-        await this.repository.updateStatus(id, newStatus);
+    async setOrderStatus(id: number, status: string) {
+        await this.repository.setStatus(id, status);
+        return true;
+    }
+
+    async setSupplierOrderId(id: number, newStatus: string) {
+        await this.repository.setStatus(id, newStatus);
         return true;
     }
 }

@@ -1,31 +1,42 @@
-import { Entity, PrimaryColumn, OneToOne, JoinColumn, ManyToOne, Column, OneToMany } from "typeorm";
+import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
 
-import { Customer } from "@entity/Customer";
-import { Address } from "@entity/Address";
 import { OrderItem } from "./OrderItem";
+
+export enum PaymentMethod {
+    PAYPAL = 'PAYPAL',
+    FLUTTERWAVE = 'FLUTTERWAVE'
+}
+
+export enum OrderStatus {
+    NEW = 'NEW',
+    PROCESSED = 'PROCESSED',
+    ARRIVED = 'ARRIVED'
+}
 
 @Entity()
 export class Order {
 
-    @PrimaryColumn()
-    id: string;
+    @PrimaryGeneratedColumn()
+    id: number;
+    
 
-    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
-    date: Date
+    @Column("varchar", {length: 127})
+    orderId: string;
 
-    @Column("varchar", {length: 127, default: () => "'NEW'"})
-    status: string
-
-
-    @ManyToOne(() => Customer, customer => customer.orders)
-    @JoinColumn()
-    customer: Promise<Customer>
-
-    @OneToOne(() => Address, { cascade: true, persistence: true })
-    @JoinColumn()
-    address: Promise<Address>
+    @Column("varchar", {length: 16})
+    paymentMethod: PaymentMethod;
 
     @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
-    items: Promise<OrderItem[]>
+    items: Promise<OrderItem[]>;
 
+
+    @Column("varchar", {length: 127, nullable: true})
+    supplierOrderId: string;
+
+
+    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
+    date: Date;
+
+    @Column("varchar", {length: 127, default: () => "'NEW'"})
+    status: string;
 }

@@ -8,7 +8,7 @@ type OrderItem {
 }
 
 type Order {
-  items: [OrderItem]! @auth
+  items: [OrderItem]!
 }
 
 type Stock {

@@ -4,25 +4,27 @@ enum OrderStatus {
   ARRIVED
 }
 
+enum PaymentMethod {
+  PAYPAL
+  FLUTTERWAVE
+}
+
 type Query {
-  orders(id: String): [Order]! @auth
-  order(id: String!): Order @auth
+  orders(id: ID): [Order]! @auth
+  order(id: ID!): Order @auth
 }
 
 type Mutation {
-  updateOrderStatus(id: String!, newStatus: OrderStatus!): Boolean @auth
+  setOrderStatus(id: ID!, status: OrderStatus!): Boolean @auth
+  setSupplierOrderId(id: ID!, orderId: String!): Boolean @auth
 }
 
 type Order {
-  id: ID! @auth
-  status: String! @auth
-  date: String! @auth
+  id: ID! 
+  status: String! 
+  date: String! 
 }
 
 type OrderItem {
-  order: Order! @auth
-}
-
-type Customer {
-  orders: [Order]! @auth
+  order: Order!
 }

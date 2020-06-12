@@ -5,15 +5,13 @@ import { ProductModule } from "./ProductModule";
 import { StockModule } from "./StockModule";
 import { PropertyNameModule } from "./PropertyNameModule";
 import { PropertyValueModule } from "./PropertyValueModule";
-import { AvailablePropertyModule } from "./AvailablePropertyModule";
 import { UserModule } from "./UserModule";
 import { AuthModule } from "./AuthModule";
 import { ProductImageModule } from "./ProductImageModule";
 import { PayPalModule } from "./PayPalModule";
 import { OrderModule } from "./OrderModule";
 import { OrderItemModule } from "./OrderItemModule";
-import { CustomerModule } from "./CustomerModule";
-import { AddressModule } from "./AddressModule";
+
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -23,14 +21,11 @@ export const GraphQLModules = new GraphQLModule({
         StockModule,
         PropertyNameModule,
         PropertyValueModule,
-        AvailablePropertyModule,
         UserModule,
         AuthModule,
         ProductImageModule,
         PayPalModule,
         OrderModule,
-        OrderItemModule,
-        CustomerModule,
-        AddressModule
+        OrderItemModule
     ]
 });
