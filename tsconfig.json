@@ -23,6 +23,7 @@
      "baseUrl": "./src",
      "paths": {
        "@modules": ["modules"],
+       "@modules/*": ["modules/*"],
        "@entity/*": ["model/*"],
        "@directives/*": ["directives/*"],
        "@repository/*": ["repository/*"],

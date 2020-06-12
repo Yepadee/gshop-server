@@ -4,9 +4,11 @@
     "description": "",
     "main": "index.js",
     "scripts": {
-        "dev": "cross-env NODE_ENV=dev && ts-node-dev -r tsconfig-paths/register src/app.ts",
         "start": "ts-node -r tsconfig-paths/register src/app.ts",
-        "test": "jest"
+        "dev": "cross-env NODE_ENV=dev && ts-node-dev -r tsconfig-paths/register src/app.ts",
+        "test-server": "cross-env NODE_ENV=test && ts-node -r tsconfig-paths/register src/app.ts",
+        "test": "cross-env NODE_ENV=test && jest",
+        "ci": "start-server-and-test test-server http://localhsot:3000 test"
     },
     "author": "",
     "license": "ISC",
@@ -25,7 +27,6 @@
         "faker": "^4.1.0",
         "graphql": "^15.0.0",
         "graphql-import-node": "0.0.4",
-        "graphql-request": "^2.0.0",
         "graphql-tools": "^6.0.0",
         "jsonwebtoken": "^8.5.1",
         "lodash": "^4.17.15",
@@ -43,12 +44,16 @@
         "@types/uuid": "^7.0.4",
         "awesome-typescript-loader": "^5.2.1",
         "cross-env": "^7.0.2",
+        "graphql-request": "^2.0.0",
         "jest": "^26.0.1",
+        "jest-transform-graphql": "^2.1.0",
+        "node-fetch": "^2.6.0",
         "nodemon": "^2.0.4",
         "ts-jest": "^26.1.0",
         "ts-node": "^8.10.1",
         "ts-node-dev": "^1.0.0-pre.44",
         "tsconfig-paths": "^3.9.0",
-        "typescript": "^3.9.3"
+        "typescript": "^3.9.3",
+        "whatwg-fetch": "^3.0.0"
     }
 }

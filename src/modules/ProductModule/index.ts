@@ -4,7 +4,7 @@ import * as typeDefs from "./schema.gql";
 import resolvers from "./resolvers";
 
 import { ProductProvider } from "./provider";
-import { AuthModule } from "modules/AuthModule";
+import { AuthModule } from "@modules/AuthModule";
 
 export const ProductModule = new GraphQLModule({
   imports: [AuthModule],
