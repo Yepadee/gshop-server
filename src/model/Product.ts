@@ -2,6 +2,7 @@ import {Entity, PrimaryGeneratedColumn, Column, ManyToOne, OneToMany, JoinColumn
 
 import { ProductType } from "./ProductType";
 import { Stock } from "./Stock";
+import { Category } from "./Category";
 import { PropertyName } from "./PropertyName";
 
 import * as fs from "fs";
@@ -20,18 +21,13 @@ export class Product {
 
     @Column("decimal", { precision: 5, scale: 2 })
     price: number;
-    
-    @Column("varchar", {length: 127})
-    catagory: string;
 
     @Column("int", {default: false})
     published: boolean;
 
-    @Column("int", { nullable: false })
-    typeId: number;
 
     @ManyToOne(() => ProductType, type => type.products, { cascade: true })
-    @JoinColumn({ name: "typeId" })
+    @JoinColumn()
     type: Promise<ProductType>;
 
     @ManyToMany(() => PropertyName)
@@ -40,6 +36,9 @@ export class Product {
 
     @OneToMany(() => Stock, stock => stock.product)
     stock:  Promise<Stock[]>;
+
+    @OneToMany(() => Category, category => category.products)
+    category:  Promise<Category[]>;
 
     @AfterInsert()
     createImageFolder() {

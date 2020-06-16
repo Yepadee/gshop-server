@@ -63,7 +63,6 @@ export const setup = async (connection) => {
     product.name = faker.commerce.product();
     product.description = faker.commerce.productAdjective();
     product.price = faker.random.number({ max: 1, min: 30 });
-    product.catagory = "hoodie";
     product.type = <any>{id:1};
     product.requiredProperties = <any>[{id:1}, {id:2}];
     product.published = true;

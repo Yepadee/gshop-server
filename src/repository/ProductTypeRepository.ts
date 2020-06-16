@@ -8,6 +8,7 @@ export class ProductTypeRepository extends Repository<ProductType> {
         const productType = new ProductType();
         productType.name = name;
         productType.propertyNames = propertyNameIds.map(propertyNameId => <any>{id: propertyNameId});
+
         await this.save(productType);
     }
 }

@@ -1,0 +1,18 @@
+type Query {
+  categories: [Category]
+}
+
+type Mutation {
+  addCategory(productTypeId: ID!, name: String!): Boolean
+  addSubCategory(parentId: ID!, name: String!): Boolean
+}
+
+type Category {
+  id: ID!
+  name: String!
+  parentId: ID
+}
+
+type ProductType {
+  categories: [Category]!
+}

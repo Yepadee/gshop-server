@@ -1,8 +1,11 @@
-import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany} from "typeorm";
+import {Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToMany, OneToOne, JoinColumn, AfterInsert, BeforeInsert} from "typeorm";
 
 import {Product} from "./Product";
 
 import {PropertyName} from "./PropertyName";
+import { Category } from "./Category";
+
+import { getManager } from "typeorm";
 
 @Entity()
 export class ProductType {
@@ -18,5 +21,17 @@ export class ProductType {
 
     @ManyToMany(() => PropertyName, propertyName => propertyName.productTypes)
     propertyNames: Promise<PropertyName[]>;
+
+    @OneToOne(() => Category)
+    @JoinColumn()
+    rootCategory: Promise<Category>;
+
+    @BeforeInsert()
+    async addRootCategory() {
+        const rootCategory = new Category();
+        rootCategory.name = "root-" + this.name + "-category"; 
+        const result = await getManager().save(rootCategory);
+        this.rootCategory = <any>{id: result.id};
+    }
 
 }
