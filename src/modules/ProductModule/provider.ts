@@ -19,19 +19,17 @@ export class ProductProvider {
     }
 
     async addProduct(product) {
-        await this.repository.insertProduct(product);
-        return true;
-
+        return await this.repository.insertProduct(product);
     }
 
     async updateProduct(updatedProduct) {
-        await this.repository.updateProduct(updatedProduct);
-        return true;
+        return await this.repository.updateProduct(updatedProduct);
     }
 
-    async removeProduct(id: number) {
+    async deleteProduct(id: number) {
+        await this.repository.deleteProduct(id);
         rimraf.sync("public/product-images/" + id);
-        await this.repository.delete(id);
+        
         return true;
     }
 
@@ -42,7 +40,6 @@ export class ProductProvider {
     }
 
     async setPublished(id: number, published: boolean) {
-        await this.repository.setPublished(id, published);
-        return true;
+        return await this.repository.setPublished(id, published);
     }
 }

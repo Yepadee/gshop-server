@@ -8,13 +8,11 @@ export class CategoryProvider {
     repository = getCustomRepository(CategoryRepository);
 
     async addCategory(productTypeId: string, name: string) {
-        await this.repository.insertRootCategory(productTypeId, name);
-        return true;
+        return await this.repository.insertRootCategory(productTypeId, name);
     }
 
     async addSubCategory(parentId: string, name: string) {
-        await this.repository.insertCategory(parentId, name);
-        return true;
+        return await this.repository.insertCategory(parentId, name);
     }
 
     getCategories(args) {

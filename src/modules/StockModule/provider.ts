@@ -7,32 +7,17 @@ import { StockRepository } from "@repository/StockRepository";
 export class StockProvider {
     repository = getCustomRepository(StockRepository);
 
-    async getStockQuantity(productId, propertyValueIds) {
-        const data = await this.repository.getStockQuantity(productId, propertyValueIds);
-        if (data) return data.quantity;
-        else return data;
-    }
-
-    async itemInStock(productId, propertyValueIds)
-    {
-        const stockCount = await this.repository.getStockQuantity(productId, propertyValueIds);
-        return parseInt(stockCount) > 0;
-    }
-
     async addStock(args) {
-        await this.repository.insertStock(args);
-        return true;
+        return await this.repository.insertStock(args);
     }
 
     async updateStockQuantity(id: number, quantity: number) {
-        await this.repository.updateStockQuantity(id, quantity);
-        return true;
+        return await this.repository.updateStockQuantity(id, quantity);
     }
 
-    async removeStock(id: number)
+    async deleteStock(id: number)
     {
-        await this.repository.delete(id);
-        return true;
+        return await this.repository.delete(id);
     }
 
     async getAvailableStock(productId: number)

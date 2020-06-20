@@ -9,13 +9,11 @@ export class PropertyValueProvider {
 
     async addPropertyValue(propertyNameId, value)
     {
-        await this.repository.insertPropertyValue(propertyNameId, value);
-        return true;
+        return await this.repository.insertPropertyValue(propertyNameId, value);
     }
 
-    async removePropertyValue(propertyValueId)
+    async deletePropertyValue(propertyValueId)
     {   
-        await this.repository.deletePropertyValue(propertyValueId);
-        return true;
+        return await this.repository.deletePropertyValue(propertyValueId);
     }
 }

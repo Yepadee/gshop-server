@@ -16,12 +16,10 @@ export class OrderProvider {
     }
 
     async setOrderStatus(id: number, status: string) {
-        await this.repository.setStatus(id, status);
-        return true;
+        return await this.repository.setStatus(id, status);
     }
 
     async setSupplierOrderId(id: number, newStatus: string) {
-        await this.repository.setStatus(id, newStatus);
-        return true;
+        return await this.repository.setStatus(id, newStatus);
     }
 }

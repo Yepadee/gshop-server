@@ -1,7 +1,7 @@
 
 type Mutation {
   addPropertyValue(propertyNameId: ID!, value: String!): Boolean @auth
-  removePropertyValue(id: ID!): Boolean @auth
+  deletePropertyValue(id: ID!): Boolean @auth
 }
 
 type PropertyValue {

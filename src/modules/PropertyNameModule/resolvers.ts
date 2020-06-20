@@ -8,7 +8,7 @@ export default {
 
     Mutation: {
       addPropertyName: (_, { name }, { injector }) => injector.get(PropertyNameProvider).addPropertyName(name),
-      removePropertyName: (_, { id }, { injector }) => injector.get(PropertyNameProvider).removePropertyName(id)
+      deletePropertyName: (_, { id }, { injector }) => injector.get(PropertyNameProvider).deletePropertyName(id)
     },
 
     ProductType: {

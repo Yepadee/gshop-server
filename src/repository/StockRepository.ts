@@ -8,7 +8,7 @@ export class StockRepository extends Repository<Stock> {
     productRepository = getRepository(Product);
     propertyValueRepository = getRepository(PropertyValue);
 
-    async getStockQuantity(productId, propertyValueIds) {
+    private async getStockQuantity(productId: number, propertyValueIds: number[]) {
         const data = await this.createQueryBuilder("stock")
         .select("DISTINCT(propertyCount.quantity)", "quantity")
         .from(qb => {
@@ -28,11 +28,6 @@ export class StockRepository extends Repository<Stock> {
 
         if (data) return data.quantity;
         else return data;
-    }
-
-    async itemInStock(productId, propertyValueIds) {
-        const stockCount = await this.getStockQuantity(productId, propertyValueIds);
-        return parseInt(stockCount) > 0;
     }
 
     async insertStock(args) {
@@ -65,6 +60,8 @@ export class StockRepository extends Repository<Stock> {
         stock.quantity = args.quantity;
 
         await this.save(stock);
+
+        return true;
     }
 
     async updateStockQuantity(id: number, quantity: number) {
@@ -73,6 +70,8 @@ export class StockRepository extends Repository<Stock> {
         .set({quantity})
         .where("id = :id", {id})
         .execute();
+
+        return true;
     }
 
     async getOrderItemsDetails(ids: number[]) {
@@ -111,6 +110,7 @@ export class StockRepository extends Repository<Stock> {
         .set({ quantity: () => "quantity + " + delta })
         .where("id = :id", {id})
         .execute();
+        return true;
     }
 
     async decrementStockQuantity(id: number, delta: number) {
@@ -119,6 +119,7 @@ export class StockRepository extends Repository<Stock> {
         .set({ quantity: () => "quantity - " + delta })
         .where("id = :id", {id})
         .execute();
+        return true;
     }
 
     async getAvailableStock(productId: number) {

@@ -16,12 +16,10 @@ export class PropertyNameProvider {
     }
 
     async addPropertyName(name: string) {
-        const result = await this.repository.insertPropertyName(name);
-        return result.id;
+        return await this.repository.insertPropertyName(name);
     }
 
-    async removePropertyName(id: number) {
-        await this.repository.delete(id);
-        return true;
+    async deletePropertyName(id: number) {
+        return await this.repository.deletePropertyName(id);
     }
 }

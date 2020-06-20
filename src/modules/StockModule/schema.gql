@@ -1,13 +1,12 @@
 
 type Query {
   stockQuantity(productId: ID!, propertyValueIds: [ID]!): Int @auth
-  itemInStock(productId: ID!, propertyValueIds: [ID]!): Boolean!
 }
 
 type Mutation {
   addStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean @auth
   updateStockQuantity(stockId: ID!, quantity: Int!): Boolean @auth
-  removeStock(id: ID!): Boolean @auth
+  deleteStock(id: ID!): Boolean @auth
 }
 
 type Stock {

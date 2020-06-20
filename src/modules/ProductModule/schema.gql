@@ -29,7 +29,7 @@ type Query {
 type Mutation {
   addProduct(newProduct: NewProductInput!): Boolean @auth
   updateProduct(updatedProduct: UpdatedProductInput!): Boolean @auth
-  removeProduct(id: ID!): Boolean @auth
+  deleteProduct(id: ID!): Boolean @auth
 
   publishProduct(id: ID!, published: Boolean!): Boolean @auth
 }

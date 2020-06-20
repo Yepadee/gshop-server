@@ -17,13 +17,11 @@ export class ProductTypeProvider {
 
     async addProductType(name, propertyNameIds)
     {
-        await this.repository.insertProductType(name, propertyNameIds);
-        return true;
+        return await this.repository.insertProductType(name, propertyNameIds);
     }
 
-    async removeProductType(productTypeId)
+    async deleteProductType(productTypeId)
     {
-        await this.repository.delete(productTypeId);
-        return true;
+        return await this.repository.deleteProductType(productTypeId);
     }
 }

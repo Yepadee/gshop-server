@@ -16,25 +16,20 @@ export class ProductRepository extends Repository<Product> {
         .getRawMany();
         const stripped = data.map(rowPacket => rowPacket.propertyNames_id.toString());
 
-        if (product.requiredPropertyIds.every(id => stripped.includes(id)))
-        {
-            const newProduct = new Product();
-            newProduct.typeId = product.typeId;
-            newProduct.name = product.name;
-            newProduct.description = product.description;
-            newProduct.price = product.price;
-            newProduct.catagory = product.catagory;
-    
-            newProduct.requiredProperties = product.requiredPropertyIds.map(id => <any>{id});
-            
-            await this.save(newProduct);
-            return true;
-        }
-        else
+        if (!product.requiredPropertyIds.every(id => stripped.includes(id)))
         {
             throw new Error("A property selected cannot be chosen for this product type.");
         }
-
+        const newProduct = new Product();
+        newProduct.type = <any>{id: product.typeId};
+        newProduct.name = product.name;
+        newProduct.description = product.description;
+        newProduct.price = product.price;
+    
+        newProduct.requiredProperties = product.requiredPropertyIds.map(id => <any>{id});
+        
+        await this.save(newProduct);
+        return true;
     }
 
     async updateProduct(updatedProduct) {
@@ -72,5 +67,20 @@ export class ProductRepository extends Repository<Product> {
         .set({published})
         .where("id = :id", { id })
         .execute();
+
+        return true;
+    }
+
+    async deleteProduct(id) {
+        const { numStock } = await this.createQueryBuilder("product").select("COUNT(*)", "numStock")
+        .innerJoin("product.stock", "stock")
+        .where("product.id = :id", {id})
+        .getRawOne();
+
+        if (numStock > 0 ) throw new Error("Cannot remove a product that has stock!");
+
+        await this.delete(id);
+
+        return true;
     }
 }

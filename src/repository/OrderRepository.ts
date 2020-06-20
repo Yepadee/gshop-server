@@ -9,6 +9,8 @@ export class OrderRepository extends Repository<Order> {
         .set({status: newStatus})
         .where("id = :id", {id})
         .execute();
+
+        return true;
     }
 
     async setSupplierOrderId(id: number, orderId: string) {
@@ -17,5 +19,7 @@ export class OrderRepository extends Repository<Order> {
         .set({supplierOrderId: orderId})
         .where("id = :id", {id})
         .execute();
+
+        return true;
     }
 }

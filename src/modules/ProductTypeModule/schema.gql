@@ -5,7 +5,7 @@ type Query {
 
 type Mutation {
   addProductType(name: String!, propertyNameIds: [ID]!): Boolean @auth
-  removeProductType(id: ID!): Boolean @auth
+  deleteProductType(id: ID!): Boolean @auth
 }
 
 type ProductType {

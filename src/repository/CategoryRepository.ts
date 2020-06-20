@@ -11,6 +11,8 @@ export class CategoryRepository extends Repository<Category> {
         newCategory.parent = <any>{id: parentCategoryId};
         newCategory.name = name;
         await this.save(newCategory);
+
+        return true;
     }
 
     async insertRootCategory(productTypeId, name) {
@@ -22,6 +24,8 @@ export class CategoryRepository extends Repository<Category> {
         .where("productType.id =:productTypeId", { productTypeId })
         .getRawOne();
         console.log(result);
-        this.insertCategory(1, name);
+        await this.insertCategory(1, name);
+
+        return true;
     }
 }

@@ -11,6 +11,7 @@ export class UserRepository extends Repository<User> {
         user.username = username;
         user.password = await bcrypt.hash(password, 10);
         await this.save(user);
+        return true;
     }
 
     async changePassword(id: number, newPassword: string) {
