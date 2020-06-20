@@ -8,6 +8,7 @@ import { Stock } from "@entity/Stock";
 import * as _ from "lodash";
 import * as faker from "faker";
 import * as bcrypt from "bcrypt";
+import { Category } from "@entity/Category";
 
 
 export const setup = async (connection) => {
@@ -54,10 +55,16 @@ export const setup = async (connection) => {
     v6.propertyName = <any>{id:2};
     await connection.manager.save(v6);
 
-    const productType = new ProductType();
+    let productType = new ProductType();
     productType.name = "Clothing";
     productType.propertyNames = <any>[{id:1}, {id:2}];
-    await connection.manager.save(productType);
+    productType = await connection.manager.save(productType);
+
+    const category = new Category();
+    category.name = "Tops";
+    category.parent = productType.rootCategory;
+    await connection.manager.save(category);
+
     _.times(2, async () => {
     const product = new Product();
     product.name = faker.commerce.product();

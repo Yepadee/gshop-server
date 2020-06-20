@@ -10,6 +10,9 @@ export class Category {
     @Column("varchar", {length: 255})
     name: string;
 
+    @Column({nullable: true})
+    parentId: number;
+
     @ManyToOne(() => Category, category => category.children, { cascade: true })
     @JoinColumn()
     parent: Promise<Category>;
