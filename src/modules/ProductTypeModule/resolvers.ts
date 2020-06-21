@@ -9,8 +9,8 @@ export default {
     },
 
     Mutation: {
-      addProductType: (_, { name, propertyNameIds }, { injector }) =>
-        injector.get(ProductTypeProvider).addProductType(name, propertyNameIds),
+      createProductType: (_, { name, propertyNameIds }, { injector }) =>
+        injector.get(ProductTypeProvider).createProductType(name, propertyNameIds),
       deleteProductType: (_, { id }, { injector }) =>
         injector.get(ProductTypeProvider).deleteProductType(id),
       addProductTypePropertyNames: (_, { id, propertyNameIds }, { injector }) =>

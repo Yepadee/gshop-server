@@ -7,11 +7,11 @@ import { getCustomRepository } from "typeorm";
 export class CategoryProvider {
     repository = getCustomRepository(CategoryRepository);
 
-    async addCategory(productTypeId: string, name: string) {
+    async createCategory(productTypeId: string, name: string) {
         return await this.repository.insertRootCategory(productTypeId, name);
     }
 
-    async addSubCategory(parentId: string, name: string) {
+    async createSubCategory(parentId: string, name: string) {
         return await this.repository.insertCategory(parentId, name);
     }
 

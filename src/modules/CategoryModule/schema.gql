@@ -3,8 +3,8 @@ type Query {
 }
 
 type Mutation {
-  addCategory(productTypeId: ID!, name: String!): Boolean
-  addSubCategory(parentId: ID!, name: String!): Boolean
+  createCategory(productTypeId: ID!, name: String!): Boolean
+  createSubCategory(parentId: ID!, name: String!): Boolean
 }
 
 type Category {

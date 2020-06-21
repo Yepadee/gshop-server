@@ -15,7 +15,7 @@ export class ProductTypeProvider {
         return this.repository.findOne(id);
     }
 
-    async addProductType(name, propertyNameIds)
+    async createProductType(name, propertyNameIds)
     {
         return await this.repository.insertProductType(name, propertyNameIds);
     }

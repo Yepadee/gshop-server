@@ -27,7 +27,7 @@ type Query {
 }
 
 type Mutation {
-  addProduct(newProduct: NewProductInput!): Boolean @auth
+  createProduct(newProduct: NewProductInput!): Boolean @auth
   updateProduct(updatedProduct: UpdatedProductInput!): Boolean @auth
   deleteProduct(id: ID!): Boolean @auth
 

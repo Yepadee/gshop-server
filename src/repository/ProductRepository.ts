@@ -2,6 +2,8 @@ import { EntityRepository, Repository, getRepository } from "typeorm";
 import { Product } from "@entity/Product";
 import { ProductType } from "@entity/ProductType";
 
+import * as rimraf from "rimraf";
+
 
 @EntityRepository(Product)
 export class ProductRepository extends Repository<Product> {
@@ -80,7 +82,8 @@ export class ProductRepository extends Repository<Product> {
         if (numStock > 0 ) throw new Error("Cannot remove a product that has stock!");
 
         await this.delete(id);
-
+        rimraf.sync("public/product-images/" + id);
+        
         return true;
     }
 }

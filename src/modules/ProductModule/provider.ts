@@ -3,7 +3,6 @@ import { Injectable } from "@graphql-modules/di";
 import { getCustomRepository } from "typeorm";
 
 import * as fs from "fs";
-import * as rimraf from "rimraf";
 import { ProductRepository } from "@repository/ProductRepository";
 
 @Injectable()
@@ -18,7 +17,7 @@ export class ProductProvider {
         return this.repository.findOne(id);
     }
 
-    async addProduct(product) {
+    async createProduct(product) {
         return await this.repository.insertProduct(product);
     }
 
@@ -27,10 +26,7 @@ export class ProductProvider {
     }
 
     async deleteProduct(id: number) {
-        await this.repository.deleteProduct(id);
-        rimraf.sync("public/product-images/" + id);
-        
-        return true;
+        return await this.repository.deleteProduct(id);
     }
 
     getProductImages(id: number) {
