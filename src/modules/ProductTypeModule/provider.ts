@@ -24,4 +24,12 @@ export class ProductTypeProvider {
     {
         return await this.repository.deleteProductType(productTypeId);
     }
+
+    async addPropertyNames(id: number, propertyNameIds: number[]) {
+        return await this.repository.addPropertyNames(id, propertyNameIds);
+    }
+
+    async removePropertyNames(id: number, propertyNameIds: number[]) {
+        return await this.repository.removePropertyNames(id, propertyNameIds);
+    }
 }
