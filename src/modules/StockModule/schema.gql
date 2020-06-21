@@ -4,7 +4,7 @@ type Query {
 }
 
 type Mutation {
-  addStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean @auth
+  createStock(productId: ID!, propertyIds: [ID], quantity: Int): Boolean @auth
   updateStockQuantity(stockId: ID!, quantity: Int!): Boolean @auth
   deleteStock(id: ID!): Boolean @auth
 }

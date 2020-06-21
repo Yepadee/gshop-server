@@ -34,11 +34,24 @@ export class ProductRepository extends Repository<Product> {
         return true;
     }
 
+    async deleteProduct(id: number) {
+        const { numStock } = await this.createQueryBuilder("product").select("COUNT(*)", "numStock")
+        .innerJoin("product.stock", "stock")
+        .where("product.id = :id", {id})
+        .getRawOne();
+
+        if (numStock > 0 ) throw new Error("Cannot remove a product that has stock!");
+
+        await this.delete(id);
+        rimraf.sync("public/product-images/" + id);
+        
+        return true;
+    }
+
     async updateProduct(updatedProduct) {
         const values = {};
 
         if (updatedProduct.name) Object.assign(values, {name: updatedProduct.name})
-        if (updatedProduct.catagory) Object.assign(values, {catagory: updatedProduct.catagory})
         if (updatedProduct.description) Object.assign(values, {description: updatedProduct.description})
         if (updatedProduct.price) Object.assign(values, {price: updatedProduct.price})
 
@@ -51,7 +64,7 @@ export class ProductRepository extends Repository<Product> {
         return true;
     }
 
-    async setPublished(id, published) {
+    async setPublished(id: number, published: boolean) {
         if (published) {
             const result = await this.createQueryBuilder("product")
             .select("COUNT(*) > 0", "hasStock")
@@ -73,17 +86,29 @@ export class ProductRepository extends Repository<Product> {
         return true;
     }
 
-    async deleteProduct(id) {
-        const { numStock } = await this.createQueryBuilder("product").select("COUNT(*)", "numStock")
+    async addProductRequiredProperties(id: number, propertyNameIds: number[]) {
+        await this.createQueryBuilder()
+        .relation(Product, "requiredProperties")
+        .of(id)
+        .add(propertyNameIds)
+        return true;
+    }
+
+    async removeProductRequiredProperties(id: number, propertyNameIds: number[]) {
+        const { numStock } = await this.createQueryBuilder("product")
+        .select("COUNT(DISTINCT stock.id)", "numStock")
         .innerJoin("product.stock", "stock")
-        .where("product.id = :id", {id})
+        .innerJoin("stock.properties", "propertyValues")
+        .innerJoin("propertyValues.propertyName", "propertyName")
+        .where("propertyName.id IN (:...propertyNameIds)", { propertyNameIds })
         .getRawOne();
-
-        if (numStock > 0 ) throw new Error("Cannot remove a product that has stock!");
-
-        await this.delete(id);
-        rimraf.sync("public/product-images/" + id);
         
+        if (numStock > 0) throw new Error("Cannot remove a require property form a product when there exists stock using this property!");
+
+        await this.createQueryBuilder()
+        .relation(Product, "requiredProperties")
+        .of(id)
+        .remove(propertyNameIds)
         return true;
     }
 }

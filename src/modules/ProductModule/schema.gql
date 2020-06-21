@@ -32,9 +32,11 @@ type Mutation {
   deleteProduct(id: ID!): Boolean @auth
 
   publishProduct(id: ID!, published: Boolean!): Boolean @auth
+  addProductRequiredProperties(id: ID!, propertyNameIds: [ID]!): Boolean @auth
+  removeProductRequiredProperties(id: ID!, propertyNameIds: [ID]!): Boolean @auth
 }
 
-type Product{
+type Product {
   id: ID!
   name: String!
   description: String

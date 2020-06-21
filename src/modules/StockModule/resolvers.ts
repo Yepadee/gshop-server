@@ -6,7 +6,7 @@ export default {
     },
 
     Mutation: {
-      addStock: (_, args, { injector }) => injector.get(StockProvider).addStock(args),
+      createStock: (_, args, { injector }) => injector.get(StockProvider).createStock(args),
       updateStockQuantity: (_, { stockId, quantity }, { injector }) => injector.get(StockProvider).updateStockQuantity(stockId, quantity),
       deleteStock: (_, { id }, { injector }) => injector.get(StockProvider).deleteStock(id)
     },

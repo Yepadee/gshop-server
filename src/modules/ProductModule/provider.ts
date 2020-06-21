@@ -38,4 +38,12 @@ export class ProductProvider {
     async setPublished(id: number, published: boolean) {
         return await this.repository.setPublished(id, published);
     }
+
+    async addProductRequiredProperties(id: number, propertyNameIds: number[]) {
+        return await this.repository.addProductRequiredProperties(id, propertyNameIds);
+    }
+
+    async removeProductRequiredProperties(id: number, propertyNameIds: number[]) {
+        return await this.repository.removeProductRequiredProperties(id, propertyNameIds);
+    }
 }

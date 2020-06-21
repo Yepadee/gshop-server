@@ -8,11 +8,20 @@ export default {
   },
 
   Mutation: {
-    createProduct: (_, { newProduct }, { injector }) => injector.get(ProductProvider).createProduct(newProduct),
-    updateProduct: (_, { updatedProduct }, { injector }) => injector.get(ProductProvider).updateProduct(updatedProduct),
-    deleteProduct: (_, { id }, { injector }) => injector.get(ProductProvider).deleteProduct(id),
+    createProduct: (_, { newProduct }, { injector }) =>
+      injector.get(ProductProvider).createProduct(newProduct),
+    updateProduct: (_, { updatedProduct }, { injector }) =>
+      injector.get(ProductProvider).updateProduct(updatedProduct),
+    deleteProduct: (_, { id }, { injector }) =>
+      injector.get(ProductProvider).deleteProduct(id),
 
-    publishProduct: (_, { id, published }, { injector }) => injector.get(ProductProvider).setPublished(id, published)
+    publishProduct: (_, { id, published }, { injector }) =>
+      injector.get(ProductProvider).setPublished(id, published),
+  
+    addProductRequiredProperties: (_, { id, propertyNameIds }, { injector }) =>
+      injector.get(ProductProvider).addProductRequiredProperties(id, propertyNameIds),
+    removeProductRequiredProperties: (_, { id, propertyNameIds }, { injector }) =>
+      injector.get(ProductProvider).removeProductRequiredProperties(id, propertyNameIds),
   },
 
   Product: {
