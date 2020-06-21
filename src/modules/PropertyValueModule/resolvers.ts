@@ -2,7 +2,7 @@ import { PropertyValueProvider } from "./provider";
 
 export default {
   Mutation: {
-    addPropertyValue: (_, { propertyNameId, value }, { injector }) => injector.get(PropertyValueProvider).addPropertyValue(propertyNameId, value),
+    createPropertyValue: (_, { propertyNameId, value }, { injector }) => injector.get(PropertyValueProvider).createPropertyValue(propertyNameId, value),
     deletePropertyValue: (_, { id }, { injector }) => injector.get(PropertyValueProvider).deletePropertyValue(id),
   },
 

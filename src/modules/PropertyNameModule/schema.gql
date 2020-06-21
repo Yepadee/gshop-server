@@ -5,7 +5,7 @@ type Query {
 }
 
 type Mutation {
-  addPropertyName(name: String!): Boolean @auth
+  createPropertyName(name: String!): Boolean @auth
   deletePropertyName(id: ID!): Boolean @auth
 }
 

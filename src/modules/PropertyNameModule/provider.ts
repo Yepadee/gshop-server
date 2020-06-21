@@ -15,7 +15,7 @@ export class PropertyNameProvider {
         return this.repository.findOne({where: {id}});
     }
 
-    async addPropertyName(name: string) {
+    async createPropertyName(name: string) {
         return await this.repository.insertPropertyName(name);
     }
 

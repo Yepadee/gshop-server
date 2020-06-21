@@ -7,7 +7,7 @@ import { PropertyValueRepository } from "@repository/PropertyValueRepository";
 export class PropertyValueProvider {
     repository = getCustomRepository(PropertyValueRepository);
 
-    async addPropertyValue(propertyNameId, value)
+    async createPropertyValue(propertyNameId, value)
     {
         return await this.repository.insertPropertyValue(propertyNameId, value);
     }

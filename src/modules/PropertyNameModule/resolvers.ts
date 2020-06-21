@@ -7,7 +7,7 @@ export default {
     },
 
     Mutation: {
-      addPropertyName: (_, { name }, { injector }) => injector.get(PropertyNameProvider).addPropertyName(name),
+      createPropertyName: (_, { name }, { injector }) => injector.get(PropertyNameProvider).createPropertyName(name),
       deletePropertyName: (_, { id }, { injector }) => injector.get(PropertyNameProvider).deletePropertyName(id)
     },
 
