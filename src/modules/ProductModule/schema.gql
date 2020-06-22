@@ -53,7 +53,7 @@ type Product {
   name: String!
   description: String
   price: Float!
-  published: Boolean!
+  published: Boolean! @auth
 
   images: [String]!
   imageDir: String!

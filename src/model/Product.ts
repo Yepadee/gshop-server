@@ -16,7 +16,7 @@ export class Product {
     @Column("varchar", {length: 255})
     name: string;
 
-    @Column("varchar", {length: 512})
+    @Column("varchar", {length: 512, nullable: true})
     description: string;
 
     @Column("decimal", { precision: 5, scale: 2 })
@@ -25,6 +25,8 @@ export class Product {
     @Column("int", {default: false})
     published: boolean;
 
+    @Column("int")
+    typeId: number;
 
     @ManyToOne(() => ProductType, type => type.products, { cascade: true })
     @JoinColumn()

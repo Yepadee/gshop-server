@@ -12,24 +12,14 @@ export class ProductRepository extends Repository<Product> {
 
     async getProducts(take: number, skip: number, keyword: string, orderBy) {
         keyword = keyword || "";
-        if (!orderBy.sales) {
-            const result = await this.find({
-                where: {
-                            published: true,
-                            name: Like("%" + keyword + "%"),
-                    },
-                order: orderBy,
-                take,
-                skip
-            });
-            return result;
-        } else {
-            let query = this.createQueryBuilder("products")
-            .take(take)
-            .skip(skip)
-            .where("products.published = :published", { published: true })
-            .andWhere("products.name like :keyword", { keyword: "%" + keyword + "%" })
-            
+
+        let query = this.createQueryBuilder("products")
+        .limit(take)
+        .offset(skip)
+        .where("products.published = :published", { published: true })
+        .andWhere("products.name like :keyword", { keyword: "%" + keyword + "%" })
+
+        if (orderBy) {
             if (orderBy.sales) {
                 query = query.innerJoin("products.stock", "stock")
                 .groupBy("stock.productId")
@@ -41,10 +31,12 @@ export class ProductRepository extends Repository<Product> {
             if ( orderBy.price ) {
                 query = query.orderBy({"products.price"  : orderBy.price });
             }
-
-            const result = await query.getMany();
-            return result;
+            if ( orderBy.createdAt ) {
+                query = query.orderBy({"products.createdAt"  : orderBy.createdAt });
+            }
         }
+        const result = await query.getMany();
+        return result;
     }
 
     async insertProduct(product) {
@@ -60,14 +52,15 @@ export class ProductRepository extends Repository<Product> {
             throw new Error("A property selected cannot be chosen for this product type.");
         }
         const newProduct = new Product();
-        newProduct.type = <any>{id: product.typeId};
+        newProduct.typeId = product.typeId;
         newProduct.name = product.name;
         newProduct.description = product.description;
         newProduct.price = product.price;
     
         newProduct.requiredProperties = product.requiredPropertyIds.map(id => <any>{id});
-        
-        await this.save(newProduct);
+        console.log(newProduct);
+        const res = await this.save(newProduct);
+        console.log(res);
         return true;
     }
 
