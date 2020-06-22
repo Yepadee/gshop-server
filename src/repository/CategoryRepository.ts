@@ -8,10 +8,9 @@ export class CategoryRepository extends Repository<Category> {
 
     async insertCategory(parentCategoryId, name) {
         const newCategory = new Category();
-        newCategory.parent = <any>{id: parentCategoryId};
+        newCategory.parentId = parentCategoryId;
         newCategory.name = name;
         await this.save(newCategory);
-
         return true;
     }
 

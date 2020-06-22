@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository, Like } from "typeorm";
+import { EntityRepository, Repository, getRepository } from "typeorm";
 import { Product } from "@entity/Product";
 import { ProductType } from "@entity/ProductType";
 
