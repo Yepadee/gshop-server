@@ -12,6 +12,7 @@ type Mutation {
 type Stock {
   id: ID!
   quantity: Int @auth
+  sales: Int @auth
   inStock: Boolean!
 }
 

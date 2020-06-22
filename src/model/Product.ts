@@ -40,6 +40,9 @@ export class Product {
     @OneToMany(() => Category, category => category.products)
     category:  Promise<Category[]>;
 
+    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
+    createdAt: Date;
+
     @AfterInsert()
     createImageFolder() {
         const imageDir = "public/product-images/" + this.id;

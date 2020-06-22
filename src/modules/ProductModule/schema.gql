@@ -13,8 +13,20 @@ input UpdatedProductInput {
   price: Float
 }
 
+enum OrderBy {
+  ASC
+  DESC
+}
+
+input ProductOrderBy {
+  name: OrderBy
+  price: OrderBy
+  createdAt: OrderBy
+  sales: OrderBy
+}
+
 type Query {
-  products(take: Int!, skip: Int!, keyword: String): [Product]!
+  products(take: Int!, skip: Int!, keyword: String, orderBy: ProductOrderBy): [Product]!
   product(id: ID!): Product
 
   allProducts(

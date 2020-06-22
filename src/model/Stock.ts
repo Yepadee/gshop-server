@@ -10,9 +10,13 @@ export class Stock {
     @PrimaryGeneratedColumn()
     id: number;
 
-    @Column("int")
+    @Column("int", { default: 0 })
     @Min(0)
     quantity: number;
+
+    @Column("int", { default: 0 })
+    @Min(0)
+    sales: number;
 
     @Column("int")
     productId: number;

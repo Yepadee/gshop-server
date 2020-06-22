@@ -1,4 +1,4 @@
-import { EntityRepository, Repository, getRepository } from "typeorm";
+import { EntityRepository, Repository, getRepository, Like } from "typeorm";
 import { Product } from "@entity/Product";
 import { ProductType } from "@entity/ProductType";
 
@@ -9,6 +9,43 @@ import * as rimraf from "rimraf";
 export class ProductRepository extends Repository<Product> {
 
     productTypeRepository = getRepository(ProductType);
+
+    async getProducts(take: number, skip: number, keyword: string, orderBy) {
+        keyword = keyword || "";
+        if (!orderBy.sales) {
+            const result = await this.find({
+                where: {
+                            published: true,
+                            name: Like("%" + keyword + "%"),
+                    },
+                order: orderBy,
+                take,
+                skip
+            });
+            return result;
+        } else {
+            let query = this.createQueryBuilder("products")
+            .take(take)
+            .skip(skip)
+            .where("products.published = :published", { published: true })
+            .andWhere("products.name like :keyword", { keyword: "%" + keyword + "%" })
+            
+            if (orderBy.sales) {
+                query = query.innerJoin("products.stock", "stock")
+                .groupBy("stock.productId")
+                .orderBy({"SUM(stock.sales)" : orderBy.sales });
+            }
+            if ( orderBy.name ) {
+                query = query.orderBy({"products.name"   : orderBy.name });
+            }
+            if ( orderBy.price ) {
+                query = query.orderBy({"products.price"  : orderBy.price });
+            }
+
+            const result = await query.getMany();
+            return result;
+        }
+    }
 
     async insertProduct(product) {
         const data = await this.productTypeRepository.createQueryBuilder("productType")
