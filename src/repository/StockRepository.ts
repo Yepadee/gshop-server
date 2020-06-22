@@ -128,4 +128,17 @@ export class StockRepository extends Repository<Stock> {
         });
         return stock;
     }
+
+    async checkOrderItemsInStock(orderItems) {
+        const ids = orderItems.map(orderItem => orderItem.stockId);
+        const itemQuantityMap = {};
+        orderItems.forEach(orderItem => {
+            itemQuantityMap[orderItem.stockId] = orderItem.quantity;
+        });
+        const stocks = await this.find({ where: {id: In(ids)} });
+        stocks.forEach(stock => {
+            const quantity = itemQuantityMap[stock.id];
+            if(quantity > stock.quantity) throw new Error("One or more selected items are out of stock!");
+        });
+    }
 }

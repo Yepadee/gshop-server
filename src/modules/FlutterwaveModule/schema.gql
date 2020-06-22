@@ -1,0 +1,10 @@
+
+type FlutterwaveOrder {
+  orderId: String!
+  approveUrl: String!
+}
+
+type Mutation {
+  createFlutterwaveOrder(items: [OrderItemInput]!, returnUrl: String, cancelUrl: String): FlutterwaveOrder
+  captureFlutterwaveOrder(orderId: String!): Boolean!
+}

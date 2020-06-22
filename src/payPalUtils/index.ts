@@ -22,9 +22,9 @@ export class PayPalRepository {
         this.stockRepository = getCustomRepository(StockRepository);
         this.orderRepository = getCustomRepository(OrderRepository);
 
-        let clientId = process.env.PAYPAL_CLIENT_ID;
-        let clientSecret = process.env.PAYPAL_SECRET;
-        let environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
+        const clientId = process.env.PAYPAL_CLIENT_ID;
+        const clientSecret = process.env.PAYPAL_SECRET;
+        const environment = new paypal.core.SandboxEnvironment(clientId, clientSecret);
         this.client = new paypal.core.PayPalHttpClient(environment);
     }
 
@@ -178,16 +178,6 @@ export class PayPalRepository {
         })
 
         return orderItemsDetails;
-    }
-
-    public async checkOrderItemsInStock(orderItems) {
-        const ids = orderItems.map(orderItem => orderItem.stockId);
-        const itemQuantityMap = this.buildItemQuantityMap(orderItems);
-        const stocks = await this.stockRepository.find({ where: {id: In(ids)} });
-        stocks.forEach(stock => {
-            const quantity = itemQuantityMap[stock.id];
-            if(quantity > stock.quantity) throw new Error("One or more selected items are out of stock!");
-        });
     }
 
 }
