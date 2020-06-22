@@ -1,6 +1,6 @@
 import { Injectable } from "@graphql-modules/di";
 
-import { getCustomRepository } from "typeorm";
+import { getCustomRepository, Like } from "typeorm";
 
 import * as fs from "fs";
 import { ProductRepository } from "@repository/ProductRepository";
@@ -9,7 +9,22 @@ import { ProductRepository } from "@repository/ProductRepository";
 export class ProductProvider {
     repository = getCustomRepository(ProductRepository);
 
-    getProducts(args) {
+    async getProducts(take: number, skip: number, keyword: string) {
+        keyword = keyword || '';
+        const [ result ] = await this.repository.findAndCount({
+            where: {
+                        published:true,
+                        name: Like('%' + keyword + '%'),
+                        order: { name: "DESC" }
+                   },
+            take,
+            skip
+        });
+
+        return result;
+    }
+
+    getAllProducts(args) {
         return this.repository.find({ where: args });
     }
     

@@ -65,7 +65,7 @@ export const setup = async (connection) => {
     category.parent = productType.rootCategory;
     await connection.manager.save(category);
 
-    _.times(2, async () => {
+    _.times(20, async () => {
     const product = new Product();
     product.name = faker.commerce.product();
     product.description = faker.commerce.productAdjective();

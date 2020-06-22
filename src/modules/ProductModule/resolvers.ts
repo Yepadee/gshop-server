@@ -2,7 +2,7 @@ import { ProductProvider } from "./provider";
 
 export default {
   Query: {
-    products: (_, args, { injector }) => injector.get(ProductProvider).getProducts({...args, published: true}),
+    products: (_, { take, skip, keyword }, { injector }) => injector.get(ProductProvider).getProducts(take, skip, keyword),
     allProducts: (_, args, { injector }) => injector.get(ProductProvider).getProducts(args),
     product: (_, { id }, { injector }) => injector.get(ProductProvider).getProductById(id)
   },

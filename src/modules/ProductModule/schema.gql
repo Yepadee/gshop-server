@@ -14,7 +14,7 @@ input UpdatedProductInput {
 }
 
 type Query {
-  products(id: ID, name: String, description: String, price: Float): [Product]!
+  products(take: Int!, skip: Int!, keyword: String): [Product]!
   product(id: ID!): Product
 
   allProducts(
