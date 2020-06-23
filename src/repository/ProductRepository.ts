@@ -10,13 +10,15 @@ export class ProductRepository extends Repository<Product> {
 
     productTypeRepository = getRepository(ProductType);
 
-    async getProducts(take: number, skip: number, keyword: string, orderBy) {
+    async getProducts(categoryId: number, take: number, skip: number, keyword: string, orderBy) {
         keyword = keyword || "";
 
         let query = this.createQueryBuilder("products")
         .limit(take)
         .offset(skip)
+        .innerJoin("products.category", "category")
         .where("products.published = :published", { published: true })
+        .andWhere("category.id = :categoryId", { categoryId })
         .andWhere("products.name like :keyword", { keyword: "%" + keyword + "%" })
 
         if (orderBy) {

@@ -26,7 +26,13 @@ input ProductOrderBy {
 }
 
 type Query {
-  products(take: Int!, skip: Int!, keyword: String, orderBy: ProductOrderBy): [Product]!
+  products(
+    categoryId: ID!,
+    take: Int!,
+    skip: Int!,
+    keyword: String,
+    orderBy: ProductOrderBy
+  ): [Product]!
   product(id: ID!): Product
 
   allProducts(
@@ -65,4 +71,8 @@ type ProductType {
 
 type Stock {
   product: Product!
+}
+
+type Category {
+  products: [Product]!
 }

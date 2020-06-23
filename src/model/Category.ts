@@ -2,7 +2,7 @@ import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Tree, TreeChildren, 
 import { Product } from "./Product";
 
 @Entity()
-@Tree("closure-table")
+@Tree("materialized-path")
 export class Category {
 
     @PrimaryGeneratedColumn()

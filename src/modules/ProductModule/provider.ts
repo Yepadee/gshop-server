@@ -9,8 +9,8 @@ import { ProductRepository } from "@repository/ProductRepository";
 export class ProductProvider {
     repository = getCustomRepository(ProductRepository);
 
-    async getProducts(take: number, skip: number, keyword: string, orderBy) {
-        return this.repository.getProducts(take, skip, keyword, orderBy)
+    async getProducts(categoryId: number, take: number, skip: number, keyword: string, orderBy) {
+        return this.repository.getProducts(categoryId, take, skip, keyword, orderBy)
     }
 
     getAllProducts(args) {

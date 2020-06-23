@@ -39,8 +39,11 @@ export class Product {
     @OneToMany(() => Stock, stock => stock.product)
     stock:  Promise<Stock[]>;
 
-    @OneToMany(() => Category, category => category.products)
-    category:  Promise<Category[]>;
+    @Column("int")
+    categoryId: number;
+
+    @ManyToOne(() => Category, category => category.products)
+    category: Promise<Category>;
 
     @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
     createdAt: Date;

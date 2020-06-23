@@ -98,6 +98,7 @@ export const setup = async (connection) => {
     product.type = <any>{id:1};
     product.requiredProperties = <any>[{id:1}, {id:2}];
     product.published = true;
+    product.categoryId = 4;
     await connection.manager.save(product);
     const s1 = new Stock();
     s1.quantity = faker.random.number({ max: 1, min: 30 });

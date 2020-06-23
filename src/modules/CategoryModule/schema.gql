@@ -16,3 +16,7 @@ type Category {
 type ProductType {
   categories: [Category]!
 }
+
+type Product {
+  categories: [Category]!
+}

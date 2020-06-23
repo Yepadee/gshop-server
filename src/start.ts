@@ -13,9 +13,10 @@ export const startServer = async () => {
 
   let ormconfig;
 
-  if (process.env.NODE_ENV === "development") ormconfig = require("../ormconfig-dev.json");
-  else if (process.env.NODE_ENV === "test") ormconfig = require("../ormconfig-test.json");
-  else ormconfig = require("../ormconfig-prod.json");
+  // if (process.env.NODE_ENV === "development") ormconfig = require("../ormconfig-dev.json");
+  // else if (process.env.NODE_ENV === "test") ormconfig = require("../ormconfig-test.json");
+  // else
+  ormconfig = require("../ormconfig-prod.json");
 
   await createConnection(ormconfig).then(async connection => {
     connection.synchronize(true).then( async () => {

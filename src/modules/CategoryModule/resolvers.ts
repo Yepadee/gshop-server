@@ -17,4 +17,8 @@ export default {
         categories: (productType, _, { injector }) =>
             injector.get(CategoryProvider).getSubCategories(productType.rootCategoryId),
     },
+
+    Product: {
+        categories: product => product.categories
+    }
 };

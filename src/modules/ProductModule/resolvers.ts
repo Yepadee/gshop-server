@@ -1,10 +1,12 @@
 import { ProductProvider } from "./provider";
-
 export default {
   Query: {
-    products: (_, { take, skip, keyword, orderBy }, { injector }) => injector.get(ProductProvider).getProducts(take, skip, keyword, orderBy),
-    allProducts: (_, args, { injector }) => injector.get(ProductProvider).getAllProducts(args),
-    product: (_, { id }, { injector }) => injector.get(ProductProvider).getProductById(id)
+    products: (_, { categoryId, take, skip, keyword, orderBy }, { injector }) =>
+      injector.get(ProductProvider).getProducts(categoryId, take, skip, keyword, orderBy),
+    allProducts: (_, args, { injector }) =>
+      injector.get(ProductProvider).getAllProducts(args),
+    product: (_, { id }, { injector }) =>
+      injector.get(ProductProvider).getProductById(id)
   },
 
   Mutation: {
@@ -40,6 +42,10 @@ export default {
 
   Stock: {
     product: stock => stock.product
+  },
+
+  Category: {
+    products: category => category.products
   }
 
 };
