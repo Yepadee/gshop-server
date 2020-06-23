@@ -1,7 +1,8 @@
-import { Entity, PrimaryGeneratedColumn, Column, OneToMany, ManyToOne, JoinColumn } from "typeorm";
+import { Entity, PrimaryGeneratedColumn, Column, OneToMany, Tree, TreeChildren, TreeParent } from "typeorm";
 import { Product } from "./Product";
 
 @Entity()
+@Tree("closure-table")
 export class Category {
 
     @PrimaryGeneratedColumn()
@@ -13,13 +14,12 @@ export class Category {
     @Column({nullable: true})
     parentId: number;
 
-    @ManyToOne(() => Category, category => category.children, { cascade: true })
-    @JoinColumn()
+    @TreeParent()
     parent: Promise<Category>;
 
-    @OneToMany(() => Category, category => category.parent)
-    children:  Promise<Category[]>;
+    @TreeChildren()
+    children: Promise<Category[]>;
 
     @OneToMany(() => Product, product => product.category)
-    products:  Promise<Product[]>;
+    products: Promise<Product[]>;
 }

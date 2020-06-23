@@ -3,7 +3,7 @@ import { CategoryProvider } from "./provider";
 export default {
     Query: {
         categories:  (_, args, { injector }) =>
-        injector.get(CategoryProvider).getCategories(args),
+            injector.get(CategoryProvider).getCategories(args),
     },
     
     Mutation: {
@@ -14,6 +14,7 @@ export default {
     },
     
     ProductType: {
-        categories: async productType => (await productType.rootCategory).children
+        categories: (productType, _, { injector }) =>
+            injector.get(CategoryProvider).getSubCategories(productType.rootCategoryId),
     },
 };

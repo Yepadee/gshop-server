@@ -60,10 +60,35 @@ export const setup = async (connection) => {
     productType.propertyNames = <any>[{id:1}, {id:2}];
     productType = await connection.manager.save(productType);
 
-    const category = new Category();
-    category.name = "Tops";
-    category.parent = productType.rootCategory;
-    await connection.manager.save(category);
+    const category1 = new Category();
+    category1.name = "Tops";
+    category1.parent = productType.rootCategory;
+    await connection.manager.save(category1);
+
+    const category2 = new Category();
+    category2.name = "Leggings";
+    category2.parent =  productType.rootCategory;
+    await connection.manager.save(category2);
+
+    const category3 = new Category();
+    category3.name = "T-Shirts";
+    category3.parent = <any>category1;
+    await connection.manager.save(category3);
+
+    const category4 = new Category();
+    category4.name = "Hoodies";
+    category4.parent = <any>category1;
+    await connection.manager.save(category4);
+
+    const category5 = new Category();
+    category5.name = "Jeans";
+    category5.parent = <any>category2;
+    await connection.manager.save(category5);
+
+    const category6 = new Category();
+    category6.name = "Skirts";
+    category6.parent = <any>category2;
+    await connection.manager.save(category6);
 
     _.times(20, async () => {
     const product = new Product();

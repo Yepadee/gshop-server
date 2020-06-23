@@ -1,12 +1,11 @@
-import { EntityRepository, Repository } from "typeorm";
+import { EntityRepository, TreeRepository, getManager } from "typeorm";
 import { Category } from "@entity/Category";
-import { getConnection } from "typeorm";
 import { ProductType } from "@entity/ProductType";
 
 @EntityRepository(Category)
-export class CategoryRepository extends Repository<Category> {
+export class CategoryRepository extends TreeRepository<Category> {
 
-    async insertCategory(parentCategoryId, name) {
+    async insertSubCategory(parentCategoryId, name) {
         const newCategory = new Category();
         newCategory.parentId = parentCategoryId;
         newCategory.name = name;
@@ -14,17 +13,21 @@ export class CategoryRepository extends Repository<Category> {
         return true;
     }
 
-    async insertRootCategory(productTypeId, name) {
-        console.log(productTypeId);
-        console.log(name);
-        const result = await getConnection().createQueryBuilder()
+    async insertCategory(productTypeId, name) {
+        const { rootCategoryId } = await this.createQueryBuilder()
         .select("productType.rootCategoryId", "rootCategoryId")
         .from(ProductType, "productType")
         .where("productType.id =:productTypeId", { productTypeId })
         .getRawOne();
-        console.log(result);
-        await this.insertCategory(1, name);
-
+        await this.insertSubCategory(rootCategoryId, name);
         return true;
+    }
+
+    async getSubCategories(parentId: number) {
+        const parent = new Category();
+        parent.id = parentId;
+        const result = await this.createDescendantsQueryBuilder("category", "categoryClosure", parent)
+        .getMany();
+        return result;
     }
 }

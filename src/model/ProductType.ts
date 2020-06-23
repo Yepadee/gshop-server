@@ -22,6 +22,9 @@ export class ProductType {
     @ManyToMany(() => PropertyName, propertyName => propertyName.productTypes)
     propertyNames: Promise<PropertyName[]>;
 
+    @Column("int")
+    rootCategoryId: number;
+
     @OneToOne(() => Category)
     @JoinColumn()
     rootCategory: Promise<Category>;

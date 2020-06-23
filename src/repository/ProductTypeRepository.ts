@@ -53,4 +53,5 @@ export class ProductTypeRepository extends Repository<ProductType> {
         .remove(propertyNameIds)
         return true;
     }
+
 }
