@@ -1,12 +1,15 @@
 scalar Upload
 
 type Image {
-  id: ID
-  name: String
-  url: String
+  id: ID!
+  path: String!
 }
 
 type Mutation {
   uploadProductImages(productId: ID!, files: [Upload]!): Boolean @auth
-  deleteProductImage(productId: ID!, filename: String!): Boolean @auth
+  deleteProductImage(imageId: ID!): Boolean @auth
+}
+
+type Product {
+    images: [Image]!
 }

@@ -6,6 +6,7 @@ import { Category } from "./Category";
 import { PropertyName } from "./PropertyName";
 
 import * as fs from "fs";
+import { ProductImage } from "./ProductImage";
 
 @Entity()
 export class Product {
@@ -24,6 +25,9 @@ export class Product {
 
     @Column("int", {default: false})
     published: boolean;
+
+    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
+    createdAt: Date;
 
     @Column("int")
     typeId: number;
@@ -45,8 +49,8 @@ export class Product {
     @ManyToOne(() => Category, category => category.products)
     category: Promise<Category>;
 
-    @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
-    createdAt: Date;
+    @OneToMany(() => ProductImage, image => image.product)
+    images:  Promise<ProductImage[]>;
 
     @AfterInsert()
     createImageFolder() {

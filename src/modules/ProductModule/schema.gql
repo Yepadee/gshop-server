@@ -27,7 +27,7 @@ input ProductOrderBy {
 
 type Query {
   products(
-    categoryId: ID!,
+    categoryId: ID,
     take: Int!,
     skip: Int!,
     keyword: String,
@@ -60,9 +60,6 @@ type Product {
   description: String
   price: Float!
   published: Boolean! @auth
-
-  images: [String]!
-  imageDir: String!
 }
 
 type ProductType {

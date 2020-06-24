@@ -18,7 +18,7 @@ export class ProductRepository extends Repository<Product> {
         .offset(skip)
         .innerJoin("products.category", "category")
         .where("products.published = :published", { published: true })
-        .andWhere("category.id = :categoryId", { categoryId })
+        .andWhere(categoryId ? "category.id = :categoryId" : '1=1', { categoryId })
         .andWhere("products.name like :keyword", { keyword: "%" + keyword + "%" })
 
         if (orderBy) {
