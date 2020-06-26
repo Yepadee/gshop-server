@@ -65,12 +65,12 @@ export class ProductImageRepository extends Repository<ProductImage> {
             .where("productImage.id = :id", { id })
             .getRawOne();
 
-            await this.delete(id).then(() => {
-                fs.unlinkSync("public/" + path);
-                this.createQueryBuilder("productImage")
-                .select("productImage.priority", "oldPriority")
-                .where("productImage.id = :id", { id })
-                .getRawOne().then(({ oldPriority }) => {
+            await this.createQueryBuilder("productImage")
+            .select("productImage.priority", "oldPriority")
+            .where("productImage.id = :id", { id })
+            .getRawOne().then(({ oldPriority }) => {
+                this.delete(id).then(() => {
+                    fs.unlinkSync("public/" + path);
                     this.createQueryBuilder()
                     .update()
                     .set({
@@ -80,7 +80,7 @@ export class ProductImageRepository extends Repository<ProductImage> {
                     .execute();
                 });
             });
-            
+
         } catch {
             throw new Error("Invalid productImage id!");
         }
