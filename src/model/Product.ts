@@ -49,7 +49,7 @@ export class Product {
     @ManyToOne(() => Category, category => category.products)
     category: Promise<Category>;
 
-    @OneToMany(() => ProductImage, image => image.product)
+    @OneToMany(() => ProductImage, image => image.product, {cascade: true})
     images:  Promise<ProductImage[]>;
 
     @AfterInsert()
