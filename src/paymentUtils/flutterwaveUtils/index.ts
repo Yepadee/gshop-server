@@ -22,9 +22,7 @@ export class FlutterwaveRepository {
         this.stockRepository = getCustomRepository(StockRepository);
         this.orderRepository = getCustomRepository(OrderRepository);
 
-        const publicKey = process.env.FLUTTERWAVE_PUBLIC_KEY;
         const secretKey = process.env.FLUTTERWAVE_SECRET_KEY;
-        const productionFlag = !(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test");
         
         this.client = axios.create({
             baseURL: 'https://api.flutterwave.com/v3',

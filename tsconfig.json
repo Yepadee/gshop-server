@@ -27,8 +27,8 @@
        "@entity/*": ["model/*"],
        "@directives/*": ["directives/*"],
        "@repository/*": ["repository/*"],
-       "@payPalUtils": ["payPalUtils"],
-       "@flutterwaveUtils": ["flutterwaveUtils"]
+       "@payPalUtils": ["paymentUtils/payPalUtils"],
+       "@flutterwaveUtils": ["paymentUtils/flutterwaveUtils"]
      }
    },
    "exclude": ["node_modules"],
