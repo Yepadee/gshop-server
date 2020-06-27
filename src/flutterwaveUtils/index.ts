@@ -4,7 +4,8 @@ import * as dotenv from "dotenv";
 
 import { OrderRepository } from "@repository/OrderRepository";
 
-const Rave = require("flutterwave-node-v3");
+import axios from "axios";
+import { uuid } from "uuidv4";
 
 
 const result = dotenv.config();
@@ -25,28 +26,45 @@ export class FlutterwaveRepository {
         const secretKey = process.env.FLUTTERWAVE_SECRET_KEY;
         const productionFlag = !(process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test");
         
-        console.log(productionFlag);
+        this.client = axios.create({
+            baseURL: 'https://api.flutterwave.com/v3',
+            timeout: 3000,
+            headers: {'Authorization': `Bearer ${secretKey}`}
+          });
 
-        this.client = new Rave(publicKey, secretKey, productionFlag);
     }
 
     public async createOrder() {
-        try {
-            const payload = {
-                "tx_ref": "MC-1585230ew9v5050e8",
-                "amount": "100",
-                "account_bank": "00000", //This is the Bank numeric code e.g 058
-                "account_number": "0000000000",
-                "currency": "GBP",
-                "email": "olufemi@flw.com",
-                "phone_number": "0902620185",
-                "fullname": "Olufemi Obafunmiso"
+        const payload = {
+            "tx_ref": uuid(),
+            "amount": "100",
+            "currency": "GBP",
+            "redirect_url": "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+            "payment_options": "card",
+            "customer": {
+             "email": "yepadee69@gmail.com",
+              "phonenumber": "07543585504",
+              "name": "James Hawkins"
+            },
+            "meta": {
+                "addressline1": "10 Parnell Gardens"
+            },
+            "customizations": {
+               "title": "gShop Payments",
+               "description": "Middleout isn't free. Pay the price",
+               "logo": "https://assets.piedpiper.com/logo.png"
             }
-    
-            const response = await this.client.Charge.uk(payload)
-            console.log(response);
-        } catch (error) {
-            console.log(error);
         }
+    
+        return this.client.post("/payments", payload).then(({ data }) => {
+            console.log(data);
+            return {
+                orderId: 1,
+                approveUrl: data.data.link
+            };
+        }).catch(error => {
+            throw new Error(error);
+        });
+        
     }
 }
