@@ -48,32 +48,8 @@ export class PayPalRepository {
         return parsedItem;
     }
 
-    private buildItemQuantityMap(orderItems) {
-        const itemQuantityMap = {};
-        orderItems.forEach(orderItem => {
-            itemQuantityMap[orderItem.stockId] = orderItem.quantity;
-        });
-        return itemQuantityMap
-    }
-
-    private async parseOrderItems(orderItems) {
-        const ids = orderItems.map(item => {
-            return item.stockId
-        });
-    
-        const orderItemsInfo = await this.stockRepository.getOrderItemsDetails(ids);
-    
-        const itemQuantityMap = this.buildItemQuantityMap(orderItems);
-        const totalValue = orderItemsInfo.reduce((acc, item) => acc + item.price * itemQuantityMap[item.stockId], 0);
-        const parsedItems = orderItemsInfo.map(orderItemInfo =>
-            this.parseItemInfo(orderItemInfo, itemQuantityMap[orderItemInfo.stockId])
-        );
-    
-        return { parsedItems, totalValue };
-    }
-
     private async buildRequestBody(orderItems, returnUrl, cancelUrl) {
-        const { parsedItems, totalValue } = await this.parseOrderItems(orderItems);
+        const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo);
         
         const body = <any>template;
         body.application_context.return_url = returnUrl;
@@ -90,7 +66,6 @@ export class PayPalRepository {
         const response = await this.client.execute(request);
         return response.result.purchase_units[0].items;
     }
-
 
     public async createOrder(selectedStock, returnUrl: string, cancelUrl: string) {
         const request = new paypal.orders.OrdersCreateRequest();

@@ -7,6 +7,22 @@ import { PropertyValue } from "@entity/PropertyValue";
 export class StockRepository extends Repository<Stock> {
     productRepository = getRepository(Product);
     propertyValueRepository = getRepository(PropertyValue);
+    
+    async parseOrderItems(orderItems, itemParser) {
+        const ids = orderItems.map(item => {
+            return item.stockId
+        });
+    
+        const orderItemsInfo = await this.getOrderItemsDetails(ids);
+    
+        const itemQuantityMap = this.buildItemQuantityMap(orderItems);
+        const totalValue = orderItemsInfo.reduce((acc, item) => acc + item.price * itemQuantityMap[item.stockId], 0);
+        const parsedItems = orderItemsInfo.map(orderItemInfo =>
+            itemParser(orderItemInfo, itemQuantityMap[orderItemInfo.stockId])
+        );
+    
+        return { parsedItems, totalValue };
+    }
 
     private async getStockQuantity(productId: number, propertyValueIds: number[]) {
         const data = await this.createQueryBuilder("stock")
@@ -141,4 +157,13 @@ export class StockRepository extends Repository<Stock> {
             if(quantity > stock.quantity) throw new Error("One or more selected items are out of stock!");
         });
     }
+
+    buildItemQuantityMap(orderItems) {
+        const itemQuantityMap = {};
+        orderItems.forEach(orderItem => {
+            itemQuantityMap[orderItem.stockId] = orderItem.quantity;
+        });
+        return itemQuantityMap
+    }
+
 }

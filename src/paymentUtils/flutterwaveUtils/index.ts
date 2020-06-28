@@ -28,24 +28,46 @@ export class FlutterwaveRepository {
             baseURL: 'https://api.flutterwave.com/v3',
             timeout: 3000,
             headers: {'Authorization': `Bearer ${secretKey}`}
-          });
+        });
 
     }
 
-    public async createOrder() {
+    private parseItemInfo(orderItem, quantity: number) {
+        const parsedItem = {
+            name: orderItem.name.toString(),
+            description: orderItem.properties.join(", "),
+            sku: orderItem.stockId.toString(),
+            unit_amount: {
+                currency_code: "GBP",
+                value: orderItem.price.toString()
+            },
+            tax: {
+                currency_code: "GBP",
+                value: "0.00"
+            },
+            quantity: quantity.toString(),
+            category: "PHYSICAL_GOODS"
+        }
+        
+        return parsedItem;
+    }
+
+    public async createOrder(returnUrl, orderItems, customerDetails, address) {
+        const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo);
         const payload = {
             "tx_ref": uuid(),
-            "amount": "100",
+            "amount": totalValue,
             "currency": "GBP",
-            "redirect_url": "https://webhook.site/9d0b00ba-9a69-44fa-a43d-a82c33c36fdc",
+            "redirect_url": returnUrl,
             "payment_options": "card",
             "customer": {
-             "email": "yepadee69@gmail.com",
+              "email": "yepadee69@gmail.com",
               "phonenumber": "07543585504",
               "name": "James Hawkins"
             },
             "meta": {
-                "addressline1": "10 Parnell Gardens"
+                ...address,
+                ...parsedItems
             },
             "customizations": {
                "title": "gShop Payments",
