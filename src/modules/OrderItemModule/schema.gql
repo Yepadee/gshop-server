@@ -2,6 +2,11 @@ type Query {
   getItemsByPayPalOrderId(orderId: String!): [OrderItem]
 }
 
+input OrderItemInput {
+  stockId: ID!
+  quantity: Int!
+}
+
 type OrderItem {
   id: ID!
   quantity: Int!

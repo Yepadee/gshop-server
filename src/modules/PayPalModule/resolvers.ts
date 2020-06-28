@@ -2,7 +2,9 @@ import { PayPalProvider } from "./provider";
 
 export default {
   Mutation: {
-    createPayPalOrder: (_, { items, returnUrl, cancelUrl }, { injector }) => injector.get(PayPalProvider).createOrder(items, returnUrl, cancelUrl),
-    capturePayPalOrder: (_, { orderId }, { injector }) => injector.get(PayPalProvider).captureOrder(orderId),
+    createPayPalOrder: (_, { returnUrl, cancelUrl, shippingAddress, items }, { injector }) =>
+      injector.get(PayPalProvider).createOrder(returnUrl, cancelUrl, shippingAddress, items),
+    capturePayPalOrder: (_, { orderId }, { injector }) =>
+      injector.get(PayPalProvider).captureOrder(orderId),
   }
 };

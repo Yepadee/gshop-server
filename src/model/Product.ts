@@ -15,6 +15,9 @@ export class Product {
     id: number;
 
     @Column("varchar", {length: 255})
+    supplierAddress: string;
+
+    @Column("varchar", {length: 255})
     name: string;
 
     @Column("varchar", {length: 512, nullable: true})

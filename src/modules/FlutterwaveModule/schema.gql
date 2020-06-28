@@ -4,23 +4,11 @@ type FlutterwaveOrder {
   approveUrl: String!
 }
 
-input Address {
-  address_line_1: String
-  address_line_2: String
-  address_line_3: String
-  admin_area_4: String
-  admin_area_3: String
-  admin_area_2: String
-  admin_area_1: String
-  postal_code: String
-  country_code: String
-}
-
 input CustomerDetials {
   name: String!
   phonenumber: String!
   email: String!
-  address: Address!
+  address: AddressInput!
 }
 
 type Mutation {

@@ -92,6 +92,7 @@ export const setup = async (connection) => {
 
     _.times(20, async () => {
     const product = new Product();
+    product.supplierAddress = "https://www.aliexpress.com/item/10000098718155.html"
     product.name = faker.commerce.product();
     product.description = faker.commerce.productAdjective();
     product.price = faker.random.number({ max: 1, min: 30 });

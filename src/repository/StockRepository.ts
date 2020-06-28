@@ -12,9 +12,9 @@ export class StockRepository extends Repository<Stock> {
         const ids = orderItems.map(item => {
             return item.stockId
         });
-    
+
         const orderItemsInfo = await this.getOrderItemsDetails(ids);
-    
+
         const itemQuantityMap = this.buildItemQuantityMap(orderItems);
         const totalValue = orderItemsInfo.reduce((acc, item) => acc + item.price * itemQuantityMap[item.stockId], 0);
         const parsedItems = orderItemsInfo.map(orderItemInfo =>

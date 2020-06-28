@@ -48,16 +48,38 @@ export class PayPalRepository {
         return parsedItem;
     }
 
-    private async buildRequestBody(orderItems, returnUrl, cancelUrl) {
+    private async buildRequestBody(returnUrl, cancelUrl, shippingAddress, orderItems) {
         const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo);
-        
+
         const body = <any>template;
+
+        if (shippingAddress) {
+            body.application_context.shipping_preference = "SET_PROVIDED_ADDRESS";
+            body.purchase_units[0].shipping = {
+                name: {
+                    full_name: shippingAddress.fullName,
+                },
+                address: {
+                    address_line_1: shippingAddress.line1,
+                    address_line_2: shippingAddress.line2,
+                    admin_area_2: shippingAddress.adminArea2,
+                    admin_area_1: shippingAddress.adminArea1,
+                    postal_code: shippingAddress.postalCode,
+                    country_code: shippingAddress.countryCode
+                }
+            };
+
+        } else {
+            body.application_context.shipping_preference = "GET_FROM_FILE";
+        }
+
         body.application_context.return_url = returnUrl;
         body.application_context.cancel_url = cancelUrl;
         body.purchase_units[0].items = parsedItems;
         body.purchase_units[0].amount.value = totalValue;
         body.purchase_units[0].amount.breakdown.item_total.value = totalValue;
-    
+        body.purchase_units[0].amount.breakdown.item_total.currency_code = "GBP";
+
         return body;
     }
 
@@ -67,10 +89,10 @@ export class PayPalRepository {
         return response.result.purchase_units[0].items;
     }
 
-    public async createOrder(selectedStock, returnUrl: string, cancelUrl: string) {
+    public async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, selectedStock) {
         const request = new paypal.orders.OrdersCreateRequest();
         request.headers["prefer"] = "return=representation";
-        request.requestBody(await this.buildRequestBody(selectedStock, returnUrl, cancelUrl));
+        request.requestBody(await this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, selectedStock));
         const response = await this.client.execute(request);
 
         let approveUrl;
@@ -107,7 +129,6 @@ export class PayPalRepository {
             this.stockRepository.decrementStockQuantity(item.sku, item.quantity)
         });
 
-
         const orderItems = items.map(item => {
             return {
                 __stock__: <any>{id: item.sku},
@@ -115,13 +136,20 @@ export class PayPalRepository {
             }
         });
 
-        // Save order details
-        const order = new Order();
-        order.orderId = orderId;
-        order.paymentMethod = PaymentMethod.PAYPAL;
-        order.items = orderItems;
+        const shipping = response.result.purchase_units[0].shipping;
+        const address = shipping.address;
+        const shippingAddress = {
+            name: shipping.name.full_name,
+            line1: address.address_line_1,
+            line2: address.address_line_2,
+            adminArea2: address.admin_area_2,
+            adminArea1: address.admin_area_1,
+            postalCode: address.postal_code,
+            countryCode: address.country_code
+        }
 
-        await this.orderRepository.save(order);
+        await this.orderRepository.insertOrder(orderId, shippingAddress, PaymentMethod.PAYPAL, orderItems);
+
     }
 
     public async getOrderItems(orderId: string) {

@@ -1,8 +1,9 @@
-import { Entity, Column, OneToMany, PrimaryGeneratedColumn, PrimaryColumn, BeforeInsert } from "typeorm";
-
-import { OrderItem } from "./OrderItem";
+import { Entity, Column, OneToMany, PrimaryColumn, BeforeInsert, OneToOne, JoinColumn } from "typeorm";
 
 import { uuid } from "uuidv4";
+
+import { OrderItem } from "./OrderItem";
+import { Address } from "./Address";
 
 export enum PaymentMethod {
     PAYPAL = 'PAYPAL',
@@ -23,16 +24,20 @@ export class Order {
     id: string;
     
     @Column("varchar", {length: 127})
-    orderId: string;
+    paymentOrderId: string;
+
+    @Column("varchar", {length: 127, nullable: true})
+    supplierOrderId: string;
 
     @Column("varchar", {length: 16})
     paymentMethod: PaymentMethod;
 
+    @OneToOne(_ => Address, {cascade: true})
+    @JoinColumn()
+    shippingAddress: Address;
+
     @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
     items: Promise<OrderItem[]>;
-
-    @Column("varchar", {length: 127, nullable: true})
-    supplierOrderId: string;
 
     @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
     date: Date;

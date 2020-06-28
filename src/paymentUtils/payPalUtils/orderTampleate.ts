@@ -4,7 +4,6 @@ export const template = {
         brand_name: "GSHOP",
         locale: "en-US",
         landing_page: "LOGIN",
-        shipping_preference: "GET_FROM_FILE",
         user_action: "CONTINUE"
     },
     purchase_units: [
@@ -18,23 +17,6 @@ export const template = {
                 currency_code: "GBP",
                 breakdown: {
                     item_total: {
-                        currency_code: "GBP",
-                    },
-                    shipping: {
-                        currency_code: "GBP",
-                        value: "0.00"
-                    },
-                    handling: {
-                        currency_code: "GBP",
-                        value: "0.00"
-                    },
-                    tax_total: {
-                        currency_code: "GBP",
-                        value: "0.00"
-                    },
-                    shipping_discount: {
-                        currency_code: "GBP",
-                        value: "0"
                     }
                 }
             },

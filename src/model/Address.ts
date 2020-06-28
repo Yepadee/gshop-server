@@ -12,21 +12,24 @@ export class Address {
     id: number;
 
     @Column("varchar", {length: 127})
+    name: string;
+
+    @Column("varchar", {length: 127})
     countryCode: CountryCode;
 
-    @Column("varchar", {length: 63})
+    @Column("varchar", {length: 63, nullable:true})
     postalCode: string;
     
     @Column("varchar", {length: 127})
     line1: string;
 
-    @Column("varchar", {length: 127})
+    @Column("varchar", {length: 127, nullable:true})
     line2: string;
 
     @Column("varchar", {length: 127})
-    line3: string;
+    adminArea2: string;
 
-    @Column("varchar", {length: 127})
-    line4: string;
+    @Column("varchar", {length: 127, nullable:true})
+    adminArea1: string;
 
 }

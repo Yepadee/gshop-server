@@ -9,9 +9,9 @@ export class PayPalProvider {
     payPalRepo = new PayPalRepository();
     stockRepo = getCustomRepository(StockRepository);
 
-    async createOrder(orderItems, returnUrl: string, cancelUrl: string) {
+    async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, orderItems) {
         await this.stockRepo.checkOrderItemsInStock(orderItems);
-        return this.payPalRepo.createOrder(orderItems, returnUrl, cancelUrl);
+        return this.payPalRepo.createOrder(returnUrl, cancelUrl, shippingAddress, orderItems);
     }
 
     async captureOrder(orderId: string) {
