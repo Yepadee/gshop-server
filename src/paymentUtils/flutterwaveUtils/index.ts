@@ -37,23 +37,17 @@ export class FlutterwaveRepository {
             name: orderItem.name.toString(),
             description: orderItem.properties.join(", "),
             sku: orderItem.stockId.toString(),
-            unit_amount: {
-                currency_code: "GBP",
-                value: orderItem.price.toString()
-            },
-            tax: {
-                currency_code: "GBP",
-                value: "0.00"
-            },
+            unit_amount: orderItem.price.toString(),
             quantity: quantity.toString(),
             category: "PHYSICAL_GOODS"
         }
         
         return parsedItem;
     }
-
-    public async createOrder(returnUrl, orderItems, customerDetails, address) {
+    
+    public async createOrder(returnUrl, orderItems, customerDetails) {
         const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo);
+
         const payload = {
             "tx_ref": uuid(),
             "amount": totalValue,
@@ -61,13 +55,13 @@ export class FlutterwaveRepository {
             "redirect_url": returnUrl,
             "payment_options": "card",
             "customer": {
-              "email": "yepadee69@gmail.com",
-              "phonenumber": "07543585504",
-              "name": "James Hawkins"
+              "email": customerDetails.email,
+              "phonenumber": customerDetails.phonenumber,
+              "name": customerDetails.name
             },
             "meta": {
-                ...address,
-                ...parsedItems
+                ...customerDetails.address,
+                items: JSON.stringify(parsedItems)
             },
             "customizations": {
                "title": "gShop Payments",

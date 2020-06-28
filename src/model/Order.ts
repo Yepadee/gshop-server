@@ -1,6 +1,8 @@
-import { Entity, Column, OneToMany, PrimaryGeneratedColumn } from "typeorm";
+import { Entity, Column, OneToMany, PrimaryGeneratedColumn, PrimaryColumn, BeforeInsert } from "typeorm";
 
 import { OrderItem } from "./OrderItem";
+
+import { uuid } from "uuidv4";
 
 export enum PaymentMethod {
     PAYPAL = 'PAYPAL',
@@ -10,14 +12,15 @@ export enum PaymentMethod {
 export enum OrderStatus {
     NEW = 'NEW',
     PROCESSED = 'PROCESSED',
-    ARRIVED = 'ARRIVED'
+    ARRIVED = 'ARRIVED',
+    REFUNDED = 'REFUNDED'
 }
 
 @Entity()
 export class Order {
 
-    @PrimaryGeneratedColumn()
-    id: number;
+    @PrimaryColumn()
+    id: string;
     
     @Column("varchar", {length: 127})
     orderId: string;
@@ -36,4 +39,9 @@ export class Order {
 
     @Column("varchar", {length: 127, default: () => "'NEW'"})
     status: string;
+
+    @BeforeInsert()
+    setId() {
+        this.id = uuid();
+    }
 }
