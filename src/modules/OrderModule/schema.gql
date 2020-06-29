@@ -20,9 +20,16 @@ type Mutation {
 }
 
 type Order {
-  id: ID! 
-  status: String! 
+  id: ID!
+  paymentOrderId: ID!
+  supplierOrderId: ID
+  paymentMethod: PaymentMethod!
+  amountPaid: Float!
+  currencyPaid: Float!
+  supplierCost: Float
+  items: [OrderItem]!
   date: String! 
+  status: String! 
 }
 
 type OrderItem {

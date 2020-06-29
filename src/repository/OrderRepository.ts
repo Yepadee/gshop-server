@@ -24,7 +24,14 @@ export class OrderRepository extends Repository<Order> {
         return true;
     }
 
-    async insertOrder(paymentOrderId: string, shippingAddress, paymentMethod: PaymentMethod, orderItems) {
+    async insertOrder(
+            paymentOrderId: string,
+            shippingAddress,
+            paymentMethod: PaymentMethod,
+            orderItems,
+            amountPaid: number,
+            currency: string
+        ) {
         const address = new Address();
         address.name = shippingAddress.name;
         address.line1 = shippingAddress.line1;
@@ -40,6 +47,10 @@ export class OrderRepository extends Repository<Order> {
         order.paymentMethod = paymentMethod;
         order.items = orderItems;
         order.shippingAddress = address;
+        order.currencyPaid = currency;
+        order.amountPaid = amountPaid;
+
+        console.log(order);
 
         await this.save(order);
     }

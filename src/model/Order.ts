@@ -32,6 +32,15 @@ export class Order {
     @Column("varchar", {length: 16})
     paymentMethod: PaymentMethod;
 
+    @Column()
+    amountPaid: number;
+
+    @Column("varchar", {length: 4})
+    currencyPaid: string;
+
+    @Column({nullable: true})
+    supplierCost: number;
+
     @OneToOne(_ => Address, {cascade: true})
     @JoinColumn()
     shippingAddress: Address;

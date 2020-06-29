@@ -70,15 +70,24 @@ export class FlutterwaveRepository {
             }
         }
     
-        return this.client.post("/payments", payload).then(({ data }) => {
-            console.log(data);
+        return this.client.post("/payments", payload).then((response) => {
             return {
                 orderId: 1,
-                approveUrl: data.data.link
+                approveUrl: response.data.data.link
             };
         }).catch(error => {
             throw new Error(error);
         });
         
+    }
+
+    public async verifyOrder() {
+        const result = await this.client.get("/transactions/123456/verify");
+        
+        console.log(result);
+        const status = result.status;
+        if (status != "success") throw new Error("Failed to fetch transaction.");
+        
+
     }
 }

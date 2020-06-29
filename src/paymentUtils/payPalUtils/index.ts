@@ -124,9 +124,11 @@ export class PayPalRepository {
         const response = await this.client.execute(request);
         const items = response.result.purchase_units[0].items;
 
+        const amount = response.result.purchase_units[0].amount;
+
         // Update stock quantity
         items.forEach(item => {
-            this.stockRepository.decrementStockQuantity(item.sku, item.quantity)
+            this.stockRepository.sellStock(item.sku, item.quantity)
         });
 
         const orderItems = items.map(item => {
@@ -148,7 +150,14 @@ export class PayPalRepository {
             countryCode: address.country_code
         }
 
-        await this.orderRepository.insertOrder(orderId, shippingAddress, PaymentMethod.PAYPAL, orderItems);
+        await this.orderRepository.insertOrder(
+            orderId,
+            shippingAddress,
+            PaymentMethod.PAYPAL,
+            orderItems,
+            amount.value,
+            amount.currency_code
+        );
 
     }
 
