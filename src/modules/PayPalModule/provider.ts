@@ -10,18 +10,19 @@ export class PayPalProvider {
     stockRepo = getCustomRepository(StockRepository);
 
     async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, orderItems) {
-        await this.stockRepo.checkOrderItemsInStock(orderItems);
-        return this.payPalRepo.createOrder(returnUrl, cancelUrl, shippingAddress, orderItems);
+        return this.stockRepo.checkOrderItemsInStock(orderItems).then(() => {
+            return this.payPalRepo.createOrder(returnUrl, cancelUrl, shippingAddress, orderItems);
+        });
     }
 
-    async captureOrder(orderId: string) {
-        const orderItems = await this.payPalRepo.getOrderItems(orderId);
-
-        await this.stockRepo.checkOrderItemsInStock(orderItems);
-        await this.payPalRepo.captureOrder(orderId);
-        await this.payPalRepo.finaliseOrder(orderId);
-
-        return true;
+    async captureOrder(orderRef: string) {
+        return this.payPalRepo.getOrderItems(orderRef).then(orderItems => {
+            return this.stockRepo.checkOrderItemsInStock(orderItems).then(() => {
+                return this.payPalRepo.captureOrder(orderRef).then(() => {
+                    return true;
+                });
+            });
+        });
     }
 
 }

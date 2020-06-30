@@ -6,6 +6,8 @@ import { OrderRepository } from "@repository/OrderRepository";
 
 import axios from "axios";
 import { uuid } from "uuidv4";
+import { OrderItemRepository } from "@repository/OrderItemRepository";
+import { PaymentMethod } from "@entity/Order";
 
 
 const result = dotenv.config();
@@ -14,13 +16,14 @@ if (result.error) throw result.error;
 export class FlutterwaveRepository {
     stockRepository : StockRepository;
     orderRepository : OrderRepository;
+    orderItemRepository : OrderItemRepository;
 
     client: any;
 
-    constructor()
-    {
+    constructor() {
         this.stockRepository = getCustomRepository(StockRepository);
         this.orderRepository = getCustomRepository(OrderRepository);
+        this.orderItemRepository = getCustomRepository(OrderItemRepository);
 
         const secretKey = process.env.FLUTTERWAVE_SECRET_KEY;
         
@@ -45,49 +48,61 @@ export class FlutterwaveRepository {
         return parsedItem;
     }
     
-    public async createOrder(returnUrl, orderItems, customerDetails) {
-        const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo);
-
-        const payload = {
-            "tx_ref": uuid(),
-            "amount": totalValue,
-            "currency": "GBP",
-            "redirect_url": returnUrl,
-            "payment_options": "card",
-            "customer": {
-              "email": customerDetails.email,
-              "phonenumber": customerDetails.phonenumber,
-              "name": customerDetails.name
-            },
-            "meta": {
-                ...customerDetails.address,
-                items: JSON.stringify(parsedItems)
-            },
-            "customizations": {
-               "title": "gShop Payments",
-               "description": "Middleout isn't free. Pay the price",
-               "logo": "https://assets.piedpiper.com/logo.png"
+    public async createOrder(returnUrl: string, orderItems, customerDetails) {
+        return this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo).then(({ parsedItems, totalValue }) => {
+            const transactionRef = uuid();
+            
+            const payload = {
+                "tx_ref": transactionRef,
+                "amount": totalValue,
+                "currency": "GBP",
+                "redirect_url": returnUrl,
+                "payment_options": "card",
+                "customer": {
+                  "email": customerDetails.email,
+                  "phone_number": customerDetails.phonenumber,
+                  "name": customerDetails.name
+                },
+                "meta": {
+                    ...customerDetails.address,
+                    items: JSON.stringify(parsedItems)
+                },
+                "customizations": {
+                   "title": "gShop Payments",
+                   "description": "Middleout isn't free. Pay the price",
+                   "logo": "https://assets.piedpiper.com/logo.png"
+                }
             }
-        }
-    
-        return this.client.post("/payments", payload).then((response) => {
-            return {
-                orderId: 1,
-                approveUrl: response.data.data.link
-            };
-        }).catch(error => {
-            throw new Error(error);
-        });
         
+            return this.client.post("/payments", payload).then((response) => {
+                return this.orderRepository.insertOrder(
+                    transactionRef,
+                    PaymentMethod.FLUTTERWAVE,
+                    orderItems,
+                    totalValue,
+                    "GBP"
+                ).then(() => {
+                    return {
+                        orderRef: transactionRef,
+                        approveUrl: response.data.data.link
+                    };
+                });
+            })
+        });
     }
 
-    public async verifyOrder() {
-        const result = await this.client.get("/transactions/123456/verify");
-        
-        console.log(result);
-        const status = result.status;
-        if (status != "success") throw new Error("Failed to fetch transaction.");
-        
+    public async verifyOrder(transactionRef: string, transactionId: string) {
+        return this.client.get(`/transactions/${transactionId}/verify`).then(result => {
+            if (result.data.status != "success") throw new Error("Failed to fetch transaction.");
+            return this.orderItemRepository.getOrderItemsByPaymentOrderRef(transactionRef).then((orderItems) => {
+                orderItems.forEach(async (item: any) => {
+                    await this.stockRepository.sellStock(item.__stockId__, item.quantity);
+                });
 
+                return this.orderRepository.confirmOrder(transactionRef, transactionId).then(() => {
+                    return true;
+                });
+            });
+        });
     }
 }

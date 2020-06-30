@@ -1,57 +1,66 @@
-import { Order, PaymentMethod } from "@entity/Order";
-import { Address } from "@entity/Address";
+import { Order, PaymentMethod, OrderStatus } from "@entity/Order";
 import { EntityRepository, Repository } from "typeorm";
+import { OrderItem } from "@entity/OrderItem";
 
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
+
+    getOrderByPaymentOrderRef(paymentOrderRef: string) {
+        return this.findOne({where: { paymentOrderRef }});
+    }
+
+    async confirmOrder(paymentOrderRef: string, paymentOrderId: string) {
+        const now: Date = new Date();
+        return this.createQueryBuilder()
+        .update(Order)
+        .set({ dateConfirmed: now, status: OrderStatus.NEW, paymentOrderId })
+        .where("paymentOrderRef = :paymentOrderRef", { paymentOrderRef })
+        .execute().then(() => {
+            return true;
+        });
+    }
+
     async setStatus(id: number, newStatus: string) {
-        await this.createQueryBuilder()
+        return this.createQueryBuilder()
         .update(Order)
         .set({status: newStatus})
         .where("id = :id", {id})
-        .execute();
-
-        return true;
+        .execute().then(() => {
+            return true;
+        });
     }
 
     async setSupplierOrderId(id: number, orderId: string) {
-        await this.createQueryBuilder()
+        return this.createQueryBuilder()
         .update(Order)
         .set({supplierOrderId: orderId})
         .where("id = :id", {id})
-        .execute();
-
-        return true;
+        .execute().then(() => {
+            return true;
+        });
     }
 
     async insertOrder(
-            paymentOrderId: string,
-            shippingAddress,
-            paymentMethod: PaymentMethod,
-            orderItems,
-            amountPaid: number,
-            currency: string
-        ) {
-        const address = new Address();
-        address.name = shippingAddress.name;
-        address.line1 = shippingAddress.line1;
-        address.line2 = shippingAddress.line2;
-        address.adminArea2 = shippingAddress.adminArea2;
-        address.adminArea1 = shippingAddress.adminArea1;
-        address.postalCode = shippingAddress.postalCode;
-        address.countryCode = shippingAddress.countryCode;
-
-        // Save order details
+        paymentOrderRef: string,
+        paymentMethod: PaymentMethod,
+        orderItems,
+        amountPaid: number,
+        currency: string
+    ) {
         const order = new Order();
-        order.paymentOrderId = paymentOrderId;
+        order.paymentOrderRef = paymentOrderRef;
         order.paymentMethod = paymentMethod;
-        order.items = orderItems;
-        order.shippingAddress = address;
+        order.items = orderItems.map(item => {
+            const orderItem = new OrderItem();
+            orderItem.quantity = item.quantity;
+            orderItem.stock = <any>{id: item.stockId};
+            return orderItem;
+        });
         order.currencyPaid = currency;
         order.amountPaid = amountPaid;
 
-        console.log(order);
-
-        await this.save(order);
+        return this.save(order).then(() => {
+            return true;
+        });
     }
 }

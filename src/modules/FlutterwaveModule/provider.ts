@@ -10,8 +10,13 @@ export class FlutterwaveProvider {
     stockRepo = getCustomRepository(StockRepository);
 
     async createOrder(returnUrl: string, items, customerDetails) {
-        await this.stockRepo.checkOrderItemsInStock(items);
-        return this.flutterWaveRepo.createOrder(returnUrl, items, customerDetails);
+        return this.stockRepo.checkOrderItemsInStock(items).then(async () => {
+            return this.flutterWaveRepo.createOrder(returnUrl, items, customerDetails);
+        });
+    }
+
+    async verifyOrder(transactionRef: string, transactionId: string) {
+        return this.flutterWaveRepo.verifyOrder(transactionRef, transactionId);
     }
 
 }

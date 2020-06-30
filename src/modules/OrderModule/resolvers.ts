@@ -13,6 +13,11 @@ export default {
       injector.get(OrderProvider).setSupplierOrderId(id, orderId)
   },
 
+  Order: {
+    transactionPath: (order, _, { injector }) =>
+      injector.get(OrderProvider).getTransactionPath(order)
+  },
+
   OrderItem: {
     order: orderItems => orderItems.order
   },

@@ -1,3 +1,4 @@
+
 input AddressInput {
   fullName: String!
 
@@ -10,19 +11,3 @@ input AddressInput {
   postalCode: String
   countryCode: String!
 }
-
-type Address {
-  line1: String
-  line2: String
-  
-  adminArea2: String
-  adminArea1: String
-  
-  postalCode: String
-  countryCode: String
-}
-
-type Order {
-  shippingAddress: Address!
-}
-

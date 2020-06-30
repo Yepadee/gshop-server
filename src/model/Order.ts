@@ -1,9 +1,8 @@
-import { Entity, Column, OneToMany, PrimaryColumn, BeforeInsert, OneToOne, JoinColumn } from "typeorm";
+import { Entity, Column, OneToMany, PrimaryColumn, BeforeInsert } from "typeorm";
 
 import { uuid } from "uuidv4";
 
 import { OrderItem } from "./OrderItem";
-import { Address } from "./Address";
 
 export enum PaymentMethod {
     PAYPAL = 'PAYPAL',
@@ -11,6 +10,7 @@ export enum PaymentMethod {
 }
 
 export enum OrderStatus {
+    UNCONFIRMED = 'UNCONFIRMED',
     NEW = 'NEW',
     PROCESSED = 'PROCESSED',
     ARRIVED = 'ARRIVED',
@@ -24,6 +24,9 @@ export class Order {
     id: string;
     
     @Column("varchar", {length: 127})
+    paymentOrderRef: string;
+
+    @Column("varchar", {length: 127, nullable: true})
     paymentOrderId: string;
 
     @Column("varchar", {length: 127, nullable: true})
@@ -41,17 +44,16 @@ export class Order {
     @Column({nullable: true})
     supplierCost: number;
 
-    @OneToOne(_ => Address, {cascade: true})
-    @JoinColumn()
-    shippingAddress: Address;
-
     @OneToMany(() => OrderItem, orderitem => orderitem.order, { cascade: true, persistence: true })
     items: Promise<OrderItem[]>;
 
     @Column({type: "datetime", default: () => "CURRENT_TIMESTAMP"})
-    date: Date;
+    dateCreated: Date;
 
-    @Column("varchar", {length: 127, default: () => "'NEW'"})
+    @Column({type: "datetime", nullable: true})
+    dateConfirmed: Date;
+
+    @Column("varchar", {length: 127, default: () => "'UNCONFIRMED'"})
     status: string;
 
     @BeforeInsert()

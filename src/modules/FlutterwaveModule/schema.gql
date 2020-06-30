@@ -1,6 +1,6 @@
 
 type FlutterwaveOrder {
-  orderId: String!
+  orderRef: String!
   approveUrl: String!
 }
 
@@ -17,5 +17,5 @@ type Mutation {
     items: [OrderItemInput]!,
     customerDetails: CustomerDetials!
   ): FlutterwaveOrder
-  captureFlutterwaveOrder(orderId: String!): Boolean!
+  verifyFlutterwaveOrder(transactionRef: String!, transactionId: String!): Boolean!
 }

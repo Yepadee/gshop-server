@@ -139,12 +139,14 @@ export class StockRepository extends Repository<Stock> {
     }
 
     async sellStock(id: number, quantity: number) {
-        await this.decrementStockQuantity(id, quantity);
-        await this.createQueryBuilder().update(Stock)
-        .set({ quantity: () => "sales + " + quantity })
-        .where("id = :id", {id})
-        .execute();
-        return true;
+        return this.decrementStockQuantity(id, quantity).then(() => {
+            return this.createQueryBuilder().update(Stock)
+            .set({ quantity: () => "sales + " + quantity })
+            .where("id = :id", {id})
+            .execute().then(() => {
+                return true;
+            });
+        });
     }
 
     async getAvailableStock(productId: number) {

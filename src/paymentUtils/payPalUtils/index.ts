@@ -4,8 +4,9 @@ import { getCustomRepository, In } from "typeorm";
 import * as paypal from '@paypal/checkout-server-sdk';
 import * as dotenv from "dotenv";
 
-import { Order, PaymentMethod } from "@entity/Order";
+import { PaymentMethod } from "@entity/Order";
 import { OrderRepository } from "@repository/OrderRepository";
+import { OrderItemRepository } from "@repository/OrderItemRepository";
 
 
 const result = dotenv.config();
@@ -14,13 +15,14 @@ if (result.error) throw result.error;
 export class PayPalRepository {
     stockRepository : StockRepository;
     orderRepository : OrderRepository;
+    orderItemRepository : OrderItemRepository;
 
     client: any;
     
-    constructor()
-    {
+    constructor() {
         this.stockRepository = getCustomRepository(StockRepository);
         this.orderRepository = getCustomRepository(OrderRepository);
+        this.orderItemRepository = getCustomRepository(OrderItemRepository);
 
         const clientId = process.env.PAYPAL_CLIENT_ID;
         const clientSecret = process.env.PAYPAL_SECRET;
@@ -92,73 +94,52 @@ export class PayPalRepository {
     public async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, selectedStock) {
         const request = new paypal.orders.OrdersCreateRequest();
         request.headers["prefer"] = "return=representation";
-        request.requestBody(await this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, selectedStock));
-        const response = await this.client.execute(request);
+        return this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, selectedStock).then(body => {
+            request.requestBody(body);
+            return this.client.execute(request).then(({ result }) => {
+                this.orderRepository.insertOrder(
+                    result.id,
+                    PaymentMethod.PAYPAL,
+                    selectedStock,
+                    body.purchase_units[0].amount.value,
+                    body.purchase_units[0].amount.breakdown.item_total.currency_code,
+                );
 
-        let approveUrl;
-        response.result.links.forEach(item => {
-            if (item.rel === "approve") {
-                approveUrl = item.href;
-            }
+                let approveUrl;
+                result.links.forEach(item => {
+                    if (item.rel === "approve") {
+                        approveUrl = item.href;
+                    }
+                });
+    
+                const payPalOrder = {
+                    orderRef: result.id,
+                    approveUrl
+                };
+
+                return payPalOrder;
+            });
         });
-
-        const payPalOrder = {
-            orderId: response.result.id,
-            approveUrl
-        };
-
-        return payPalOrder;
     }
 
     public async captureOrder(orderId: string) {
         const request = new paypal.orders.OrdersCaptureRequest(orderId);
         request.requestBody({});
-        let response = await this.client.execute(request);
-        if (!(response.statusCode === 201 && response.result.status === "COMPLETED")) {
-            throw new Error(`capture order request failed! statusCode: ${response.statusCode}, status: ${response.result.status}`);
-        }
-    }
-
-    public async finaliseOrder(orderId: string) {
-        const request = new paypal.orders.OrdersGetRequest(orderId);
-        const response = await this.client.execute(request);
-        const items = response.result.purchase_units[0].items;
-
-        const amount = response.result.purchase_units[0].amount;
-
-        // Update stock quantity
-        items.forEach(item => {
-            this.stockRepository.sellStock(item.sku, item.quantity)
-        });
-
-        const orderItems = items.map(item => {
-            return {
-                __stock__: <any>{id: item.sku},
-                quantity: item.quantity
+        return this.client.execute(request).then(response => {
+            if (!(response.statusCode === 201 && response.result.status === "COMPLETED")) {
+                throw new Error(`capture order request failed! statusCode: ${response.statusCode}, status: ${response.result.status}`);
             }
+
+            return this.orderItemRepository.getOrderItemsByPaymentOrderRef(orderId).then((orderItems) => {
+                orderItems.forEach(async (item: any) => {
+                    await this.stockRepository.sellStock(item.__stockId__, item.quantity)
+                });
+
+                return this.orderRepository.confirmOrder(orderId, orderId).then(() => {
+                    return true;
+                });
+            });
         });
-
-        const shipping = response.result.purchase_units[0].shipping;
-        const address = shipping.address;
-        const shippingAddress = {
-            name: shipping.name.full_name,
-            line1: address.address_line_1,
-            line2: address.address_line_2,
-            adminArea2: address.admin_area_2,
-            adminArea1: address.admin_area_1,
-            postalCode: address.postal_code,
-            countryCode: address.country_code
-        }
-
-        await this.orderRepository.insertOrder(
-            orderId,
-            shippingAddress,
-            PaymentMethod.PAYPAL,
-            orderItems,
-            amount.value,
-            amount.currency_code
-        );
-
     }
 
     public async getOrderItems(orderId: string) {

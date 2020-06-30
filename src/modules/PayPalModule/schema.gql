@@ -1,6 +1,6 @@
 
 type PayPalOrder {
-  orderId: String!
+  orderRef: String!
   approveUrl: String!
 }
 
@@ -11,5 +11,5 @@ type Mutation {
     shippingAddress: AddressInput
     items: [OrderItemInput]!
   ): PayPalOrder
-  capturePayPalOrder(orderId: String!): Boolean!
+  capturePayPalOrder(orderRef: String!): Boolean!
 }
