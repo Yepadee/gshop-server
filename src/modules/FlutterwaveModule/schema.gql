@@ -1,6 +1,6 @@
 
 type FlutterwaveOrder {
-  orderRef: String!
+  transactionRef: String!
   approveUrl: String!
 }
 

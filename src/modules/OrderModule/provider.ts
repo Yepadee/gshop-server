@@ -2,7 +2,7 @@ import { Injectable } from "@graphql-modules/di";
 
 import { getCustomRepository } from "typeorm";
 import { OrderRepository } from "@repository/OrderRepository";
-import { Order, PaymentMethod } from "@entity/Order";
+import { Order, PaymentMethod, OrderStatus } from "@entity/Order";
 
 
 @Injectable()
@@ -26,16 +26,18 @@ export class OrderProvider {
     }
 
     getTransactionPath(order: Order) {
+        if (order.status == OrderStatus.UNCONFIRMED) return null;
+        
         switch (order.paymentMethod) {
             case PaymentMethod.PAYPAL:
                 if (process.env.NODE_ENV === "development" || process.env.NODE_ENV === "test") {
-                    return "https://www.sandbox.paypal.com/activity/payment/" + order.paymentOrderId;
+                    return "https://www.sandbox.paypal.com/activity/payment/" + order.paymentTransactionId;
                 } else {
-                    return "https://www.paypal.com/activity/payment/" + order.paymentOrderId;
+                    return "https://www.paypal.com/activity/payment/" + order.paymentTransactionId;
                 }
 
             case PaymentMethod.FLUTTERWAVE:
-                return "https://dashboard.flutterwave.com/dashboard/transactions/" + order.paymentOrderId;
+                return "https://dashboard.flutterwave.com/dashboard/transactions/" + order.paymentTransactionId;
         }
     }
 }

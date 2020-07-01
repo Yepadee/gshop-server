@@ -83,7 +83,7 @@ export class FlutterwaveRepository {
                     "GBP"
                 ).then(() => {
                     return {
-                        orderRef: transactionRef,
+                        transactionRef,
                         approveUrl: response.data.data.link
                     };
                 });

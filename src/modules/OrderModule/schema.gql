@@ -33,7 +33,7 @@ type Order {
   dateConfirmed: String
   status: String! 
 
-  transactionPath: String!
+  transactionPath: String
 }
 
 type OrderItem {

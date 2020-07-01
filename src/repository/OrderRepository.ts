@@ -9,11 +9,11 @@ export class OrderRepository extends Repository<Order> {
         return this.findOne({where: { paymentOrderRef }});
     }
 
-    async confirmOrder(paymentOrderRef: string, paymentOrderId: string) {
+    async confirmOrder(paymentOrderRef: string, paymentTransactionId: string) {
         const now: Date = new Date();
         return this.createQueryBuilder()
         .update(Order)
-        .set({ dateConfirmed: now, status: OrderStatus.NEW, paymentOrderId })
+        .set({ dateConfirmed: now, status: OrderStatus.NEW, paymentTransactionId })
         .where("paymentOrderRef = :paymentOrderRef", { paymentOrderRef })
         .execute().then(() => {
             return true;

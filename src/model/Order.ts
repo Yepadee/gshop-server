@@ -27,7 +27,7 @@ export class Order {
     paymentOrderRef: string;
 
     @Column("varchar", {length: 127, nullable: true})
-    paymentOrderId: string;
+    paymentTransactionId: string;
 
     @Column("varchar", {length: 127, nullable: true})
     supplierOrderId: string;

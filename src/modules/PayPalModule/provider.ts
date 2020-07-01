@@ -15,10 +15,10 @@ export class PayPalProvider {
         });
     }
 
-    async captureOrder(orderRef: string) {
-        return this.payPalRepo.getOrderItems(orderRef).then(orderItems => {
+    async captureOrder(orderId: string) {
+        return this.payPalRepo.getOrderItems(orderId).then(orderItems => {
             return this.stockRepo.checkOrderItemsInStock(orderItems).then(() => {
-                return this.payPalRepo.captureOrder(orderRef).then(() => {
+                return this.payPalRepo.captureOrder(orderId).then(() => {
                     return true;
                 });
             });

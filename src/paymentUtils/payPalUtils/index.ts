@@ -113,7 +113,7 @@ export class PayPalRepository {
                 });
     
                 const payPalOrder = {
-                    orderRef: result.id,
+                    orderId: result.id,
                     approveUrl
                 };
 
@@ -123,9 +123,10 @@ export class PayPalRepository {
     }
 
     public async captureOrder(orderId: string) {
-        const request = new paypal.orders.OrdersCaptureRequest(orderId);
+        let request = new paypal.orders.OrdersCaptureRequest(orderId);
         request.requestBody({});
-        return this.client.execute(request).then(response => {
+        return this.client.execute(request).then(async response => {
+            const transactionId = response.result.purchase_units[0].payments.captures[0].id;
             if (!(response.statusCode === 201 && response.result.status === "COMPLETED")) {
                 throw new Error(`capture order request failed! statusCode: ${response.statusCode}, status: ${response.result.status}`);
             }
@@ -135,7 +136,7 @@ export class PayPalRepository {
                     await this.stockRepository.sellStock(item.__stockId__, item.quantity)
                 });
 
-                return this.orderRepository.confirmOrder(orderId, orderId).then(() => {
+                return this.orderRepository.confirmOrder(orderId, transactionId).then(() => {
                     return true;
                 });
             });
