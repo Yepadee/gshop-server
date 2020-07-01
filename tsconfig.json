@@ -28,7 +28,8 @@
        "@directives/*": ["directives/*"],
        "@repository/*": ["repository/*"],
        "@payPalUtils": ["paymentUtils/payPalUtils"],
-       "@flutterwaveUtils": ["paymentUtils/flutterwaveUtils"]
+       "@flutterwaveUtils": ["paymentUtils/flutterwaveUtils"],
+       "@forexUtils": ["forexUtils"]
      }
    },
    "exclude": ["node_modules"],

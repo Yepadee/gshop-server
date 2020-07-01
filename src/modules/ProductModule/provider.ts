@@ -1,10 +1,16 @@
 import { Injectable } from "@graphql-modules/di";
 import { getCustomRepository } from "typeorm";
 import { ProductRepository } from "@repository/ProductRepository";
+import { CurrencyConverter } from "@forexUtils";
 
 @Injectable()
 export class ProductProvider {
     repository = getCustomRepository(ProductRepository);
+    currencyConverter = new CurrencyConverter();
+
+    convertToOtherCurrency(currency, amount) {
+        return this.currencyConverter.convertPrice(currency, amount);
+    }
 
     async getProducts(categoryId: number, take: number, skip: number, keyword: string, orderBy) {
         return this.repository.getProducts(categoryId, take, skip, keyword, orderBy)

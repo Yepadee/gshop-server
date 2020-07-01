@@ -1,4 +1,5 @@
 import { ProductProvider } from "./provider";
+
 export default {
   Query: {
     products: (_, { categoryId, take, skip, keyword, orderBy }, { injector }) =>
@@ -31,7 +32,8 @@ export default {
     name: product => product.name,
     description: product => product.description,
     catagory: product => product.catagory,
-    price: product => product.price,
+    price: (product, _, { currency, injector }) =>
+      injector.get(ProductProvider).convertToOtherCurrency(currency, product.price)
   },
 
   ProductType: {

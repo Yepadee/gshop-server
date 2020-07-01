@@ -5,6 +5,7 @@
     "username": "root",
     "password": "yoloswag69",
     "database": ":memory:",
+    "cache": true,
     "synchronize": true,
     "logging": false,
     "entities": [
