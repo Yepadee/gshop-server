@@ -28,21 +28,49 @@ export class CurrencyConverter {
 
     }
 
-    private getExchangeRate(currency: Currency) {
+    private async getExchangeRate(currency: Currency) {
+        const homeCurrency: string = <string> process.env.HOME_CURRENCY;
         let exchangeRate = this.cache.get(currency);
-        if (exchangeRate) {
-            return exchangeRate;
-        } else {
-            return this.client.get(`/latest?symbols=${process.env.HOME_CURRENCY},${currency}`).then(({ data }) => {
-                exchangeRate = data.rates[currency];
-                this.cache.put(currency, exchangeRate, CACHE_DURATION);
-                return exchangeRate;
-            });
+        if (!exchangeRate) {
+            if (currency === Currency.EUR) {
+                exchangeRate = await this.client.get(`/latest?symbols=${homeCurrency}`).then(({ data }) => {
+                    return 1.0 / data.rates[homeCurrency];
+                });
+            } else {
+                exchangeRate = await this.client.get(`/latest?symbols=${homeCurrency},${currency}`).then(({ data }) => {
+                    return data.rates[currency] / data.rates[homeCurrency];
+                });
+            }
         }
+        this.cache.put(currency, exchangeRate, CACHE_DURATION);
+        return exchangeRate;
     }
 
-    public convertPrice(currency: Currency, price: number) {
-        const exchangeRate = this.getExchangeRate(currency);
-        return Math.ceil(price * exchangeRate);
+    private roundUp(num: number, sf: number) {
+        const numDigits = Math.ceil(Math.log10(num));
+        const div = numDigits - sf;
+
+        
+        let result;
+
+        if (div <= 0) {
+            let precision = Math.min(2, Math.abs(div));
+            precision = Math.pow(10, precision);
+            result = Math.ceil(num * precision) / precision
+        } else {
+            sf = Math.pow(10, div)
+            result = Math.ceil(num / sf) * sf;
+        }
+
+        return result;
+      }
+
+    public async convertPrice(currency: Currency, price: number) {
+        if (currency != process.env.HOME_CURRENCY) {
+            const exchangeRate = await this.getExchangeRate(currency);
+            price = this.roundUp(price * exchangeRate, 3);
+        }
+
+        return price;
     }
 }
