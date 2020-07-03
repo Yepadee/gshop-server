@@ -80,7 +80,7 @@ export class PayPalRepository {
         body.purchase_units[0].amount.value = totalValue;
         body.purchase_units[0].amount.breakdown.item_total.value = totalValue;
         body.purchase_units[0].amount.breakdown.item_total.currency_code = currency;
-        console.log(parsedItems);
+
         return body;
     }
 
