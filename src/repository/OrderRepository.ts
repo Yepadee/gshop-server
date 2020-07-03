@@ -5,6 +5,15 @@ import { OrderItem } from "@entity/OrderItem";
 @EntityRepository(Order)
 export class OrderRepository extends Repository<Order> {
 
+    getOrders(paymentMethod, status, take, skip) {
+        return this.createQueryBuilder("products")
+        .limit(take)
+        .offset(skip)
+        .andWhere(paymentMethod ? "paymentMethod = :paymentMethod" : '1=1', { paymentMethod })
+        .andWhere(status ? "status = :status" : '1=1', { status })
+        .getMany();
+    }
+
     getOrderByPaymentOrderRef(paymentOrderRef: string) {
         return this.findOne({where: { paymentOrderRef }});
     }

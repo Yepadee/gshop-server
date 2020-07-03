@@ -14,7 +14,6 @@ export const template = {
             custom_id: "CUST-GSHOP",
             soft_descriptor: "GSHOP",
             amount: {
-                currency_code: "GBP",
                 breakdown: {
                     item_total: {
                     }

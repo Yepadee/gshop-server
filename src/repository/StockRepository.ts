@@ -2,24 +2,25 @@ import { EntityRepository, Repository, getRepository, In, MoreThan } from "typeo
 import { Stock } from "@entity/Stock";
 import { Product } from "@entity/Product";
 import { PropertyValue } from "@entity/PropertyValue";
+import { Currency, CurrencyConverter } from "@forexUtils";
 
 @EntityRepository(Stock)
 export class StockRepository extends Repository<Stock> {
     productRepository = getRepository(Product);
     propertyValueRepository = getRepository(PropertyValue);
+    currencyConverter = new CurrencyConverter();
     
-    async parseOrderItems(orderItems, itemParser) {
+    async parseOrderItems(orderItems, itemParser, currency: Currency) {
         const ids = orderItems.map(item => {
-            return item.stockId
+            return item.stockId;
         });
 
-        const orderItemsInfo = await this.getOrderItemsDetails(ids);
-
+        const orderItemsInfo = await this.getOrderItemsDetails(ids, currency);
         const itemQuantityMap = this.buildItemQuantityMap(orderItems);
-        const totalValue = orderItemsInfo.reduce((acc, item) => acc + item.price * itemQuantityMap[item.stockId], 0);
-        const parsedItems = orderItemsInfo.map(orderItemInfo =>
-            itemParser(orderItemInfo, itemQuantityMap[orderItemInfo.stockId])
-        );
+        const totalValue = orderItemsInfo.reduce((acc: number, item: any) => acc + item.price * itemQuantityMap[item.stockId], 0);
+        const parsedItems = await Promise.all(orderItemsInfo.map((orderItemInfo: any) =>
+            itemParser(orderItemInfo, itemQuantityMap[orderItemInfo.stockId], currency)
+        ));
     
         return { parsedItems, totalValue };
     }
@@ -90,7 +91,7 @@ export class StockRepository extends Repository<Stock> {
         return true;
     }
 
-    async getOrderItemsDetails(ids: number[]) {
+    async getOrderItemsDetails(ids: number[], currency: Currency) {
         const stock = <any> await this.find({
             where: { id : In(ids) },
             join: {
@@ -103,7 +104,7 @@ export class StockRepository extends Repository<Stock> {
             }
         });
 
-        const stockInfo = stock.map(item => {
+        const stockInfo = await Promise.all(stock.map( async item => {
             const properties = item.__properties__;
             const product = item.__product__;
             const productType = product.__type__;
@@ -112,10 +113,10 @@ export class StockRepository extends Repository<Stock> {
                 stockId: item.id,
                 type: productType.name,
                 name: product.name,
-                price: parseFloat(product.price),
+                price: await this.currencyConverter.convertPrice(currency, product.price),
                 properties: properties.map( property => property.value ),
             }
-        });
+        }));
         
         return stockInfo;
     }

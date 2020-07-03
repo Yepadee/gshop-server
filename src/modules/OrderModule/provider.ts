@@ -9,8 +9,8 @@ import { Order, PaymentMethod, OrderStatus } from "@entity/Order";
 export class OrderProvider {
     repository = getCustomRepository(OrderRepository);
 
-    getOrders(args) {
-        return this.repository.find({ where: args });
+    getOrders(paymentMethod, status, take, skip) {
+        return this.repository.getOrders(paymentMethod, status, take, skip);
     }
 
     getOrderById(id: number) {

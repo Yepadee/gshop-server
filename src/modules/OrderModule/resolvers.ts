@@ -2,8 +2,10 @@ import { OrderProvider } from "./provider";
 
 export default {
   Query: {
-    orders: (_, args, { injector }) => injector.get(OrderProvider).getOrders(args),
-    order: (_, { id }, { injector }) => injector.get(OrderProvider).getOrderById(id)
+    orders: (_, { paymentMethod, status, take, skip }, { injector }) =>
+      injector.get(OrderProvider).getOrders(paymentMethod, status, take, skip),
+    order: (_, { id }, { injector }) =>
+      injector.get(OrderProvider).getOrderById(id)
   },
 
   Mutation: {

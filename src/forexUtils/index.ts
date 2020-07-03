@@ -1,7 +1,9 @@
 import axios from "axios";
 import { Cache } from "memory-cache";
 
-const CACHE_DURATION = 3600 * 1000;
+// Hour - Secound - Microsecond
+const CACHE_DURATION = 2 * 3600 * 1000;
+const CONVERSION_CHARGE = 1.04;
 
 export enum Currency {
     GBP = "GBP",
@@ -9,8 +11,8 @@ export enum Currency {
     CAD = "CAD",
     AUD = "AUD",
     EUR = "EUR",
-    JPY = "JYP",
     NZD = "NZD",
+    JPY = "JYP",
     INR = "INR"
   }
 
@@ -20,12 +22,10 @@ export class CurrencyConverter {
 
     constructor() {
         this.cache = new Cache();
-
         this.client = axios.create({
             baseURL: `https://api.exchangeratesapi.io`,
             timeout: 3000
         });
-
     }
 
     private async getExchangeRate(currency: Currency) {
@@ -46,7 +46,7 @@ export class CurrencyConverter {
         return exchangeRate;
     }
 
-    private roundUp(num: number, sf: number) {
+    private roundUp(num: number, sf: number, minPrecision: number) {
         const numDigits = Math.ceil(Math.log10(num));
         const div = numDigits - sf;
 
@@ -54,7 +54,7 @@ export class CurrencyConverter {
         let result;
 
         if (div <= 0) {
-            let precision = Math.min(2, Math.abs(div));
+            let precision = Math.min(minPrecision, Math.abs(div));
             precision = Math.pow(10, precision);
             result = Math.ceil(num * precision) / precision
         } else {
@@ -63,12 +63,20 @@ export class CurrencyConverter {
         }
 
         return result;
-      }
+    }
+
+    private getCurrencyPrecision(currency: Currency) {
+        let precision;
+        if (currency in [Currency.JPY, Currency.INR]) precision = 1;
+        else precision = 2;
+        return precision;
+    }
 
     public async convertPrice(currency: Currency, price: number) {
         if (currency != process.env.HOME_CURRENCY) {
             const exchangeRate = await this.getExchangeRate(currency);
-            price = this.roundUp(price * exchangeRate, 3);
+            const minPrecision = this.getCurrencyPrecision(currency);
+            price = this.roundUp(price * exchangeRate * CONVERSION_CHARGE, 3, minPrecision);
         }
 
         return price;

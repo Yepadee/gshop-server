@@ -11,6 +11,7 @@ export class ProductRepository extends Repository<Product> {
     productTypeRepository = getRepository(ProductType);
 
     async getProducts(categoryId: number, take: number, skip: number, keyword: string, orderBy) {
+        if (take > 32) throw new Error("Cannot request more than 32 products at a time.");
         keyword = keyword || "";
 
         let query = this.createQueryBuilder("products")

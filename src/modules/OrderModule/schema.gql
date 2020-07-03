@@ -10,7 +10,12 @@ enum PaymentMethod {
 }
 
 type Query {
-  orders(id: ID): [Order]! @auth
+  orders(
+    paymentMethod: PaymentMethod
+    status: OrderStatus
+    take: Int!,
+    skip: Int!,
+  ): [Order]! @auth
   order(id: ID!): Order @auth
 }
 
@@ -22,7 +27,7 @@ type Mutation {
 type Order {
   id: ID!
   paymentOrderRef: ID!
-  paymentOrderId: ID
+  paymentTransactionId: ID
   supplierOrderId: ID
   paymentMethod: PaymentMethod!
   amountPaid: Float!

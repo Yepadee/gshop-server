@@ -7,6 +7,7 @@ import * as dotenv from "dotenv";
 import { PaymentMethod } from "@entity/Order";
 import { OrderRepository } from "@repository/OrderRepository";
 import { OrderItemRepository } from "@repository/OrderItemRepository";
+import { Currency } from "@forexUtils";
 
 
 const result = dotenv.config();
@@ -30,18 +31,15 @@ export class PayPalRepository {
         this.client = new paypal.core.PayPalHttpClient(environment);
     }
 
-    private parseItemInfo(orderItem, quantity: number) {
+    private parseItemInfo(orderItem, quantity: number, currency: Currency) {
+        if (!currency) currency = Currency.GBP;
         const parsedItem = {
             name: orderItem.name.toString(),
             description: orderItem.properties.join(", "),
             sku: orderItem.stockId.toString(),
             unit_amount: {
-                currency_code: "GBP",
+                currency_code: currency,
                 value: orderItem.price.toString()
-            },
-            tax: {
-                currency_code: "GBP",
-                value: "0.00"
             },
             quantity: quantity.toString(),
             category: "PHYSICAL_GOODS"
@@ -50,9 +48,9 @@ export class PayPalRepository {
         return parsedItem;
     }
 
-    private async buildRequestBody(returnUrl, cancelUrl, shippingAddress, orderItems) {
-        const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo);
-
+    private async buildRequestBody(returnUrl, cancelUrl, shippingAddress, currency: Currency, orderItems) {
+        const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo, currency);
+        
         const body = <any>template;
 
         if (shippingAddress) {
@@ -75,13 +73,14 @@ export class PayPalRepository {
             body.application_context.shipping_preference = "GET_FROM_FILE";
         }
 
+        body.purchase_units[0].amount.currency_code = currency,
         body.application_context.return_url = returnUrl;
         body.application_context.cancel_url = cancelUrl;
         body.purchase_units[0].items = parsedItems;
         body.purchase_units[0].amount.value = totalValue;
         body.purchase_units[0].amount.breakdown.item_total.value = totalValue;
-        body.purchase_units[0].amount.breakdown.item_total.currency_code = "GBP";
-
+        body.purchase_units[0].amount.breakdown.item_total.currency_code = currency;
+        console.log(parsedItems);
         return body;
     }
 
@@ -91,16 +90,22 @@ export class PayPalRepository {
         return response.result.purchase_units[0].items;
     }
 
-    public async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, selectedStock) {
+    public async createOrder(
+        returnUrl: string,
+        cancelUrl: string,
+        shippingAddress,
+        currency: Currency,
+        orderItems
+    ) {
         const request = new paypal.orders.OrdersCreateRequest();
         request.headers["prefer"] = "return=representation";
-        return this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, selectedStock).then(body => {
+        return this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, currency, orderItems).then(body => {
             request.requestBody(body);
             return this.client.execute(request).then(({ result }) => {
                 this.orderRepository.insertOrder(
                     result.id,
                     PaymentMethod.PAYPAL,
-                    selectedStock,
+                    orderItems,
                     body.purchase_units[0].amount.value,
                     body.purchase_units[0].amount.breakdown.item_total.currency_code,
                 );

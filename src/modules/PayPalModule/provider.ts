@@ -2,6 +2,7 @@ import { Injectable } from "@graphql-modules/di";
 import { PayPalRepository } from "@payPalUtils"
 import { getCustomRepository } from "typeorm";
 import { StockRepository } from "@repository/StockRepository";
+import { Currency } from "@forexUtils";
 
 
 @Injectable()
@@ -9,9 +10,9 @@ export class PayPalProvider {
     payPalRepo = new PayPalRepository();
     stockRepo = getCustomRepository(StockRepository);
 
-    async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, orderItems) {
+    async createOrder(returnUrl: string, cancelUrl: string, shippingAddress, currency: Currency, orderItems) {
         return this.stockRepo.checkOrderItemsInStock(orderItems).then(() => {
-            return this.payPalRepo.createOrder(returnUrl, cancelUrl, shippingAddress, orderItems);
+            return this.payPalRepo.createOrder(returnUrl, cancelUrl, shippingAddress, currency, orderItems);
         });
     }
 
