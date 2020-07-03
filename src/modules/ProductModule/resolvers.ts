@@ -32,6 +32,7 @@ export default {
     name: product => product.name,
     description: product => product.description,
     catagory: product => product.catagory,
+    basePrice: product => product.price,
     price: (product, _, { currency, injector }) =>
       injector.get(ProductProvider).convertToOtherCurrency(currency, product.price)
   },

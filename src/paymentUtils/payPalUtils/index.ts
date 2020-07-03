@@ -101,8 +101,8 @@ export class PayPalRepository {
         request.headers["prefer"] = "return=representation";
         return this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, orderItems, currency).then(body => {
             request.requestBody(body);
-            return this.client.execute(request).then(({ result }) => {
-                this.orderRepository.insertOrder(
+            return this.client.execute(request).then(async ({ result }) => {
+                await this.orderRepository.insertOrder(
                     result.id,
                     PaymentMethod.PAYPAL,
                     orderItems,
