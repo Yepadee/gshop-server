@@ -14,8 +14,8 @@ input CustomerDetials {
 type Mutation {
   createFlutterwaveOrder(
     returnUrl: String!,
+    customerDetails: CustomerDetials!,
     items: [OrderItemInput]!,
-    customerDetails: CustomerDetials!
   ): FlutterwaveOrder
   verifyFlutterwaveOrder(transactionRef: String!, transactionId: String!): Boolean!
 }

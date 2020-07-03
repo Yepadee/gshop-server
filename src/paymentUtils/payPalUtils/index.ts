@@ -48,7 +48,7 @@ export class PayPalRepository {
         return parsedItem;
     }
 
-    private async buildRequestBody(returnUrl, cancelUrl, shippingAddress, currency: Currency, orderItems) {
+    private async buildRequestBody(returnUrl, cancelUrl, shippingAddress, orderItems, currency: Currency) {
         const { parsedItems, totalValue } = await this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo, currency);
         
         const body = <any>template;
@@ -94,12 +94,12 @@ export class PayPalRepository {
         returnUrl: string,
         cancelUrl: string,
         shippingAddress,
-        currency: Currency,
-        orderItems
+        orderItems,
+        currency: Currency
     ) {
         const request = new paypal.orders.OrdersCreateRequest();
         request.headers["prefer"] = "return=representation";
-        return this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, currency, orderItems).then(body => {
+        return this.buildRequestBody(returnUrl, cancelUrl, shippingAddress, orderItems, currency).then(body => {
             request.requestBody(body);
             return this.client.execute(request).then(({ result }) => {
                 this.orderRepository.insertOrder(

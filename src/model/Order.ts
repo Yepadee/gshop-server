@@ -35,7 +35,7 @@ export class Order {
     @Column("varchar", {length: 16})
     paymentMethod: PaymentMethod;
 
-    @Column()
+    @Column("decimal", { precision: 5, scale: 2 })
     amountPaid: number;
 
     @Column("varchar", {length: 4})

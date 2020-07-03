@@ -8,6 +8,7 @@ import axios from "axios";
 import { uuid } from "uuidv4";
 import { OrderItemRepository } from "@repository/OrderItemRepository";
 import { PaymentMethod } from "@entity/Order";
+import { Currency } from "@forexUtils";
 
 
 const result = dotenv.config();
@@ -48,14 +49,19 @@ export class FlutterwaveRepository {
         return parsedItem;
     }
     
-    public async createOrder(returnUrl: string, orderItems, customerDetails) {
-        return this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo).then(({ parsedItems, totalValue }) => {
+    public async createOrder(
+        returnUrl: string,
+        customerDetails,
+        orderItems,
+        currency: Currency
+    ) {
+        return this.stockRepository.parseOrderItems(orderItems, this.parseItemInfo, currency).then(({ parsedItems, totalValue }) => {
             const transactionRef = uuid();
             
             const payload = {
                 "tx_ref": transactionRef,
                 "amount": totalValue,
-                "currency": "GBP",
+                "currency": currency,
                 "redirect_url": returnUrl,
                 "payment_options": "card",
                 "customer": {
@@ -80,7 +86,7 @@ export class FlutterwaveRepository {
                     PaymentMethod.FLUTTERWAVE,
                     orderItems,
                     totalValue,
-                    "GBP"
+                    currency
                 ).then(() => {
                     return {
                         transactionRef,
