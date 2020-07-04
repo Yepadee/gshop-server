@@ -1,0 +1,22 @@
+type Collection {
+  id: ID!
+  name: String!
+}
+
+type Query {
+  collections(id: ID): Collection
+  collection(id: ID!): Collection
+}
+
+type Mutation {
+  createCollection(name: String): Boolean @auth
+  updateCollection(id: ID!, name: String): Boolean @auth
+  deleteCollection(id: ID!): Boolean @auth
+
+  addProductToCollection(id: ID!, productId: ID!): Boolean @auth
+  removeProductFromCollection(id: ID!, productId: ID!): Boolean @auth
+}
+
+type Product {
+  collections: [Collection]!
+}

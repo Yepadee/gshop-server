@@ -14,6 +14,7 @@ import { OrderItemModule } from "./OrderItemModule";
 import { CategoryModule } from "./CategoryModule";
 import { FlutterwaveModule } from "./FlutterwaveModule";
 import { CurrencyModule } from "./CurrencyModule";
+import { CollectionModule } from "./CollectionModule";
 
 
 export const GraphQLModules = new GraphQLModule({
@@ -31,6 +32,7 @@ export const GraphQLModules = new GraphQLModule({
         OrderModule,
         OrderItemModule,
         CurrencyModule,
-        CategoryModule
+        CategoryModule,
+        CollectionModule
     ]
 });
