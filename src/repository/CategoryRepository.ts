@@ -41,8 +41,10 @@ export class CategoryRepository extends TreeRepository<Category> {
         return result;
     }
 
-    async getLeafCategories() {
-        return this.createQueryBuilder("category")
+    async getLeafCategories(parentId: number) {
+        const parent = new Category();
+        parent.id = parentId;
+        return this.createDescendantsQueryBuilder("category", "categoryClosure", parent)
         .where(qb => {
             const subQuery = qb.subQuery()
             .select("DISTINCT cat.parentid")

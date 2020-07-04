@@ -1,8 +1,3 @@
-type Query {
-  categories: [Category]!
-  leafCategories: [Category]!
-}
-
 type Mutation {
   createCategory(productTypeId: ID!, name: String!): Boolean
   createSubCategory(parentId: ID!, name: String!): Boolean
@@ -16,6 +11,7 @@ type Category {
 
 type ProductType {
   categories: [Category]!
+  leafCategories: [Category]!
 }
 
 type Product {

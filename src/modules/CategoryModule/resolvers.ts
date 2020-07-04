@@ -1,13 +1,7 @@
 import { CategoryProvider } from "./provider";
 
 export default {
-    Query: {
-        categories:  (_, args, { injector }) =>
-            injector.get(CategoryProvider).getCategories(args),
-        leafCategories:  (_, args, { injector }) =>
-        injector.get(CategoryProvider).getLeafCategories(args),
-    },
-    
+
     Mutation: {
         createCategory: (_, { productTypeId, name }, { injector }) =>
             injector.get(CategoryProvider).createCategory(productTypeId, name),
@@ -18,6 +12,8 @@ export default {
     ProductType: {
         categories: (productType, _, { injector }) =>
             injector.get(CategoryProvider).getSubCategories(productType.rootCategoryId),
+        leafCategories: (productType, _, { injector }) =>
+            injector.get(CategoryProvider).getLeafCategories(productType.rootCategoryId),
     },
 
     Product: {
