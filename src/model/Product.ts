@@ -7,6 +7,7 @@ import { PropertyName } from "./PropertyName";
 
 import * as fs from "fs";
 import { ProductImage } from "./ProductImage";
+import { Collection } from "./Collection";
 
 @Entity()
 export class Product {
@@ -54,6 +55,9 @@ export class Product {
 
     @OneToMany(() => ProductImage, image => image.product, {cascade: true})
     images:  Promise<ProductImage[]>;
+
+    @ManyToMany(() => Collection, collection => collection.products)
+    collections: Promise<Collection[]>;
 
     @AfterInsert()
     createImageFolder() {

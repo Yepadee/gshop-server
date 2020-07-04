@@ -7,12 +7,16 @@ import { getCustomRepository } from "typeorm";
 export class CategoryProvider {
     repository = getCustomRepository(CategoryRepository);
 
-    createCategory(productTypeId: string, name: string) {
+    createCategory(productTypeId: number, name: string) {
         return this.repository.insertCategory(productTypeId, name);
     }
 
-    createSubCategory(parentId: string, name: string) {
+    createSubCategory(parentId: number, name: string) {
         return this.repository.insertSubCategory(parentId, name);
+    }
+
+    getLeafCategories() {
+        return this.repository.getLeafCategories();
     }
 
     getCategories(args) {

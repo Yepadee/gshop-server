@@ -40,4 +40,17 @@ export class CategoryRepository extends TreeRepository<Category> {
         .getMany();
         return result;
     }
+
+    async getLeafCategories() {
+        return this.createQueryBuilder("category")
+        .where(qb => {
+            const subQuery = qb.subQuery()
+            .select("DISTINCT cat.parentid")
+            .from(Category, "cat")
+            .where("cat.parentId IS NOT NULL")
+            .getQuery();
+            return "category.id NOT IN " + subQuery;
+        })
+        .getMany();
+    }
 }

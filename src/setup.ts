@@ -9,6 +9,7 @@ import * as _ from "lodash";
 import * as faker from "faker";
 import * as bcrypt from "bcrypt";
 import { Category } from "@entity/Category";
+import { Collection } from "@entity/Collection";
 
 
 export const setup = async (connection) => {
@@ -90,6 +91,14 @@ export const setup = async (connection) => {
     category6.parent = <any>category2;
     await connection.manager.save(category6);
 
+    const collection1 = new Collection();
+    collection1.name = "Summer";
+    await connection.manager.save(collection1);
+
+    const collection2 = new Collection();
+    collection2.name = "Fruity";
+    await connection.manager.save(collection2);
+
     _.times(20, async () => {
     const product = new Product();
     product.supplierAddress = "https://www.aliexpress.com/item/10000098718155.html"
@@ -100,6 +109,7 @@ export const setup = async (connection) => {
     product.requiredProperties = <any>[{id:1}, {id:2}];
     product.published = true;
     product.categoryId = 4;
+    product.collections = <any>[{id:1}, {id:2}];
     await connection.manager.save(product);
     const s1 = new Stock();
     s1.quantity = faker.random.number({ max: 1, min: 30 });

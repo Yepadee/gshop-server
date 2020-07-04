@@ -4,6 +4,8 @@ export default {
     Query: {
         categories:  (_, args, { injector }) =>
             injector.get(CategoryProvider).getCategories(args),
+        leafCategories:  (_, args, { injector }) =>
+        injector.get(CategoryProvider).getLeafCategories(args),
     },
     
     Mutation: {
