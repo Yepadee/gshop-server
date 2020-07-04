@@ -6,7 +6,9 @@ export default {
         createCategory: (_, { productTypeId, name }, { injector }) =>
             injector.get(CategoryProvider).createCategory(productTypeId, name),
         createSubCategory: (_, { parentId, name }, { injector }) =>
-            injector.get(CategoryProvider).createSubCategory(parentId, name)
+            injector.get(CategoryProvider).createSubCategory(parentId, name),
+        addProductToCategory: (_, { id, productId }, { injector }) =>
+            injector.get(CategoryProvider).addProduct(id, productId)
     },
     
     ProductType: {
@@ -17,6 +19,6 @@ export default {
     },
 
     Product: {
-        categories: product => product.categories
+        category: product => product.category
     }
 };

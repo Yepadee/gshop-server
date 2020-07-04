@@ -1,6 +1,7 @@
 import { EntityRepository, TreeRepository } from "typeorm";
 import { Category } from "@entity/Category";
 import { ProductType } from "@entity/ProductType";
+import { Product } from "@entity/Product";
 
 @EntityRepository(Category)
 export class CategoryRepository extends TreeRepository<Category> {
@@ -54,5 +55,44 @@ export class CategoryRepository extends TreeRepository<Category> {
             return "category.id NOT IN " + subQuery;
         })
         .getMany();
+    }
+
+    private async validCategoryForProduct(id: number, productId: number) {
+        const { parentId } = await this.createQueryBuilder("category")
+        .select("DISTINCT rootCategory.id", "parentId")
+        .from(Product, "product")
+        .innerJoin("product.type","productType")
+        .innerJoin("productType.rootCategory", "rootCategory")
+        .where("product.id = :productId", { productId })
+        .getRawOne();
+
+        const parent = new Category();
+        parent.id = parentId;
+        const { isLeaf } = await this.createDescendantsQueryBuilder("category", "categoryClosure", parent)
+        .select("COUNT(*)", "isLeaf")
+        .where(qb => {
+            const subQuery = qb.subQuery()
+            .select("DISTINCT cat.parentid")
+            .from(Category, "cat")
+            .where("cat.parentId IS NOT NULL")
+            .getQuery();
+            return "category.id NOT IN " + subQuery;
+        })
+        .andWhere("category.id = " + id)
+        .getRawOne();
+
+        return Boolean(Number(isLeaf));
+
+    }
+
+    async addProduct(id: number, productId: number) {      
+        if (!await this.validCategoryForProduct(id, productId)) throw new Error("Invalid category for product!");
+
+        return this.createQueryBuilder()
+        .relation(Category, "products")
+        .of(id)
+        .add(productId).then(() => {
+            return true;
+        });
     }
 }

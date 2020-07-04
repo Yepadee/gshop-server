@@ -26,4 +26,8 @@ export class CategoryProvider {
     getSubCategories(parentId: number) {
         return this.repository.getSubCategories(parentId);
     }
+
+    async addProduct(id: number, productId: number) {
+        return this.repository.addProduct(id, productId);
+    }
 }
