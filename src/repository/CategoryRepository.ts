@@ -6,16 +6,32 @@ import { Product } from "@entity/Product";
 @EntityRepository(Category)
 export class CategoryRepository extends TreeRepository<Category> {
 
+    private async isRootCategory(id: number) {
+        const result = await this.createQueryBuilder("category")
+        .select("category.parentId", "parentId")
+        .where("category.id = :id", { id })
+        .getRawOne();
+
+        if (!result) throw new Error("Invalid category id!");
+
+        return !result.parentId;
+    }
+
+    private async hasProducts(id: number) {
+        const { hasProducts } = await this.createQueryBuilder("category")
+        .select("COUNT(*) > 0", "hasProducts")
+        .innerJoin("category.products", "products")
+        .where("category.id = :id", { id })
+        .getRawOne();
+
+        return Boolean(Number(hasProducts));
+    }
+
     async insertSubCategory(parentId: number, name: string) {
         //Valdiation: Check parent category has no products assigned.
-        const { numProducts } = await this.createQueryBuilder("category")
-        .select("COUNT(*)", "numProducts")
-        .innerJoin("category.products", "products")
-        .where("category.id = :parentId", { parentId })
-        .getRawOne();
-        console.log(numProducts);
-
-        if ( numProducts > 0) throw new Error("Cannot add a sub-category to a category with products assigned!");
+        if (await this.hasProducts(parentId)) {
+            throw new Error("Cannot add a sub-category to a category with products assigned!");
+        }
 
         const newCategory = new Category();
         newCategory.parent = <any>{id: parentId};
@@ -32,6 +48,31 @@ export class CategoryRepository extends TreeRepository<Category> {
         .getRawOne();
         await this.insertSubCategory(rootCategoryId, name);
         return true;
+    }
+
+    async updateCategory(args) {
+        if (await this.isRootCategory(args.id)) throw new Error("Cannot update a root category!");
+
+        return this.createQueryBuilder()
+        .update(Category)
+        .set({name: args.name})
+        .where("id = :id", { id: args.id })
+        .execute().then(() => {
+            return true;
+        });
+    }
+
+    async deleteCategory(id: number) {
+        if (await this.isRootCategory(id)) throw new Error("Cannot delete a root category!");
+        if (await this.hasProducts(id)) {
+            throw new Error("Cannot delete a category with products assigned!");
+        }
+        
+        return this.delete(id).then(() => {
+            return true;
+        }).catch(() => {
+            throw new Error("Cannot delete a category with children assigned!");
+        });
     }
 
     async getSubCategories(parentId: number) {
@@ -92,6 +133,15 @@ export class CategoryRepository extends TreeRepository<Category> {
         .relation(Category, "products")
         .of(id)
         .add(productId).then(() => {
+            return true;
+        });
+    }
+
+    async removeProduct(id: number, productId: number) { 
+        return this.createQueryBuilder()
+        .relation(Category, "products")
+        .of(id)
+        .remove(productId).then(() => {
             return true;
         });
     }

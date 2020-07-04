@@ -15,6 +15,15 @@ export class CategoryProvider {
         return this.repository.insertSubCategory(parentId, name);
     }
 
+    updateCategory(args) {
+        return this.repository.updateCategory(args);
+    }
+
+
+    deleteCategory(id: number) {
+        return this.repository.deleteCategory(id);
+    }
+
     getLeafCategories(parentId: number) {
         return this.repository.getLeafCategories(parentId);
     }
@@ -23,11 +32,17 @@ export class CategoryProvider {
         return this.repository.find({ where: args });
     }
 
+    
+
     getSubCategories(parentId: number) {
         return this.repository.getSubCategories(parentId);
     }
 
-    async addProduct(id: number, productId: number) {
+    addProduct(id: number, productId: number) {
         return this.repository.addProduct(id, productId);
+    }
+
+    removeProduct(id: number, productId: number) {
+        return this.repository.removeProduct(id, productId);
     }
 }

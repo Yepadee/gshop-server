@@ -108,7 +108,7 @@ export const setup = async (connection) => {
     product.type = <any>{id:1};
     product.requiredProperties = <any>[{id:1}, {id:2}];
     product.published = true;
-    product.categoryId = 4;
+    product.category = <any>{id:4};
     product.collections = <any>[{id:1}, {id:2}];
     await connection.manager.save(product);
     const s1 = new Stock();

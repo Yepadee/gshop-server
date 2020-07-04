@@ -7,8 +7,18 @@ export default {
             injector.get(CategoryProvider).createCategory(productTypeId, name),
         createSubCategory: (_, { parentId, name }, { injector }) =>
             injector.get(CategoryProvider).createSubCategory(parentId, name),
+
+        updateCategory: (_, args, { injector }) =>
+            injector.get(CategoryProvider).updateCategory(args),    
+
+        deleteCategory: (_, { id }, { injector }) =>
+            injector.get(CategoryProvider).deleteCategory(id),        
+
         addProductToCategory: (_, { id, productId }, { injector }) =>
-            injector.get(CategoryProvider).addProduct(id, productId)
+            injector.get(CategoryProvider).addProduct(id, productId),
+
+        removeProductFromCategory: (_, { id, productId }, { injector }) =>
+            injector.get(CategoryProvider).removeProduct(id, productId)
     },
     
     ProductType: {

@@ -1,7 +1,13 @@
 type Mutation {
   createCategory(productTypeId: ID!, name: String!): Boolean
   createSubCategory(parentId: ID!, name: String!): Boolean
+
+  updateCategory(id: ID!, name: String): Boolean
+
+  deleteCategory(id: ID!): Boolean
+
   addProductToCategory(id: ID!, productId: ID!): Boolean
+  removeProductFromCategory(id: ID!, productId: ID!): Boolean
 }
 
 type Category {

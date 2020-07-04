@@ -47,9 +47,6 @@ export class Product {
     @OneToMany(() => Stock, stock => stock.product)
     stock:  Promise<Stock[]>;
 
-    @Column("int")
-    categoryId: number;
-
     @ManyToOne(() => Category, category => category.products)
     category: Promise<Category>;
 
