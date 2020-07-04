@@ -15,8 +15,8 @@ export class CategoryProvider {
         return this.repository.insertSubCategory(parentId, name);
     }
 
-    getLeafCategories() {
-        return this.repository.getLeafCategories();
+    getLeafCategories(parentId: number) {
+        return this.repository.getLeafCategories(parentId);
     }
 
     getCategories(args) {
