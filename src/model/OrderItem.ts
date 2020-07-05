@@ -9,9 +9,14 @@ export class OrderItem {
     @PrimaryGeneratedColumn()
     id: number;
 
+
+
     @ManyToOne(() => Order, order => order.items)
     @JoinColumn()
     order: Promise<Order>
+
+    @Column()
+    stockId: number;
 
     @ManyToOne(() => Stock, stock => stock.orders)
     @JoinColumn()

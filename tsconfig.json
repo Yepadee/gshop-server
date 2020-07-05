@@ -29,7 +29,8 @@
        "@repository/*": ["repository/*"],
        "@payPalUtils": ["paymentUtils/payPalUtils"],
        "@flutterwaveUtils": ["paymentUtils/flutterwaveUtils"],
-       "@forexUtils": ["forexUtils"]
+       "@forexUtils": ["forexUtils"],
+       "@emailUtils": ["emailUtils"]
      }
    },
    "exclude": ["node_modules"],

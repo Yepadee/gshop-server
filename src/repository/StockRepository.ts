@@ -3,6 +3,7 @@ import { Stock } from "@entity/Stock";
 import { Product } from "@entity/Product";
 import { PropertyValue } from "@entity/PropertyValue";
 import { Currency, CurrencyConverter } from "@forexUtils";
+import { OrderItem } from "@entity/OrderItem";
 
 @EntityRepository(Stock)
 export class StockRepository extends Repository<Stock> {
@@ -140,9 +141,9 @@ export class StockRepository extends Repository<Stock> {
     }
 
     async sellStock(id: number, quantity: number) {
-        return this.decrementStockQuantity(id, quantity).then(() => {
+        return this.decrementStockQuantity(id, quantity).then(async () => {
             return this.createQueryBuilder().update(Stock)
-            .set({ quantity: () => "sales + " + quantity })
+            .set({ sales: () => "sales + " + quantity })
             .where("id = :id", {id})
             .execute().then(() => {
                 return true;
@@ -157,8 +158,8 @@ export class StockRepository extends Repository<Stock> {
         return stock;
     }
 
-    async checkOrderItemsInStock(orderItems) {
-        const ids = orderItems.map(orderItem => orderItem.stockId);
+    async checkOrderItemsInStock(orderItems: OrderItem[]) {
+        const ids = orderItems.map((orderItem: OrderItem) => orderItem.stockId);
         const itemQuantityMap = {};
         orderItems.forEach(orderItem => {
             itemQuantityMap[orderItem.stockId] = orderItem.quantity;
@@ -166,7 +167,7 @@ export class StockRepository extends Repository<Stock> {
         const stocks = await this.find({ where: {id: In(ids)} });
         stocks.forEach(stock => {
             const quantity = itemQuantityMap[stock.id];
-            if(quantity > stock.quantity) throw new Error("One or more selected items are out of stock!");
+            if(quantity > stock.quantity) throw new Error("Not enough stock to fulfill order!");
         });
     }
 

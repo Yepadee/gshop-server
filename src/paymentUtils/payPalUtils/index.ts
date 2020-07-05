@@ -138,7 +138,7 @@ export class PayPalRepository {
 
             return this.orderItemRepository.getOrderItemsByPaymentOrderRef(orderId).then((orderItems) => {
                 orderItems.forEach(async (item: any) => {
-                    await this.stockRepository.sellStock(item.__stockId__, item.quantity)
+                    await this.stockRepository.sellStock(item.stockId, item.quantity)
                 });
 
                 return this.orderRepository.confirmOrder(orderId, transactionId).then(() => {
